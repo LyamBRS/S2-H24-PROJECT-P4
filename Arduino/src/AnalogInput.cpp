@@ -22,6 +22,16 @@ AnalogInput::AnalogInput(int pin, int min, int max)
 {
     pinMode(pin,INPUT);
     arduinoPin=pin;
+     if (min<0)
+    {min=0;}
+    if (max>1023)
+    {max=1023;}
+      if (min>=1023)
+    {min=1022;}
+      if (max<=0)
+    {max=1;}
+    if (max>1023)
+    {max=1023;}
     minimumValue=min;
     maximumValue=max;
 }
