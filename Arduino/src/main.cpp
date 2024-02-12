@@ -11,6 +11,7 @@
  */
 
 // - INCLUDES -//
+#include <Arduino.h>
 
 /// @brief Arduino's initialisation function.
 void setup()

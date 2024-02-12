@@ -13,7 +13,7 @@
 #pragma once
 
 // - INCLUDES - //
-
+#include <Arduino.h>
 // - DEFINES - //
 
 // - CLASS - //
