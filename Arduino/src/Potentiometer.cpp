@@ -2,12 +2,13 @@
 
 Potentiometer::Potentiometer(int pin)
 {
-    
+    delete analogInput;
+    analogInput = new AnalogInput(pin);
 }
 
 bool Potentiometer::SetLimits(int newMin, int newMax){
-    analogInput.SetMax(newMax);
-    analogInput.SetMin(newMax);
+    analogInput->SetMax(newMax);
+    analogInput->SetMin(newMin);
     return true;
 }
 
@@ -21,9 +22,8 @@ bool Potentiometer::SetDeadZones(int newDeadZoneMin, int newDeadzoneMax){
 }
 
 int Potentiometer::GetPourcent(){
-    return analogInput.GetPourcent();
+    return analogInput->GetPourcent();
 }
-
 
 bool Potentiometer::Update(){
     //rawInputValue = analogInput.UpdateRawValue();
