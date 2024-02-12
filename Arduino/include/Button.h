@@ -29,7 +29,7 @@ class Button
 {
     private:
         /// @brief The digital pin number on the arduino where this LED will be connected.
-        int arduinoPin;
+        uint8_t arduinoPin;
         /// @brief The last state that was read when Update was called.
         bool state = false;
         /// @brief Specifies if the button is on with a LOW value. Defaults to false (ON with a HIGH value)
@@ -50,6 +50,7 @@ class Button
          */
         Button(int pin);
 
+
         /**
          * @brief Construct a new Button object.
          * Default constructor sets the pin
@@ -68,6 +69,12 @@ class Button
          * How long in milliseconds should the debounce be for.
          */
         Button(int pin, bool isInverted, int debounceDelayMS);
+
+        /**
+         * @brief Destroy the Button object
+         * 
+         */
+        ~Button();
 
         /**
          * @brief Get the State of the button.
@@ -90,4 +97,10 @@ class Button
          * Failed to update the button.
          */
         bool Update();
+
+        /**
+         * @brief Set the State object
+         * 
+         */
+        void SetState();
 };
