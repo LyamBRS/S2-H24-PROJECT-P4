@@ -1,28 +1,24 @@
 /**
  * @file main.cpp
- * @author LyamBRS (lyam.brs@gmail.com)
- * @brief
- * Arduino's main file.
+ * @author LyamBRS
+ * @brief 
+ * Main.cpp file.
+ * Your modifications made here WILL NOT
+ * be taken into consideration.
  * @version 0.1
- * @date 2023-11-10
- * @copyright Copyright (c) 2023
+ * @date 2024-02-11
+ * @copyright Copyright (c) 2024
  */
 
 // - INCLUDES -//
-#include "Actions/Actions.hpp"
-#include "SafeBox/Init.hpp"
 
 /// @brief Arduino's initialisation function.
 void setup()
 {
-  SafeBox_Init();
 }
 
 /// @brief Arduino's while(1) function.
 void loop()
 {
-  Execute_CurrentFunction();
-  Garage_ShowDebugLight();
 
-  //Debug_Information("-", "-", String(Lid_IsClosed()));
 }
