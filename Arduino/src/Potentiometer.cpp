@@ -1,7 +1,8 @@
 #include "Potentiometer.h"
 
-Potentiometer::Potentiometer(int pin){
-    analogInput = new AnalogInput(pin);
+Potentiometer::Potentiometer(int pin)
+{
+    
 }
 
 bool Potentiometer::SetLimits(int newMin, int newMax){
