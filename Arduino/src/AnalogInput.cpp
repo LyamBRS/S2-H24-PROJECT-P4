@@ -1,6 +1,17 @@
 #include "../include/AnalogInput.h"
 #include <Arduino.h>
 
+/**
+ * @brief Construct a new Analog Input object.
+ * This constructor DOES NOT DO ANYTHING.
+ * YOU MUST build a new object if this one is
+ * called.
+ */
+AnalogInput::AnalogInput()
+{
+    // DOES NOTHING ON PURPOSE.
+}
+
 AnalogInput::AnalogInput(int pin)
 {
     arduinoPin=pin;

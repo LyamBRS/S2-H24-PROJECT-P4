@@ -42,6 +42,15 @@ class AnalogInput
         int maximumValue = 1023;
 
     public:
+
+        /**
+         * @brief Construct a new Analog Input object.
+         * This constructor DOES NOT DO ANYTHING.
+         * YOU MUST build a new object if this one is
+         * called.
+         */
+        AnalogInput();
+
         /**
          * @brief Construct a new Analog Input object.
          * Default constuctors sets the minimum possible
