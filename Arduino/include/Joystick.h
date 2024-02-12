@@ -24,11 +24,11 @@ class Joystick
 {
     private:
         /// @brief The button object of the potentiometer
-        Button button;
+        Button *button;
         /// @brief Y axis potentiometer object
-        Potentiometer xAxis;
+        Potentiometer *xAxis;
         /// @brief X axis potentiometer object
-        Potentiometer yAxis;
+        Potentiometer *yAxis;
 
     public:
         /**
@@ -52,25 +52,25 @@ class Joystick
          * new value from 0 to 1023 that sets the maximum
          * value that the joystick will ever reach for the
          * X axis.
-         * @param newMaxY
-         * new value from 0 to 1023 that sets the maximum
+         * @param newMinX
+         * new value from 0 to 1023 that sets the minimum
          * value that the joystick will ever reach for the
-         * Y axis.
+         * X axis.
          * @return true:
          * Successfully sets the maximums for the potentiometers
          * @return false:
          * Failed to set the maximums for the potentiometers
          */
-        bool SetMax(int newMaxX, int newMaxY);
+        bool SetX(int newMaxX, int newMinX);
 
         /**
          * @brief Sets new minimum values for all
          * the potentiometers that creates the
          * joystick.
-         * @param newMinX
-         * new value from 0 to 1023 that sets the minimum
+         * @param newMaxY
+         * new value from 0 to 1023 that sets the maximum
          * value that the joystick will ever reach for the
-         * X axis.
+         * Y axis.
          * @param newMinY
          * new value from 0 to 1023 that sets the minimum
          * value that the joystick will ever reach for the
@@ -80,7 +80,7 @@ class Joystick
          * @return false:
          * Failed to set the minimums for the potentiometers
          */
-        bool SetMin(int newMinX, int newMinY);
+        bool SetY(int newMaxY, int newMinY);
 
         /**
          * @brief
