@@ -32,11 +32,11 @@ class Accelerometer
 {
     private:
         /// @brief Object that reads the values of the X axis.
-        AnalogInput xAxis;
+        AnalogInput *xAxis;
         /// @brief Object that reads the values of the Y axis.
-        AnalogInput yAxis;
+        AnalogInput *yAxis;
         /// @brief Object that reads the values of the Z axis.
-        AnalogInput zAxis;
+        AnalogInput *zAxis;
 
     public:
         /**
