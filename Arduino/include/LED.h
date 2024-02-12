@@ -72,7 +72,7 @@ class LED
          * @param isInverted
         * Specifies if the LED is on with a LOW value. Defaults to false (ON with a HIGH value)
          */
-        LED(int pin, bool initialState, bool isInverted);
+        LED(int pin, bool initialState, bool inverted);
 
         /**
          * @brief
