@@ -21,5 +21,4 @@ void setup()
 /// @brief Arduino's while(1) function.
 void loop()
 {
-
 }
