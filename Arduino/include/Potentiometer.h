@@ -30,7 +30,7 @@ class Potentiometer
 {
     private:
         /// @brief The analog object that is used to parse the analog input.
-        AnalogInput analogInput = AnalogInput(0);
+        AnalogInput *analogInput;
         /// @brief Specifies the minimum needed before the potentiometer gets stuck at 50. defaults to -1 (disabled)
         int deadZoneMin = -1;
         /// @brief Specifies the maximum needed before the potentiometer gets no longer stuck at 50. defaults to -1 (disabled)
