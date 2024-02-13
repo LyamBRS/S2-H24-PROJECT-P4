@@ -1,0 +1,196 @@
+/**
+ * @file Arduino.h
+ * @author LyamBRS
+ * @brief
+ * Contains the header definition of the Arduino
+ * class used to handle controllers and the
+ * special JSON communication.
+ * @version 0.1
+ * @date 2024-02-13
+ * @copyright Copyright (c) 2024
+ */
+
+#pragma once
+
+// - INCLUDES - //
+#include <iostream>
+#include "../Controller/Controller.h"
+#include "../Communication/Communication.h"
+// - DEFINES - //
+
+// - CLASS - //
+
+/**
+ * @brief 
+ * Class used to handle an arduino where 2 simple
+ * controllers can connect to. This arduino communicates
+ * with the PC through a "communication" protocol if it
+ * can be called that allowing JSON files to be exchanged
+ * between the two. The arduino will send controller
+ * informations on the serial port to the PC and the PC
+ * will send LCD and BarGraph information to the arduino.
+ * The PC is the one to initate the handshake with the
+ * arduino.
+ */
+class Arduino
+{
+    private:
+        /// @brief Handles the serial port and JSON objects
+        Communication serialHandler;
+        /// @brief Vector of controllers that the arduino has.
+        std::vector<Controller*> controllers;
+        /// @brief How many tries has it been to read a good JSON file?
+        int attemptsSinceLastGoodParse = 0;
+    
+    public:
+        /**
+         * @brief Construct a new Arduino object.
+         * Class used to handle an arduino where 2 simple
+         * controllers can connect to. This arduino communicates
+         * with the PC through a "communication" protocol if it
+         * can be called that allowing JSON files to be exchanged
+         * between the two. The arduino will send controller
+         * informations on the serial port to the PC and the PC
+         * will send LCD and BarGraph information to the arduino.
+         * The PC is the one to initate the handshake with the
+         * arduino.
+         * @param arduinoComPort
+         * Which com port is the arduino supposed to be at.
+         * @param arduinoBaudRate
+         * Which baud rate is the arduino supposed to be
+         * using.
+         */
+        Arduino(std::string arduinoComPort, int arduinoBaudRate);
+
+        /**
+         * @brief 
+         * Method that allows you to check if the Arduino
+         * has been responding according to plan. This
+         * will check wether the com port is connected at
+         * all and will also tell you if its been a while
+         * since a JSON file was successfully parsed from
+         * the arduino.
+         * @return true:
+         * Everything is working well! 
+         * @return false:
+         * No ports opened / Nothing answered for a while.
+         */
+        bool Verify();
+
+        /**
+         * @brief
+         * Returns a player's controller so that you can
+         * modify, get and change values of that controller.
+         * Some values are automatically overwritten when a
+         * new JSON file is seen from the arduino such as
+         * inputs. Others will be sent to the arduino when
+         * an handshake next occurs.
+         * @attention
+         * ## IF INDEX OUT OF BOUNDS, IT WILL BE 0.
+         * @param playerIndex
+         * Which controller do you want?
+         * @return Controller* 
+         */
+        Controller* GetPlayerController(int playerIndex);
+
+        /**
+         * @brief 
+         * Update function of the Arduino object.
+         * This handles the handshakes, communications,
+         * JSON buildings n so on. This is used to
+         * determine the intervals at which handshakes
+         * must be sent n shit.
+         * @return true:
+         * Successfully updated everything.
+         * @return false:
+         * Welp, I guess something went wrong eh?
+         */
+        bool Update();
+
+        /**
+         * @brief Set the New LCD Message.
+         * The string MUST be 20 or below characters.
+         * You only have access to one line on the
+         * LCD.
+         * @param newMessage
+         * New 20 character message to display on the
+         * arduino screen
+         * @return true:
+         * Message is valid and ready to be sent
+         * in the next handshake.
+         * @return false:
+         * Invalid message bruh
+         */
+        bool SetNewLCDMessage(std::string newMessage);
+
+        /**
+         * @brief 
+         * Tells you how many controllers are currently
+         * responding on the Arduino. To see which
+         * controller specifically, you MUST obtain the
+         * pointer to each and check their member
+         * attributes. Controllers that are not connected
+         * should be reset and players should stop
+         * moving around like headless chickens.
+         * @return int
+         * -1 = ERROR
+         */
+        int AmountOfConnectedPlayers();
+
+        /**
+         * @brief Set the Com Port of the arduino.
+         * Can only be done when the Arduino is
+         * disconnected.
+         * 
+         * @param newComPort
+         * New com port for the Arduino to use
+         * to communicate.
+         * @return true:
+         * Successfully changed the com port.
+         * @return false:
+         * Failed to change the com port.
+         */
+        bool SetComPort(std::string newComPort);
+
+        /**
+         * @brief Set the Baud Rate.
+         * Sets the baud rate of the arduino's serial
+         * port, defining the speed at which the
+         * program will attempt to communicate with
+         * the Arduino. Yes they both need to be the
+         * same. Yes its probably why you're reading
+         * gibberish on your terminal.
+         * @param newBaudRate
+         * new baudrate value that the port should use.
+         * @return true:
+         * Successfully updated the baud rate.
+         * @return false:
+         * Failed to update the baud rate to that value.
+         */
+        bool SetBaudRate(int newBaudRate);
+
+        /**
+         * @brief 
+         * Attempts to connect the serial port to the
+         * specified values set either through methods
+         * or in the constructor when the object was
+         * built.
+         * @attention
+         * ## THIS WILL FREEZE THE APPLICATION AS IT CONNECTS
+         * @return true 
+         * @return false 
+         */
+        bool Connect();
+
+        /**
+         * @brief 
+         * Disconnects the arduino from the serial port
+         * allowing its values to be changed for example.
+         * @return true:
+         * Successfully disconnected the arduino.
+         * @return false:
+         * Failed to disconnect the arduino / arduino
+         * already disconnected.
+         */
+        bool Disconnect();
+};
