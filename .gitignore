@@ -35,6 +35,7 @@ Makefile*
 # Visual Studio Output
 /Application/debug
 *.ipch
+*.db
 
 # Qt unit tests
 target_wrapper.*
