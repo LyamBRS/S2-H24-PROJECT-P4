@@ -140,4 +140,15 @@ class Communication
          * @return false 
          */
         bool GetSerialMessage(std::string &msg);
+
+        /**
+         * @brief 
+         * Returns wether the SerialPort is connected
+         * successfully or not.
+         * @return true:
+         * Is connected
+         * @return false:
+         * Is not connected. 
+         */
+        bool ConnectionStatus();
 };
