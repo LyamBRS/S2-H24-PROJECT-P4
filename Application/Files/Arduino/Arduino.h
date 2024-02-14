@@ -120,6 +120,20 @@
              * will send LCD and BarGraph information to the arduino.
              * The PC is the one to initate the handshake with the
              * arduino.
+             */
+            Arduino();
+
+            /**
+             * @brief Construct a new Arduino object.
+             * Class used to handle an arduino where 2 simple
+             * controllers can connect to. This arduino communicates
+             * with the PC through a "communication" protocol if it
+             * can be called that allowing JSON files to be exchanged
+             * between the two. The arduino will send controller
+             * informations on the serial port to the PC and the PC
+             * will send LCD and BarGraph information to the arduino.
+             * The PC is the one to initate the handshake with the
+             * arduino.
              * @param arduinoComPort
              * Which com port is the arduino supposed to be at.
              * @param arduinoBaudRate

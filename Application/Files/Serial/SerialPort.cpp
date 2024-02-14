@@ -117,6 +117,12 @@ bool SerialPort::writeSerialPort(const char *buffer, unsigned int buf_size)
 // Checking if serial port is connected
 bool SerialPort::isConnected()
 {
+    if (this == nullptr)
+    {
+        std::cerr << "SerialPort reference error" << std::endl;
+        return false;
+    }
+
     if (!ClearCommError(this->handler, &this->errors, &this->status))
     {
         this->connected = false;

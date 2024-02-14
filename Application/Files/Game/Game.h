@@ -171,6 +171,12 @@ class Game
     public:
 
         /**
+         * @brief
+         * # DO NOT USE THIS CONSTRUCTOR OUTSIDE OF CLASS MEMBER DEFINITIONS
+         */
+        Game();
+
+        /**
          * @brief 
          * # Game
          * @brief

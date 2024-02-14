@@ -42,9 +42,9 @@ class Movements
          * X axis as well as the Y axis.
          * Movements corresponds to
          * the distance that needs to be done
-         * in a determined amount of time.
+         * in a determined amount of time
          */
-        Mouvements();
+        Movements();
 
         /**
          * @brief
