@@ -73,6 +73,9 @@
     <ClCompile Include="Files\Application\Application.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\Colour\Colour.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -130,5 +133,8 @@
     </ClInclude>
     <ClInclude Include="Files\Object\Object.hpp" />
     <ClInclude Include="Files\JSON\json.hpp" />
+    <ClInclude Include="Files\Colour\Colour.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

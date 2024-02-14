@@ -83,10 +83,15 @@ bool Communication::SetComPort(std::string newComPort)
  */
 bool Communication::Connect()
 {
+    if(connectCalled)
+    {
+        return false;
+    }
+
     if(serialPort->isConnected()) return false;
 
     serialPort = new SerialPort(comPort.c_str(), baudRate);
-
+    connectCalled = true;
     if(!serialPort->isConnected()) return false;
     return true;
 }
@@ -176,5 +181,9 @@ bool Communication::GetSerialMessage(std::string &msg)
  */
 bool Communication::ConnectionStatus()
 {
+    if(!connectCalled)
+    {
+        return false;
+    }
     return serialPort->isConnected();
 }

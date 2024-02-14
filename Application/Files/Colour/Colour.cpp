@@ -11,11 +11,7 @@
 
 #include <codecvt>
 #include "Colour.h"
-
-#ifdef _WIN32
-    #include "Windows.h"
-#endif
-#include <iostream>
+#include "Windows.h"
 
 std::string ExePath() {
     TCHAR buffer[MAX_PATH] = { 0 };
@@ -34,18 +30,11 @@ std::string ExePath() {
 }
 
 
-void PrintInColour(std::ostream & os, std::string toBePrinted, char colour)
+void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour)
 {
    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
-   if(colour == 'G')
-   {
-      SetConsoleTextAttribute(hConsole, FOREGROUND_GREEN);
-   }
-   else
-   {
-      SetConsoleTextAttribute(hConsole, FOREGROUND_RED);
-   }
-
-   s << toBePrinted;
+   int colour = backgroundColour * 16 + foregroundColour;
+   SetConsoleTextAttribute(hConsole, colour);
+   os << toBePrinted;
    SetConsoleTextAttribute(hConsole, 7);
 }

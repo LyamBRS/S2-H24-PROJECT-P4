@@ -15,11 +15,23 @@
 // - INCLUDES - //
 #include "../Arduino/Arduino.h"
 #include "../Game/Game.h"
+#include "../Colour/Colour.h"
+#include <conio.h>
+#include <chrono>
 
 // - DEFINES - //
 #define APP_MAIN_MENU 0
-#define APP_GAME_MENU 1
-#define APP_TEST_MENU 2
+#define APP_GAME_MENU 3
+#define APP_TEST_MENU 1
+#define APP_EXIT_MENU 4
+#define APP_ARDUINO_MENU 2
+
+#define KB_UP 72
+#define KB_DOWN 80
+#define KB_LEFT 75
+#define KB_RIGHT 77
+#define KB_ESCAPE 27
+#define KB_ENTER 13
 
 // - CLASS - //
 
@@ -40,6 +52,12 @@ class Application
 
         int wantedSelectedMenu = 0;
         int currentSelectedMenu = 0;
+
+        int selection = 0;
+        uint
+
+
+        bool requiresNewDrawing = true;
 
         /**
          * @brief 
@@ -69,6 +87,15 @@ class Application
 
         /**
          * @brief 
+         * Draws the little prompt which asks the user
+         * if they really want to leave the application.
+         * @return true 
+         * @return false 
+         */
+        bool DrawExitMenu();
+
+        /**
+         * @brief 
          * Draw the menu where the user can select which
          * map they want to play to eventually start the
          * game so that they can play it.
@@ -78,6 +105,43 @@ class Application
          * Failed to draw the game menu.
          */
         bool DrawGameMenu();
+
+        /**
+         * @brief 
+         * Draws the menu that allows the user to select
+         * a wanted com port as well as a wanted baud rate
+         * and see if their connection was successful or not.
+         * @return true 
+         * @return false 
+         */
+        bool DrawArduinoSetupMenu();
+
+        /**
+         * @brief 
+         * Handles all the drawing of all the menus
+         * Specifies if they need to be redrawn as well.
+         * @return true 
+         * @return false 
+         */
+        bool HandleMenuDrawings();
+
+        bool MainMenuKeyboardHandler();
+        bool ExitMenuKeyboardHandler();
+        bool GameMenuKeyboardHandler();
+        bool TestMenuKeyboardHandler();
+        bool ArduinoSetupKeyboardHandler();
+
+        /**
+         * @brief 
+         * Simple function which handles the arrow keys
+         * of the user as well as the enter key so that
+         * navigation is possible between menus.
+         * @return true:
+         * Successfully handled a valid key.
+         * @return false:
+         * Invalid key.
+         */
+        bool HandleKeyboardActions();
     public:
 
         /**

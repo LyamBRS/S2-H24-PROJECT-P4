@@ -39,6 +39,8 @@ class Communication
 
         int baudRate = 9600;
         std::string comPort = "0";
+
+        bool connectCalled = false;
     public:
 
         /**

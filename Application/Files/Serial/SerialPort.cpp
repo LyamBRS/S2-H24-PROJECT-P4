@@ -123,6 +123,11 @@ bool SerialPort::isConnected()
         return false;
     }
 
+    if (this == NULL)
+    {
+        return false;
+    }
+
     if (!ClearCommError(this->handler, &this->errors, &this->status))
     {
         this->connected = false;
