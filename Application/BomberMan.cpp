@@ -14,6 +14,11 @@
 
 int main( int argc, char ** argv )
 {
-	QApplication app(argc, argv);
-	return app.exec();
+	//QApplication app(argc, argv);
+	Application application = Application();
+
+	application.TemporaryLoop();
+
+	//return app.exec();
+	return 0;
 }
