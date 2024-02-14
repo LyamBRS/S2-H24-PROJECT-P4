@@ -17,8 +17,168 @@
 #include <iostream>
 // - DEFINES - //
 
-// - CLASS - //
 
+//////////////////////////////////////////////////////// - TILES
+
+/**
+ * @brief
+ * # BinaryTilesAttributes
+ * @brief
+ * Struct which holds potential binary attributes for each tiles.
+ * Tiles are a series of 12 bits which holds data as followed:
+ * "0000 0000 0000" First 4 bits describes the tile's attributes.
+ * second set of 4 bits defines the type of the object currently
+ * on it. Third set of 4 bits gives the ID, or value of something
+ * that is currently on that tile.
+ * @brief
+ * ## BIT VALUES FOR A TILE'S ATTRIBUTES
+ * @brief
+ * - Bit 0: Undestructible or not. 0 = Destructible
+ * @brief
+ * - Bit 1: Can have an object on it
+ * @brief
+ * - Bit 2: Can be exploded by bomb (reached by smoke particles)
+ * @brief
+ * - Bit 3: Is a player's potential spawn
+ */
+struct BinaryTilesAttributes
+{
+    unsigned int CantBeDestroyed = 0b0000000000000001;
+    unsigned int CanHoldObjects  = 0b0000000000000010;
+    unsigned int CanBeExploded   = 0b0000000000000100;
+    unsigned int CanSpawnPlayers = 0b0000000000001000;
+};
+
+/**
+ * @brief
+ * # BinaryTilesHoldings
+ * @brief
+ * Struct which holds the potential values that a tile can
+ * get when it holds a certain type of thing.
+ * Tiles are a series of 12 bits which holds data as followed:
+ * "0000 0000 0000" First 4 bits describes the tile's attributes.
+ * second set of 4 bits defines the type of the object currently
+ * on it. Third set of 4 bits gives the ID, or value of something
+ * that is currently on that tile.
+ * @brief
+ * ## BIT VALUES FOR A TILE'S ATTRIBUTES
+ * @brief
+ * - Bit 4: Has a destructible obstacle on it or not.
+ * @brief
+ * - Bit 5: Has a powerup on it or not.
+ * @brief
+ * - Bit 6: Has a player on it or not.
+ * @brief
+ * - Bit 7: Has a smoke on it or not.
+ */
+struct BinaryTilesHoldings
+{
+    unsigned int HoldsDestructibleObject = 0b0000000000010000;
+    unsigned int HoldsPowerUp            = 0b0000000000100000;
+    unsigned int HoldsPlayer             = 0b0000000001000000;
+    unsigned int HoldsSmoke              = 0b0000000010000000;
+
+    unsigned int HoldsPlayerOnPowerUp           = 0b0000000001100000;
+    unsigned int HoldsPlayerOnSmoke             = 0b0000000011000000;
+    unsigned int HoldsPlayerOnSmokeOnPowerUp    = 0b0000000011100000;
+    unsigned int HoldsSmokeOnBox                = 0b0000000010010000;
+};
+
+/**
+ * @brief
+ * # BinaryTileMasks
+ * @brief
+ * Used to perform masks operations on tiles such as
+ * extract ID, attributes, or whats on it.
+ */
+struct BinaryTileMasks
+{
+    unsigned int OnlyKeepAttributes = 0b0000000000001111;
+    unsigned int OnlyKeepHoldings   = 0b0000000011110000;
+    unsigned int OnlyKeepID         = 0b0000111100000000;
+    unsigned int OnlyKeepRESERVED   = 0b1111000000000000;
+};
+
+/**
+ * @brief
+ * # BinaryTilesID
+ * @brief
+ * Struct which holds the potential values that a specific thing
+ * on a tile can be. This allows a tile to know the ID of the
+ * specific thing that is on it.
+ * Tiles are a series of 12 bits which holds data as followed:
+ * "0000 0000 0000" First 4 bits describes the tile's attributes.
+ * second set of 4 bits defines the type of the object currently
+ * on it. Third set of 4 bits gives the ID, or value of something
+ * that is currently on that tile.
+ * While there can be multiple things on a tile, this is ONLY
+ * true DURING the game and only for 1 frame at best. The game
+ * will handle it so only 1 thing is left on a tile. (object)
+ * @brief
+ * ## BIT VALUES FOR A TILE'S ATTRIBUTES
+ * @brief
+ * Represents a 4 bit numbers leading up to an ID to tell more
+ * precisely, exactly, whats on the tile. Boxes dont have their
+ * own ID numbers because players can be on them. Smoke dont hold
+ * its own ID number because multiple things can be on it, and it
+ * doesnt really need to be saved in the game.
+ * Objects hold their own ID number so that they can be stored in
+ * a @ref Map template.
+ * @brief
+ * ## To resume:
+ * @brief
+ * - If a player is on a tile, the ID of the tile = Player number.
+ * @brief
+ * - If a power up is on a tile, ID = PowerUp ID
+ * @brief
+ * - If a bomb is on a tile, ID = Bomb explosivity
+ * @brief
+ * - If a destructible box is on a tile, ID = health points.
+ */
+struct BinaryTilesID
+{
+    unsigned int EMPTY = 0;
+};
+
+/**
+ * @brief
+ * # BinaryDefaultTiles
+ * @brief
+ * Struct which holds basic default example of some tiles without
+ * specific data on them.
+ * @brief
+ * "0000 0000 0000" First 4 bits describes the tile's attributes.
+ * second set of 4 bits defines the type of the object currently
+ * on it. Third set of 4 bits gives the ID, or value of something
+ * that is currently on that tile.
+ * @brief
+ * - Bit 0: Undestructible Or not. 0 = Destructible
+ * @brief
+ * - Bit 1: Can have an object on it
+ * @brief
+ * - Bit 2: Can be exploded by bomb (reached by smoke particles)
+ * @brief
+ * - Bit 3: Is a player's potential spawn
+ * @brief
+ * - Bit 4: Has a destructible obstacle on it or not.
+ * @brief
+ * - Bit 5: Has a powerup on it or not.
+ * @brief
+ * - Bit 6: Has a player on it or not.
+ * @brief
+ * - Bit 7: Has a smoke on it or not.
+ * @brief
+ * - Bit 8 to 11: Value associated with the thing on the tile based on bits 4 to 7. 
+ */
+struct BinaryDefaultTiles
+{
+    unsigned int DefaultEmptySpace                         = 0b0000000000000110; // 0x600
+    unsigned int DefaultEmptySpaceWithPotentialPlayerSpawn = 0b0000000000001110;
+    unsigned int DefaultTileWithBoxOnIt                    = 0b0000000000010110;
+    unsigned int IndestructibleWall                        = 0b0000000000000001;
+};
+
+//////////////////////////////////////////////////////// - MAP
 /**
  * @brief 
  * The map class allows a game to handle a 2
