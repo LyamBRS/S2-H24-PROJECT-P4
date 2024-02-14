@@ -88,7 +88,7 @@ bool Arduino::ParseReceivedMessage()
     if(!jsonToParse[CA_ACCELEROMETER_X_A].is_null())    controllers[0]->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_A].template get<int>(); else controllers[0]->accelerometerX = -1;
     if(!jsonToParse[CA_ACCELEROMETER_Y_A].is_null())    controllers[0]->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_A].template get<int>(); else controllers[0]->accelerometerY = -1;
     if(!jsonToParse[CA_ACCELEROMETER_Z_A].is_null())    controllers[0]->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_A].template get<int>(); else controllers[0]->accelerometerZ = -1;
-
+    
     if(!jsonToParse[CA_ACCELEROMETER_X_B].is_null())    controllers[1]->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_B].template get<int>(); else controllers[1]->accelerometerX = -1;
     if(!jsonToParse[CA_ACCELEROMETER_Y_B].is_null())    controllers[1]->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_B].template get<int>(); else controllers[1]->accelerometerY = -1;
     if(!jsonToParse[CA_ACCELEROMETER_Z_B].is_null())    controllers[1]->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_B].template get<int>(); else controllers[1]->accelerometerZ = -1;
@@ -97,7 +97,7 @@ bool Arduino::ParseReceivedMessage()
     if(!jsonToParse[CA_JOYSTICK_X_A].is_null())         controllers[0]->joystickX = jsonToParse[CA_JOYSTICK_X_A].template get<int>(); else controllers[0]->joystickX = -1;
     if(!jsonToParse[CA_JOYSTICK_Y_A].is_null())         controllers[0]->joystickY = jsonToParse[CA_JOYSTICK_Y_A].template get<int>(); else controllers[0]->joystickY = -1;
     if(!jsonToParse[CA_JOYSTICK_BUTTON_A].is_null())    controllers[0]->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_A].template get<int>(); else controllers[0]->joystickButton = -1;
-
+    
     if(!jsonToParse[CA_JOYSTICK_X_B].is_null())         controllers[1]->joystickX = jsonToParse[CA_JOYSTICK_X_B].template get<int>(); else controllers[1]->joystickX = -1;
     if(!jsonToParse[CA_JOYSTICK_Y_B].is_null())         controllers[1]->joystickY = jsonToParse[CA_JOYSTICK_Y_B].template get<int>(); else controllers[1]->joystickY = -1;
     if(!jsonToParse[CA_JOYSTICK_BUTTON_B].is_null())    controllers[1]->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_B].template get<bool>(); else controllers[1]->joystickButton = false;
@@ -107,7 +107,7 @@ bool Arduino::ParseReceivedMessage()
     if(!jsonToParse[CA_TOP_BUTTON_A].is_null())         controllers[0]->topButton = jsonToParse[CA_TOP_BUTTON_A].template get<bool>(); else controllers[0]->topButton = false;
     if(!jsonToParse[CA_RIGHT_BUTTON_A].is_null())       controllers[0]->rightButton = jsonToParse[CA_RIGHT_BUTTON_A].template get<bool>(); else controllers[0]->rightButton = false;
     if(!jsonToParse[CA_LEFT_BUTTON_A].is_null())        controllers[0]->leftButton = jsonToParse[CA_LEFT_BUTTON_A].template get<bool>(); else controllers[0]->leftButton = false;
-
+    
     if(!jsonToParse[CA_BOTTOM_BUTTON_B].is_null())      controllers[1]->bottomButton = jsonToParse[CA_BOTTOM_BUTTON_B].template get<bool>(); else controllers[1]->bottomButton = false;
     if(!jsonToParse[CA_TOP_BUTTON_B].is_null())         controllers[1]->topButton = jsonToParse[CA_TOP_BUTTON_B].template get<bool>(); else controllers[1]->topButton = false;
     if(!jsonToParse[CA_RIGHT_BUTTON_B].is_null())       controllers[1]->rightButton = jsonToParse[CA_RIGHT_BUTTON_B].template get<bool>(); else controllers[1]->rightButton = false;
@@ -146,8 +146,11 @@ Arduino::Arduino(std::string arduinoComPort, int arduinoBaudRate)
     serialHandler.SetBaudRate(arduinoBaudRate);
     serialHandler.SetComPort(arduinoComPort);
 
-    controllers[0] = new Controller();
-    controllers[1] = new Controller();
+    Controller controllerA = Controller();
+    Controller controllerB = Controller();
+
+    controllers.push_back(&controllerA);
+    controllers.push_back(&controllerB);
 }
 
 /**

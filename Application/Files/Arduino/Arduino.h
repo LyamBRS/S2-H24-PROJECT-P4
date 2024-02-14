@@ -17,6 +17,7 @@
 #include "../Controller/Controller.h"
 #include "../Communication/Communication.h"
 #include "../JSON/json.hpp"
+
 // - DEFINES - //
 #define ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST 50
 #define UPDATES_BETWEEN_HANDSHAKES 100

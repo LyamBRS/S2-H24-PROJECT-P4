@@ -150,5 +150,5 @@ class Controller
          * IS NO LONGER SEEN ONLINE OR IF THE
          * COMMUNICATION WITH THE ARDUINO IS LOST.
          */
-        Reset();
+        bool Reset();
 };
