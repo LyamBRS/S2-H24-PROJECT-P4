@@ -210,5 +210,12 @@ bool Communication::ConnectionStatus()
     {
         return false;
     }
+
+    if(connectCalled && !serialPort->isConnected())
+    {
+        connectCalled = false;
+        return false;
+    }
+
     return serialPort->isConnected();
 }
