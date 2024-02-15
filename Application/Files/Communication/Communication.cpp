@@ -21,7 +21,7 @@
  */
 Communication::Communication()
 {
-
+    serialPort = new SerialPort(comPort.c_str(), baudRate);
 }
 
 /**
