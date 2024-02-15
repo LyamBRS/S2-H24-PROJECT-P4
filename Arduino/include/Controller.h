@@ -41,6 +41,8 @@ class Controller
         Joystick joystick;
         BarGraph barGraph;
 
+        bool isConnected = false;
+
     public:
 
         /**
@@ -204,6 +206,17 @@ class Controller
          * the specified bits.
          */
         bool SetGraphDisplay(int bits);
+
+        /**
+         * @brief
+         * Returns if the card is connected or
+         * not.
+         * @return true:
+         * The card is currently connected.
+         * @return false:
+         * The card is not currently connected.
+         */
+        bool GetDetection();
 
         /**
          * @brief 

@@ -32,6 +32,15 @@ Makefile*
 *.qm
 *.prl
 
+# Visual Studio Output
+/Application/debug
+*.ipch
+*.db
+*.db-shm
+*.db-wal
+*.opendb
+*.suo
+
 # Qt unit tests
 target_wrapper.*
 
