@@ -118,8 +118,7 @@ struct BinaryTileMasks
  * ## BIT VALUES FOR A TILE'S ATTRIBUTES
  * @brief
  * Represents a 4 bit numbers leading up to an ID to tell more
- * precisely, exactly, whats on the tile. Boxes dont have their
- * own ID numbers because players can be on them. Smoke dont hold
+ * precisely, exactly, whats on the tile. Smoke dont hold
  * its own ID number because multiple things can be on it, and it
  * doesnt really need to be saved in the game.
  * Objects hold their own ID number so that they can be stored in
