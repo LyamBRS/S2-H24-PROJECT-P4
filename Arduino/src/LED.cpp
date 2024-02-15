@@ -50,13 +50,13 @@ bool LED::GetState(){
 bool LED::Update()
 {
     int resultat = digitalRead(arduinoPin);
-    if (resultat == HIGH)
+    if (GetState() == true)
     {
-        TurnOn();
+        resultat = HIGH;
     }
     else
     {
-        TurnOff();
+        resultat = LOW;
     }
     return true;
 }
