@@ -67,6 +67,8 @@ SerialPort::~SerialPort()
     // which happens btw, you'll throw an exception up cuz your own
     // disconnect function doesn't put it back to false!
     // Lmfao. I guess teachers didn't do much unit test eh?
+    // Anyways, I replaced that by your own isConnected function, which
+    // fixed that issue.
     if (this->isConnected())
     {
         this->connected = false;
