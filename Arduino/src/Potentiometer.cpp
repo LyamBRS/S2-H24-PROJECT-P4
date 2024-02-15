@@ -21,12 +21,13 @@ bool Potentiometer::SetDeadZones(int newDeadZoneMin, int newDeadzoneMax){
     }
 }
 
-int Potentiometer::GetPourcent(){
+float Potentiometer::GetPourcent(){
     return analogInput->GetPourcent();
 }
 
 bool Potentiometer::Update(){
-    //rawInputValue = analogInput.UpdateRawValue();
+     analogInput->UpdateRawValue();
+    return true;
 }
 
 

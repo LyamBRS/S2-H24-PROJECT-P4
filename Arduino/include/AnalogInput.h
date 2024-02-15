@@ -127,5 +127,5 @@ class AnalogInput
          * @return int
          * Value from 0 to 100.
          */
-        int GetPourcent();
+        float GetPourcent();
 };
