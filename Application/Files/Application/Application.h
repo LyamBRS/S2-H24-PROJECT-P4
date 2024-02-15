@@ -54,20 +54,6 @@
 class Application
 {
     private:
-        Arduino arduino;
-        Game currentGame;
-
-        SimpleTimer frameTimer = SimpleTimer(10);
-
-        int wantedSelectedMenu = 1;
-        int currentSelectedMenu = 0;
-
-        int selection = 0;
-
-        int oldAmountOfComPorts = 0;
-
-        bool requiresNewDrawing = true;
-
         /**
          * @brief 
          * Draws a simple main menu where the user can
@@ -225,6 +211,20 @@ class Application
          */
         bool HandleKeyboardActions();
     public:
+
+        Arduino arduino;
+        Game currentGame;
+
+        SimpleTimer frameTimer = SimpleTimer(10);
+
+        int wantedSelectedMenu = 1;
+        int currentSelectedMenu = 0;
+
+        int selection = 0;
+
+        int oldAmountOfComPorts = 0;
+
+        bool requiresNewDrawing = true;
 
         /**
          * @brief
