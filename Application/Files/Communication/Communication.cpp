@@ -69,6 +69,30 @@ bool Communication::SetComPort(std::string newComPort)
 }
 
 /**
+ * @brief
+ * Returns the baud rate currently configured in the
+ * Communication handler. See @ref SetBaudRate for
+ * more detailed information about baudrates.
+ * @return int 
+ */
+int Communication::GetBaudRate()
+{
+    return baudRate;
+}
+
+/**
+ * @brief
+ * Returns the com port that is currently configured
+ * in the Communication handler. See @ref SetComPort
+ * for more detailed information about Com ports.
+ * @return std::string 
+ */
+std::string Communication::GetComPort()
+{
+    return comPort;
+}
+
+/**
  * @brief 
  * Attempts to use the specified COM
  * port and the specified baud rate
@@ -113,6 +137,7 @@ bool Communication::Disconnect()
     if(!serialPort->isConnected()) return false;
     serialPort->closeSerial();
     serialPort->~SerialPort();
+    connectCalled = false;
     return true;
 }
 

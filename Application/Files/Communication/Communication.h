@@ -71,6 +71,24 @@ class Communication
 
         /**
          * @brief
+         * Returns the baud rate currently configured in the
+         * Communication handler. See @ref SetBaudRate for
+         * more detailed information about baudrates.
+         * @return int 
+         */
+        int GetBaudRate();
+
+        /**
+         * @brief
+         * Returns the com port that is currently configured
+         * in the Communication handler. See @ref SetComPort
+         * for more detailed information about Com ports.
+         * @return std::string 
+         */
+        std::string GetComPort();
+
+        /**
+         * @brief
          * Sets a new COM port to be used by
          * this serial port. The serial port
          * must be closed before you can

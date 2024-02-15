@@ -20,7 +20,7 @@
 
 // - DEFINES - //
 #define ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST 50
-#define UPDATES_BETWEEN_HANDSHAKES 100
+#define UPDATES_BETWEEN_HANDSHAKES 5
 
 // - JSON ATTRIBUTES - (CA = Communication Attributes)
 #define CA_JOYSTICK_X_A "JXA"
@@ -57,6 +57,37 @@
 #define CA_LCD_MESSAGE      "LM"
 
 // - CLASS - //
+
+    enum ArduinoBaudRates
+{
+    _300    = 300,
+    _600    = 600,
+    _1200   = 1200,
+    _2400   = 2400,
+    _4800   = 4800,
+    _9600   = 9600,
+    _14400  = 14400,
+    _19200  = 19200,
+    _28800  = 28800,
+    _31250  = 31250,
+    _38400  = 38400,
+    _57600  = 57600,
+    _115200 = 115200,
+};
+
+/**
+ * @brief
+ * # VerifyBaudRate
+ * @brief 
+ * Returns true or false depending on the
+ * validity of the input baud rate. The
+ * baud rate must be within
+ * @ref ArduinoBaudRates to be valid.
+ * @param baudRateToverify 
+ * @return true 
+ * @return false 
+ */
+bool VerifyBaudRate(unsigned int baudRateToverify);
 
     /**
      * @brief 
@@ -248,6 +279,34 @@
              * Failed to update the baud rate to that value.
              */
             bool SetBaudRate(int newBaudRate);
+
+            /**
+             * @brief
+             * Returns the current com port that
+             * has been selected for the communication.
+             * @return std::string 
+             */
+            std::string GetComPort();
+
+            /**
+             * @brief
+             * Only tells you if the serial port is connected
+             * on the PC side of things. Use @ref Verify to
+             * ensure that it is truly working as intended.
+             * @return true:
+             * SerialPort is connected.
+             * @return false:
+             * SerialPort is not connected.
+             */
+            bool GetPortState();
+
+            /**
+             * @brief
+             * Returns the current baud rate that the
+             * arduino is configured at.
+             * @return int 
+             */
+            int GetBaudRate();
 
             /**
              * @brief 

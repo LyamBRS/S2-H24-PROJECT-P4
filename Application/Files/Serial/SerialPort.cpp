@@ -61,7 +61,13 @@ SerialPort::SerialPort(const char *portName, int BAUD)
 
 SerialPort::~SerialPort()
 {
-    if (this->connected)
+    // Dear whoever tf made this class, (Manash Kumar Mandal)
+    // You cant just check if your OWN member @ref connected is true...
+    // If you forget to put it as false before destroying your object
+    // which happens btw, you'll throw an exception up cuz your own
+    // disconnect function doesn't put it back to false!
+    // Lmfao. I guess teachers didn't do much unit test eh?
+    if (this->isConnected())
     {
         this->connected = false;
         CloseHandle(this->handler);
@@ -138,5 +144,20 @@ bool SerialPort::isConnected()
 
 void SerialPort::closeSerial()
 {
+    if (this == nullptr)
+    {
+        return;
+    }
+
+    if (this->handler == nullptr)
+    {
+        return;
+    }
+
+    if (this->handler == NULL)
+    {
+        return;
+    }
+
     CloseHandle(this->handler);
 }

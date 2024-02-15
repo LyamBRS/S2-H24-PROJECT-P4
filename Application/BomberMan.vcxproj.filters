@@ -76,6 +76,12 @@
     <ClCompile Include="Files\Colour\Colour.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\SimpleTimer\SimpleTimer.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Serial\PortDetector.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -134,6 +140,12 @@
     <ClInclude Include="Files\Object\Object.hpp" />
     <ClInclude Include="Files\JSON\json.hpp" />
     <ClInclude Include="Files\Colour\Colour.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\SimpleTimer\SimpleTimer.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Serial\PortDetector.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

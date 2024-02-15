@@ -14,6 +14,40 @@
 #include "../Arduino/Arduino.h"
 
 /**
+ * @brief
+ * # VerifyBaudRate
+ * @brief 
+ * Returns true or false depending on the
+ * validity of the input baud rate. The
+ * baud rate must be within
+ * @ref ArduinoBaudRates to be valid.
+ * @param baudRateToverify 
+ * @return true 
+ * @return false 
+ */
+bool VerifyBaudRate(unsigned int baudRateToverify)
+{
+    switch(baudRateToverify)
+    {
+        case(ArduinoBaudRates::_115200):
+        case(ArduinoBaudRates::_57600):
+        case(ArduinoBaudRates::_38400):
+        case(ArduinoBaudRates::_31250):
+        case(ArduinoBaudRates::_28800):
+        case(ArduinoBaudRates::_14400):
+        case(ArduinoBaudRates::_19200):
+        case(ArduinoBaudRates::_9600):
+        case(ArduinoBaudRates::_4800):
+        case(ArduinoBaudRates::_2400):
+        case(ArduinoBaudRates::_1200):
+        case(ArduinoBaudRates::_600):
+        case(ArduinoBaudRates::_300):
+            return true;
+    }
+    return false;
+}
+
+/**
  * @brief 
  * Generates a JSON text file to send on the Arduino's
  * serial port. The JSON file is generated based on
@@ -28,6 +62,7 @@ bool Arduino::GenerateAndSendMessage()
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to send a message while connection is not established" << std::endl;
+        Disconnect();
         return false;
     }
 
@@ -40,6 +75,7 @@ bool Arduino::GenerateAndSendMessage()
     if(!serialHandler.SendToSerial(jsonToSend))
     {
         std::cerr << "Failure while trying to send JSON to the serial port." << std::endl;
+        Disconnect();
         return false;
     }
     return true;
@@ -61,6 +97,7 @@ bool Arduino::ParseReceivedMessage()
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to parse a message while connection is not established" << std::endl;
+        Disconnect();
         return false;
     }
 
@@ -80,9 +117,19 @@ bool Arduino::ParseReceivedMessage()
         return false;
     }
 
-    jsonToParse = nlohmann::json::parse(receivedMessage);
+    jsonToParse = nlohmann::json::parse(receivedMessage, nullptr, false);
+    if(jsonToParse.is_discarded())
+    {
+        return false;
+    }
+
 
     // - PARSING - // (Yes I know, I shouldve made a function for that + I shouldve made enums to for loop and parse everything in one go. Bowomp.)
+
+    if(!jsonToParse.is_array() && !jsonToParse.is_structured())
+    {
+        return false;
+    }
 
     // - ACCELEROMETER - //
     if(!jsonToParse[CA_ACCELEROMETER_X_A].is_null())    controllers[0]->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_A].template get<int>(); else controllers[0]->accelerometerX = -1;
@@ -217,6 +264,21 @@ Controller* Arduino::GetPlayerController(int playerIndex)
 }
 
 /**
+ * @brief
+ * Only tells you if the serial port is connected
+ * on the PC side of things. Use @ref Verify to
+ * ensure that it is truly working as intended.
+ * @return true:
+ * SerialPort is connected.
+ * @return false:
+ * SerialPort is not connected.
+ */
+bool Arduino::GetPortState()
+{
+    return serialHandler.ConnectionStatus();
+}
+
+/**
  * @brief 
  * Update function of the Arduino object.
  * This handles the handshakes, communications,
@@ -334,6 +396,28 @@ bool Arduino::SetComPort(std::string newComPort)
 bool Arduino::SetBaudRate(int newBaudRate)
 {
     return serialHandler.SetBaudRate(newBaudRate);
+}
+
+/**
+ * @brief
+ * Returns the current com port that
+ * has been selected for the communication.
+ * @return std::string 
+ */
+std::string Arduino::GetComPort()
+{
+    return serialHandler.GetComPort();
+}
+
+/**
+ * @brief
+ * Returns the current baud rate that the
+ * arduino is configured at.
+ * @return int 
+ */
+int Arduino::GetBaudRate()
+{
+    return serialHandler.GetBaudRate();
 }
 
 /**

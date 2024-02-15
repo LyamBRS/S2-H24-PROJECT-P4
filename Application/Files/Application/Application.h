@@ -16,15 +16,22 @@
 #include "../Arduino/Arduino.h"
 #include "../Game/Game.h"
 #include "../Colour/Colour.h"
+#include "../SimpleTimer/SimpleTimer.h"
+#include "../Serial/PortDetector.h"
 #include <conio.h>
-#include <chrono>
+#include <vector>
 
 // - DEFINES - //
 #define APP_MAIN_MENU 0
 #define APP_GAME_MENU 3
 #define APP_TEST_MENU 1
 #define APP_EXIT_MENU 4
+
 #define APP_ARDUINO_MENU 2
+#define APP_BAUD_RATE_MENU 5
+#define APP_COM_PORT_MENU 6
+#define APP_CONNECTING_MENU 7
+#define APP_DISCONNECTING_MENU 8
 
 #define KB_UP 72
 #define KB_DOWN 80
@@ -50,12 +57,14 @@ class Application
         Arduino arduino;
         Game currentGame;
 
-        int wantedSelectedMenu = 0;
+        SimpleTimer frameTimer = SimpleTimer(10);
+
+        int wantedSelectedMenu = 1;
         int currentSelectedMenu = 0;
 
         int selection = 0;
-        uint
 
+        int oldAmountOfComPorts = 0;
 
         bool requiresNewDrawing = true;
 
@@ -115,6 +124,10 @@ class Application
          * @return false 
          */
         bool DrawArduinoSetupMenu();
+        bool DrawArduinoBaudRateMenu();
+        bool DrawArduinoComPortMenu();
+        bool DrawArduinoConnectingMenu();
+        bool DrawArduinoDisconnectingMenu();
 
         /**
          * @brief 
@@ -125,11 +138,80 @@ class Application
          */
         bool HandleMenuDrawings();
 
+        /**
+         * @brief 
+         * Handles the keyboard's keys when the current
+         * menu is the main menu, allowing the selected
+         * wanted menu to move up and down on the screen
+         * and a selection to be selected through the
+         * enter key.
+         * @return true:
+         * Handled a key 
+         * @return false:
+         * Wrong key / No keys?
+         */
         bool MainMenuKeyboardHandler();
+
+        /**
+         * @brief 
+         * Handles the keyboard's keys when the current
+         * menu is the exit application menu, allowing
+         * the user to answer a simple yes or no question
+         * prompting him if he wants to leave the app or
+         * not. Pressing enter while selecting the yes
+         * option will make the application exit.
+         * @return true:
+         * Handled a key 
+         * @return false:
+         * Wrong key / No keys?
+         */
         bool ExitMenuKeyboardHandler();
+
+        /**
+         * @brief 
+         * Handles the keyboard's keys when the current
+         * menu is the pre-game menu, allowing the user
+         * to navigate and select a map that they want
+         * to play.
+         * @return true:
+         * Handled a key 
+         * @return false:
+         * Wrong key / No keys?
+         */
         bool GameMenuKeyboardHandler();
+
+        /**
+         * @brief 
+         * Handles the keyboard's keys when the current
+         * menu is the test menu, allowing the user to
+         * test specific components of the application
+         * through the terminal.
+         * @return true:
+         * Handled a key 
+         * @return false:
+         * Wrong key / No keys?
+         */
         bool TestMenuKeyboardHandler();
+
+        /**
+         * @brief 
+         * Handles the keyboard's keys when the current
+         * menu is the arduino setup menu, allowing the
+         * user to select a communication port, select
+         * a BAUD rate and try to connect to an arduino.
+         * Also displays the result of that communication
+         * attempt and if data is received or not.
+         * @return true:
+         * Handled a key 
+         * @return false:
+         * Wrong key / No keys?
+         */
         bool ArduinoSetupKeyboardHandler();
+
+        bool ArduinoBaudRateKeyboardHandler();
+        bool ArduinoComPortKeyboardHandler();
+        bool ArduinoConnectingKeyboardHandler();
+        bool ArduinoDisconnectingKeyboardHandler();
 
         /**
          * @brief 
