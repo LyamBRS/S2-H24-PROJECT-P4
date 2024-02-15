@@ -206,12 +206,13 @@ struct BinaryDefaultTiles
  * dimmensionnal map. The map consists of a
  * 2 dimmensionnal array filled with numbers.
  * The numbers correspond to what is there on
- * the map. There CANNOT be multiple things at
- * the same place at the same time.
+ * the map. 
  * The Map renders these when @ref Draw is called.
  * It is also worth mentionning that for each
  * slot in the map, 3 ASCII characters are drawn
  * to represent it.
+ * The goal of this class is to draw a map in the terminal
+ * or the QT application.
  */
 class Map
 {
@@ -305,36 +306,30 @@ class Map
          * is currently in the object. Use this
          * in the constructor if needed.
          * @ref Map.h
-         * @param filePath
-         * System path pointing to the file that
-         * needs to be loaded as a map.
+         * @param mapAsJSON
+         * A JSON object which holds the map's attributes
+         * See the top of @ref Map.h for the standard map
+         * structure.
          * @return true:
          * Successfully loaded the map.
          * @return false:
          * Failed to load the map.
          */
-        bool LoadMap(std::wstring filePath);
+        bool LoadMap(nlohmann::json mapAsJSON);
 
         /**
          * @brief 
-         * Saves the current map loaded in this object
-         * in a JSON file somewhere on the user system.
-         * This also converts the array into a string.
+         * Returns the current map as a JSON object
+         * so that it can be saved at a specified
+         * location later or whatever.
          * @attention
          * KEEP THIS FUNCTION FOR NOW, WE'LL SEE LATER
          * IF WE HAVE TIME TO DO SHIT WITH THIS.
          * FOR NOW, JUST DONT BOTHER.
-         * @param filePath
-         * System path pointing to the file that
-         * needs to be overwritten or created
-         * @return true:
-         * Successfully saved the map at the specified
-         * emplacement.
-         * @return false:
-         * An error occured and the map could not
-         * be saved at the specified place. 
+         * @return nlohmann::json
+         * JSON object of the map.
          */
-        bool SaveCurrentMap(std::wstring filePath);
+        nlohmann::json* GetCurrentMap();
 
         /**
          * @brief
