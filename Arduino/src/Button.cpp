@@ -15,6 +15,7 @@
 Button::Button(int pin)
 {
     arduinoPin = pin;
+    pinMode(arduinoPin, INPUT);
 }
 
 Button::Button(int pin, bool isInverted, int debounceDelayMS)
@@ -34,13 +35,9 @@ bool Button::GetState()
 
 bool Button::Update()
 {
-    if (GetState()==true)
-    {
-        return true;
-    }
-    return false;
+    state = digitalRead(arduinoPin);
+    return true;
 }
-
 void Button::SetState()
 {
     int res = digitalRead(arduinoPin);
