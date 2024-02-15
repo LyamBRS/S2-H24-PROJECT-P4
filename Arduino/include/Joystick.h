@@ -90,7 +90,7 @@ class Joystick
          * @return int
          * Value ranging from 0 to 100.
          */
-        int GetPourcentX();
+        float GetPourcentX();
 
         /**
          * @brief
@@ -100,7 +100,7 @@ class Joystick
          * @return int
          * Value ranging from 0 to 100.
          */
-        int GetPourcentY();
+        float GetPourcentY();
 
         /**
          * @brief

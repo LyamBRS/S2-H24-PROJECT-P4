@@ -39,7 +39,7 @@ AnalogInput::AnalogInput(int pin, int min, int max)
 bool AnalogInput::UpdateRawValue()
 {
     rawInputValue=analogRead(arduinoPin);
-    if (rawInputValue==NULL)
+    if (rawInputValue>maximumValue||rawInputValue<minimumValue)
     {
         return false;
     }
@@ -65,13 +65,12 @@ bool AnalogInput::SetMin(int newMin)
 }
 
 
-int AnalogInput::GetPourcent()
+float AnalogInput::GetPourcent()
 {
-    if (rawInputValue<minimumValue)
-    {return 0;}
-    if (rawInputValue>maximumValue)
-    {return 100;}
-    int Valeur_Pourcent=((rawInputValue-minimumValue)*100/(maximumValue-(minimumValue)));
-    return Valeur_Pourcent;
+    float Valeur_Pourcent=(((rawInputValue)-minimumValue)/maximumValue-minimumValue);
+    return Valeur_Pourcent*100;
+    if (Valeur_Pourcent<minimumValue)
+    {return 0.0;}
+    if (Valeur_Pourcent>maximumValue)
+    {return 100.0;}
 }
-
