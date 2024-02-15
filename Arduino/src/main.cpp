@@ -12,13 +12,60 @@
 
 // - INCLUDES -//
 #include <Arduino.h>
+#include "Button.h"
+#include "Accelerometer.h"
+#include "AnalogInput.h"
 
 /// @brief Arduino's initialisation function.
 void setup()
 {
+    Serial.begin(115200);
 }
+//     Button bouton1(24);
+//     Button bouton2(22);
+//     Button bouton3(28);
+//     Button bouton4(26);
+Accelerometer* accel(A0, A1, A2);
+
 
 /// @brief Arduino's while(1) function.
 void loop()
 {
+      //Serial.println("allo");
+
+//     bouton1.Update();
+//     bouton2.Update();
+//     bouton3.Update();
+//     bouton4.Update();
+
+//     if (bouton1.GetState() == false)
+//     {
+//         Serial.println("1");
+//     }
+
+//     if (bouton2.GetState() == false)
+//     {
+//         Serial.println("2");
+//     }
+
+//     if (bouton3.GetState() == false)
+//     {
+//         Serial.println("3");
+//     }
+
+//     if (bouton4.GetState() == false)
+//     {
+//         Serial.println("4");
+//     }
+
+accel->Update();
+Serial.println("Pourcentage en x :");
+Serial.println(accel->GetPourcentX());
+Serial.println();
+Serial.println("Pourcentage en y :");
+Serial.println(accel->GetPourcentY());
+Serial.println();
+Serial.println("Pourcentage en z :");
+Serial.println(accel->GetPourcentZ());
+delay(500);
 }
