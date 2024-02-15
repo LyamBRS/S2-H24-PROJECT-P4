@@ -60,12 +60,12 @@ void loop()
 
 accel->Update();
 Serial.println("Pourcentage en x :");
-Serial.println(accel->GetPourcentX());
+Serial.println(analogRead(A2));
 Serial.println();
 Serial.println("Pourcentage en y :");
-Serial.println(accel->GetPourcentY());
+Serial.println(analogRead(A1));
 Serial.println();
 Serial.println("Pourcentage en z :");
-Serial.println(accel->GetPourcentZ());
+Serial.println(analogRead(A0));
 delay(500);
 }

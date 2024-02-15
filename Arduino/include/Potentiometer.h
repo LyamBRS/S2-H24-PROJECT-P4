@@ -120,7 +120,7 @@ class Potentiometer
          * update its read values.
          * @return int 
          */
-        int GetPourcent();
+        float GetPourcent();
 
         /**
          * @brief
