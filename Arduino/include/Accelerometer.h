@@ -105,7 +105,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        int GetPourcentX();
+        float GetPourcentX();
 
         /**
          * @brief
@@ -115,7 +115,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        int GetPourcentY();
+        float GetPourcentY();
 
         /**
          * @brief
@@ -125,7 +125,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        int GetPourcentZ();
+        float GetPourcentZ();
 
         /**
          * @brief 

@@ -35,7 +35,7 @@ class AnalogInput
         /// @brief The pin number where the analog data will be read. -1 by default.
         int arduinoPin = -1;
         /// @brief The last raw input that was gathered when @ref UpdateRawValue was called.
-        int rawInputValue = 0;
+        float rawInputValue = 0;
         /// @brief The absolute lowest that the input value can reach. Anything below will be seen as 0.
         int minimumValue = 0;
         /// @brief The absolute maximum that the input value can reach. Anything above will be seen as 100. Defaults to 1023.

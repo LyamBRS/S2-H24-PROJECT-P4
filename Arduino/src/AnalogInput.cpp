@@ -49,7 +49,7 @@ bool AnalogInput::UpdateRawValue()
 
 bool AnalogInput::SetMax(int newMax)
 {
-    if (maximumValue<newMax || newMax<minimumValue)
+    if (1023<newMax || 0<minimumValue)
     {return false;}
     maximumValue=newMax;
     return true;
@@ -58,19 +58,21 @@ bool AnalogInput::SetMax(int newMax)
  
 bool AnalogInput::SetMin(int newMin)
 {
-  if (minimumValue>newMin||newMin>maximumValue)
+  if (0>newMin||newMin>1023)
     {return false;}
-    maximumValue=newMin;
+    minimumValue=newMin;
     return true;
 }
 
 
 float AnalogInput::GetPourcent()
 {
-    float Valeur_Pourcent=(((rawInputValue)-minimumValue)/maximumValue-minimumValue);
-    return Valeur_Pourcent*100;
+    float plage=maximumValue-minimumValue;
+    float Valeur_Pourcent=((rawInputValue-minimumValue)/(plage))*100;
     if (Valeur_Pourcent<minimumValue)
     {return 0.0;}
     if (Valeur_Pourcent>maximumValue)
     {return 100.0;}
+    return Valeur_Pourcent;
 }
+
