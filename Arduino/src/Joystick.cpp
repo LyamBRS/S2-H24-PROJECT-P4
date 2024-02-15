@@ -31,20 +31,19 @@ bool Joystick::SetY(int newMaxY, int newMinY)
     return true;
 }
 
-int Joystick::GetPourcentX()
+float Joystick::GetPourcentX()
 {
     return xAxis->GetPourcent();
 }
 
-int Joystick::GetPourcentY()
+float Joystick::GetPourcentY()
 {
     return yAxis->GetPourcent();
 }
 
 bool Joystick::GetButtonState()
 {
-    button->GetState();
-    return true;
+    return button->GetState();
 }
 
 bool Joystick::Update()
@@ -54,3 +53,4 @@ bool Joystick::Update()
     button->Update();
     return true;
 }
+
