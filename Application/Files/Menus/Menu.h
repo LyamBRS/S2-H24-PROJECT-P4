@@ -14,6 +14,7 @@
 // - INCLUDES - //
 #include "../Colour/Colour.h"
 #include "../Application/AppHandler.h"
+#include "../Colour/Colour.h"
 #include <iostream>
 
 // - DEFINES - //
@@ -29,6 +30,7 @@
 #define KB_RIGHT 77
 #define KB_ESCAPE 27
 #define KB_ENTER 13
+#define KB_ESCAPE 27
 
 // - CLASS - //
 // class Application;

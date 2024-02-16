@@ -14,6 +14,7 @@
 #include "../Application/AppHandler.h"
 #include "Menu.h"
 #include "../Serial/PortDetector.h"
+#include "../Colour/Colour.h"
 
 // - DEFINES - //
 #define APP_MAIN_MENU 0

@@ -562,6 +562,11 @@ bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
                 if(selection>4) selection=0;
                 return true;
 
+        case KB_ESCAPE:
+                appRef->currentSelectedMenu = APP_MAIN_MENU;
+                selection = 0;
+                return true;
+
         case KB_ENTER:
                 if(selection==4) appRef->currentSelectedMenu = APP_MAIN_MENU;
                 if(selection==0) selectedSubMenu = APP_BAUD_RATE_MENU;
@@ -586,6 +591,11 @@ bool ArduinoMenu::HandleKeyboardBaudrateMenu(int keyBoardKey)
         case KB_DOWN:
                 selection++;
                 if(selection>12) selection=0;
+                return true;
+
+        case KB_ESCAPE:
+                selectedSubMenu = APP_MAIN_MENU;
+                selection = 0;
                 return true;
 
         case KB_ENTER:
@@ -631,6 +641,11 @@ bool ArduinoMenu::HandleKeyboardComPortMenu(int keyBoardKey)
                 if(selection>AmountOfAvailablePorts) selection=0;
                 return true;
 
+        case KB_ESCAPE:
+                selectedSubMenu = APP_MAIN_MENU;
+                selection = 0;
+                return true;
+
         case KB_ENTER:
                 if(selection==AmountOfAvailablePorts)
                 {
@@ -671,6 +686,11 @@ bool ArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
         case KB_RIGHT:
                 selection++;
                 if(selection>1) selection=1;
+                return true;
+
+        case KB_ESCAPE:
+                selectedSubMenu = APP_MAIN_MENU;
+                selection = 0;
                 return true;
 
         case KB_ENTER:
@@ -726,6 +746,11 @@ bool ArduinoMenu::HandleKeyboardDisconnectMenu(int keyBoardKey)
                 if(selection>1) selection=1;
                 return true;
 
+        case KB_ESCAPE:
+                selectedSubMenu = APP_MAIN_MENU;
+                selection = 0;
+                return true;
+
         case KB_ENTER:
                 if(selection==0)
                 {
@@ -774,7 +799,6 @@ bool ArduinoMenu::HandleKeyboard(int keyBoardKey)
 
 bool ArduinoMenu::Draw()
 {
-    std::cout << "HERE" << std::endl;
     switch(selectedSubMenu)
     {
         case(0): DrawArduinoMainMenu(); return true;

@@ -12,6 +12,7 @@
 
 // - INCLUDES - //
 #include "../Application/AppHandler.h"
+#include "../Colour/Colour.h"
 #include "Menu.h"
 
 // - DEFINES - //

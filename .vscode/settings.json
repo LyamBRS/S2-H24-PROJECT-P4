@@ -92,6 +92,7 @@
         "string_view": "cpp",
         "*.tcc": "cpp",
         "cinttypes": "cpp",
-        "hashtable": "cpp"
+        "hashtable": "cpp",
+        "fstream": "cpp"
     }
 }

@@ -57,7 +57,6 @@ bool Application::HandleKeyboardActions()
     if (kbhit())
     {
         appHandler.requiresNewDrawing = true;
-        std::cout << appHandler.currentSelectedMenu << std::endl;
         return menus[appHandler.currentSelectedMenu]->HandleKeyboard(getch());
     }
     return true;

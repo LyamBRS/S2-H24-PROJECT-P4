@@ -44,6 +44,11 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
                 appRef->currentSelectedMenu = selection;
                 selection = 0;
                 return true;
+        
+        case KB_ESCAPE:
+                appRef->currentSelectedMenu = 4;
+                selection = 0;
+                return true; 
     }        
     return false;
 }
@@ -54,8 +59,9 @@ bool MainMenu::Draw()
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
-    std::cout << "-  Press the arrow keys to navigate menus - " << std::endl;
-    std::cout << "- Press enter to select  the current thing -" << std::endl;
+    std::cout << "-  Press the arrow keys to navigate menus  - " << std::endl;
+    std::cout << "-   Enter key: select the current option   -" << std::endl;
+    std::cout << "-   Esc key: return to the previous menu   -" << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
 
     // if not done, the available menus are not printed until a key is pressed
