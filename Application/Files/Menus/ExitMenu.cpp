@@ -8,7 +8,6 @@
  * @date 2024-02-15
  * @copyright Copyright (c) 2024
  */
-#pragma once
 
 // - INCLUDES - //
 #include "ExitMenu.h"
@@ -17,13 +16,23 @@
 
 // - CLASS - //
 
+ExitMenu::ExitMenu(AppHandler* currentAppHandler)
+{
+    appRef = currentAppHandler;
+}
+
+bool ExitMenu::Update()
+{
+    return false;
+}
+
 bool ExitMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
         case KB_RIGHT:
                 selection--;
-                if(selection<1) selection=0;
+                if(selection<0) selection=1;
                 return true;            
     
         case KB_LEFT:
@@ -32,7 +41,7 @@ bool ExitMenu::HandleKeyboard(int keyBoardKey)
                 return true;                  
 
         case KB_ENTER:
-                if(selection==0) appRef->currentSelectedMenu = APP_MAIN_MENU;
+                if(selection==0) appRef->currentSelectedMenu = 0;
                 if(selection==1) appRef->wantedSelectedMenu = -1;
                 selection = 0;
                 return true;
@@ -67,14 +76,4 @@ bool ExitMenu::Draw()
     }
     std::cout << "############################################" << std::endl;
     return true;
-}
-
-bool ExitMenu::OnEnter()
-{
-    selection = 0;
-}
-
-bool ExitMenu::OnExit()
-{
-    selection = 0;
 }

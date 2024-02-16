@@ -12,6 +12,7 @@
 #include "Menu.h"
 
 // - PROGRAM - //
+
 /**
  * @brief 
  * # Menu
@@ -21,10 +22,11 @@
  * are then used in the Application for various
  * reasons and purposes.
  */
-Menu::Menu(Application* currentApp)
-{
-    appRef = currentApp;
-}
+// Menu::Menu(AppHandler* currentAppHandler)
+// {
+    // std::cerr << "GOOD CONSTRUCTOR USED" << std::endl;
+    // appRef = currentAppHandler;
+// }
 
 /**
  * @brief 
@@ -35,11 +37,6 @@ Menu::Menu(Application* currentApp)
  */
 bool Menu::Update()
 {
-    if(needsRedrawing)
-    {
-        Draw();
-        return true;
-    }
     return false;
 }
 
@@ -76,7 +73,6 @@ bool Menu::HandleKeyboard(int keyBoardKey)
  */
 bool Menu::RedrawNextFrame()
 {
-    needsRedrawing = true;
     return false;
 }
 

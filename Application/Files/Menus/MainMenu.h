@@ -11,20 +11,23 @@
 #pragma once
 
 // - INCLUDES - //
+#include "../Application/AppHandler.h"
 #include "Menu.h"
-#include "../Application/Application.h"
 
 // - DEFINES - //
 
 // - CLASS - //
+//class Application;
 
 class MainMenu : public Menu
 {
     private:
 
-    public: 
+    public:
+        MainMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
+        bool Update();
         bool OnEnter();
         bool OnExit();
-}
+};

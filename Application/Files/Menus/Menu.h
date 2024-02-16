@@ -13,12 +13,25 @@
 
 // - INCLUDES - //
 #include "../Colour/Colour.h"
-#include "../Application/Application.h"
+#include "../Application/AppHandler.h"
 #include <iostream>
 
 // - DEFINES - //
+#define APP_MAIN_MENU 0
+#define APP_ARDUINO_MENU 2
+#define APP_GAME_MENU 3
+#define APP_TEST_MENU 1
+#define APP_EXIT_MENU 4
+
+#define KB_UP 72
+#define KB_DOWN 80
+#define KB_LEFT 75
+#define KB_RIGHT 77
+#define KB_ESCAPE 27
+#define KB_ENTER 13
 
 // - CLASS - //
+// class Application;
 
 /**
  * @brief 
@@ -31,15 +44,14 @@
  */
 class Menu 
 {
-    private:
+    public:
+
         /// @brief A reference to the current application, allowing the menu to change things within the application.
-        Application* appRef;
+        AppHandler* appRef = nullptr;
         /// @brief Defines the currently selected item within the menu.
         int selection = 0;
         /// @brief Should the menu redraw itself when @ref Update is called.
         bool needsRedrawing = false;
-
-    public:
 
         /**
          * @brief 
@@ -50,7 +62,7 @@ class Menu
          * are then used in the Application for various
          * reasons and purposes.
          */
-        Menu(Application* currentApp);
+        // Menu(AppHandler* currentAppHandler);
 
         /**
          * @brief 
@@ -59,7 +71,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool Update();
+        virtual bool Update() = 0;
 
         /**
          * @brief 
@@ -67,7 +79,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool Draw();
+        virtual bool Draw() = 0;
 
         /**
          * @brief 
@@ -77,7 +89,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool HandleKeyboard(int keyBoardKey);
+        virtual bool HandleKeyboard(int keyBoardKey) = 0;
 
         /**
          * @brief 

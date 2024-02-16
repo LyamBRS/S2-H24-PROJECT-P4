@@ -8,7 +8,7 @@
  * @date 2024-02-15
  * @copyright Copyright (c) 2024
  */
-#pragma once
+
 
 // - INCLUDES - //
 #include "MainMenu.h"
@@ -16,6 +16,15 @@
 // - DEFINES - //
 
 // - CLASS - //
+MainMenu::MainMenu(AppHandler* currentAppHandler)
+{
+    appRef = currentAppHandler;
+}
+
+bool MainMenu::Update()
+{
+    return false;
+}
 
 bool MainMenu::HandleKeyboard(int keyBoardKey)
 {
@@ -49,9 +58,15 @@ bool MainMenu::Draw()
     std::cout << "- Press enter to select  the current thing -" << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
 
+    // if not done, the available menus are not printed until a key is pressed
+    if(selection == 0)
+    {
+        selection = 1;
+    }
+
     if(!appRef->arduino.GetPortState())                              PrintInColour(std::cout, "-      No arduino connected to the PC      -", colors::red, colors::black);
     if(appRef->arduino.GetPortState() && !appRef->arduino.Verify())  PrintInColour(std::cout, "- Connected devices not answering requests -", colors::black, colors::gold);
-    if(aappRef->arduino.GetPortState() && appRef->arduino.Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
+    if(appRef->arduino.GetPortState() && appRef->arduino.Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
     std::cout << std::endl;
 
 	std::cout << "--------------------------------------------" << std::endl;
@@ -88,9 +103,4 @@ bool MainMenu::Draw()
     }
     std::cout << "############################################" << std::endl;
     return true;
-}
-
-bool MainMenu::OnEnter()
-{
-    
 }
