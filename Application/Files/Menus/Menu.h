@@ -55,17 +55,6 @@ class Menu
 
         /**
          * @brief 
-         * # Menu
-         * @brief
-         * Abstract class used to define the standard
-         * methods within a standard Menu. These menus
-         * are then used in the Application for various
-         * reasons and purposes.
-         */
-        // Menu(AppHandler* currentAppHandler);
-
-        /**
-         * @brief 
          * Updates the menu. Redraws the screen if necessary
          * Handles the keyboard etc.
          * @return true 
