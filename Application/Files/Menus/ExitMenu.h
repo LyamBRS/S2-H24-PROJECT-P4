@@ -12,19 +12,23 @@
 
 // - INCLUDES - //
 #include "Menu.h"
-#include "../Application/Application.h"
+#include "../Application/AppHandler.h"
+#include "../Colour/Colour.h"
 
 // - DEFINES - //
 
 // - CLASS - //
+//class Application;
 
 class ExitMenu : public Menu
 {
     private:
 
-    public: 
+    public:
+        ExitMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
+        bool Update();
         bool Draw();
         bool OnEnter();
         bool OnExit();
-}
+};
