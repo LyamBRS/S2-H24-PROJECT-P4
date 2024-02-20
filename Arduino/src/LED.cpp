@@ -20,6 +20,7 @@ bool LED::TurnOn(){
     if (state == false)
     {
         state = true;
+        Update();
         return true;
     }
     return false;
@@ -29,6 +30,7 @@ bool LED::TurnOff(){
      if (state == true)
     {
         state = false;
+        Update();
         return true;
     }
     return false;
@@ -49,14 +51,13 @@ bool LED::GetState(){
 
 bool LED::Update()
 {
-    int resultat = digitalRead(arduinoPin);
     if (GetState() == true)
     {
-        resultat = HIGH;
+        digitalWrite(arduinoPin, HIGH);
     }
     else
     {
-        resultat = LOW;
+        digitalWrite(arduinoPin, LOW);
     }
     return true;
 }

@@ -16,20 +16,20 @@ BarGraph myBarGraph(44, 38, 40, 36, 42, 37, 39, 41, 43, 45);
 
 void testBarGraph() {
 
-
- 
-
   for(int i = 0; i < 10; i++)
   {
-    // Test individual LED control
-    Serial.println("Turning on the [i] LED...");
+    Serial.print("Turning on the ");
+    Serial.print(i);
+    Serial.println(" LED...");
     myBarGraph.SetIndividualState(i, true); 
-    myBarGraph.Update();// Turn on the first LED
+    myBarGraph.Update(); // Turn on the LED
     delay(1000); // Wait for 1 second
 
-    Serial.println("Turning off the [i] LED...");
+    Serial.print("Turning off the ");
+    Serial.print(i);
+    Serial.println(" LED...");
     myBarGraph.SetIndividualState(i, false);
-    myBarGraph.Update(); // Turn off the first LED
+    myBarGraph.Update(); // Turn off the LED
     delay(1000); // Wait for 1 second
   }
  

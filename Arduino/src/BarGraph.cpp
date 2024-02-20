@@ -61,17 +61,21 @@ bool BarGraph::SetIndividualState(int ledNumber, bool wantedState){
     }else{
         Leds[ledNumber]->TurnOff();
     }
+    return true;
 }
 
 bool BarGraph::Update(){
-    for(int index=0; index<16; index++)
+    for(int index=0; index<10; index++)
     {
         unsigned int shiftedBits = bits >> index;
         unsigned int result = shiftedBits & 1;
-        if (result==true){
+        if (result == true){
             Leds[index]->TurnOn();
+            Leds[index]->Update();
         }else{
             Leds[index]->TurnOff();
+            Leds[index]->Update();
         }
     }
+    return true;
 }
