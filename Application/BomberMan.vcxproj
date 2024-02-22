@@ -143,6 +143,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BomberMan.cpp" />
+    <ClCompile Include="Files\Application\AppHandler.cpp" />
     <ClCompile Include="Files\Application\Application.cpp" />
     <ClCompile Include="Files\Arduino\Arduino.cpp" />
     <ClCompile Include="Files\Colour\Colour.cpp" />
@@ -151,6 +152,12 @@
     <ClCompile Include="Files\Game\Game.cpp" />
     <ClCompile Include="Files\Inventory\Inventory.cpp" />
     <ClCompile Include="Files\Map\Map.cpp" />
+    <ClCompile Include="Files\Menus\ArduinoMenu.cpp" />
+    <ClCompile Include="Files\Menus\ExitMenu.cpp" />
+    <ClCompile Include="Files\Menus\MainMenu.cpp" />
+    <ClCompile Include="Files\Menus\MapMenu.cpp" />
+    <ClCompile Include="Files\Menus\Menu.cpp" />
+    <ClCompile Include="Files\Menus\TestMenu.cpp" />
     <ClCompile Include="Files\Movements\Movements.cpp" />
     <ClCompile Include="Files\Object\Object.cpp" />
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
@@ -183,6 +190,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Files\Application\AppHandler.h" />
     <ClInclude Include="Files\Application\Application.h" />
     <ClInclude Include="Files\Arduino\Arduino.h" />
     <ClInclude Include="Files\Colour\Colour.h" />
@@ -192,6 +200,12 @@
     <ClInclude Include="Files\Inventory\Inventory.h" />
     <ClInclude Include="Files\JSON\json.hpp" />
     <ClInclude Include="Files\Map\Map.h" />
+    <ClInclude Include="Files\Menus\ArduinoMenu.h" />
+    <ClInclude Include="Files\Menus\ExitMenu.h" />
+    <ClInclude Include="Files\Menus\MainMenu.h" />
+    <ClInclude Include="Files\Menus\MapMenu.h" />
+    <ClInclude Include="Files\Menus\Menu.h" />
+    <ClInclude Include="Files\Menus\TestMenu.h" />
     <ClInclude Include="Files\Movements\Movements.h" />
     <ClInclude Include="Files\Object\Object.hpp" />
     <ClInclude Include="Files\PlacedBomb\PlacedBomb.h" />

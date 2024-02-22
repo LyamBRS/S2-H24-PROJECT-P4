@@ -15,10 +15,31 @@
 
 // - INCLUDES - //
 #include <iostream>
+#include "../JSON/json.hpp"
 // - DEFINES - //
 
 
 //////////////////////////////////////////////////////// - TILES
+
+/**
+ * @brief 
+ * # JSON STRUCTURE
+ * @brief
+ * {
+ *      "name" : "mapName",
+ *      "sizeX" : number,
+ *      "sizeY" : number,
+ *      "amountOfPlayers" : numberOfHowManyPlayersSpawnThereIs,
+ *      "map" : {
+ *          {0,0,0,0,0,0,0,0,0,0,0,0},
+ *          {0,0,0,0,0,0,0,0,0,0,0,0},
+ *          {0,0,0,0,0,0,0,0,0,0,0,0},
+ *          ...
+ *          {0,0,0,0,0,0,0,0,0,0,0,0},
+ *      }
+ * }
+ */
+
 
 /**
  * @brief
@@ -184,12 +205,13 @@ struct BinaryDefaultTiles
  * dimmensionnal map. The map consists of a
  * 2 dimmensionnal array filled with numbers.
  * The numbers correspond to what is there on
- * the map. There CANNOT be multiple things at
- * the same place at the same time.
+ * the map. 
  * The Map renders these when @ref Draw is called.
  * It is also worth mentionning that for each
  * slot in the map, 3 ASCII characters are drawn
  * to represent it.
+ * The goal of this class is to draw a map in the terminal
+ * or the QT application.
  */
 class Map
 {
@@ -220,6 +242,11 @@ class Map
          * Handles the various updating that
          * the map needs to do to store new data
          * as stuff inside of it.
+         * @attention
+         * You could perhaps do 2 buffers, compare between
+         * the 2, and only redraw the map if a change is
+         * seen between the current array and the old one
+         * But that isn't really necessary.
          * @return true:
          * Successfully updated the map.
          * @return false:
@@ -271,42 +298,47 @@ class Map
 
         /**
          * @brief 
-         * Loads a text file as a map in an array.
+         * Loads a JSON file as a map in an array.
          * File types are stored as JSONs and their
-         * structure can be found at the top of 
+         * structure can be found at the top of the
+         * file. This just overwrites the map that
+         * is currently in the object. Use this
+         * in the constructor if needed.
          * @ref Map.h
-         * @param filePath
-         * System path pointing to the file that
-         * needs to be loaded as a map.
+         * @param mapAsJSON
+         * A JSON object which holds the map's attributes
+         * See the top of @ref Map.h for the standard map
+         * structure.
          * @return true:
          * Successfully loaded the map.
          * @return false:
          * Failed to load the map.
          */
-        bool LoadSavedMap(std::wstring filePath);
+        bool LoadMap(nlohmann::json mapAsJSON);
 
         /**
          * @brief 
-         * Saves the current map loaded in this object
-         * in a JSON file somewhere on the user system.
-         * This also converts the array into a string.
-         * @param filePath
-         * System path pointing to the file that
-         * needs to be overwritten or created
-         * @return true:
-         * Successfully saved the map at the specified
-         * emplacement.
-         * @return false:
-         * An error occured and the map could not
-         * be saved at the specified place. 
+         * Returns the current map as a JSON object
+         * so that it can be saved at a specified
+         * location later or whatever.
+         * @attention
+         * KEEP THIS FUNCTION FOR NOW, WE'LL SEE LATER
+         * IF WE HAVE TIME TO DO SHIT WITH THIS.
+         * FOR NOW, JUST DONT BOTHER.
+         * @return nlohmann::json
+         * JSON object of the map.
          */
-        bool SaveCurrentMap(std::wstring filePath);
+        nlohmann::json* GetCurrentMap();
 
         /**
          * @brief
          * Simply gives a name to the map so that it
          * can be recognized by the game and displayed
          * somewhere.
+         * @attention
+         * KEEP THIS FUNCTION FOR NOW, WE'LL SEE LATER
+         * IF WE HAVE TIME TO DO SHIT WITH THIS.
+         * FOR NOW, JUST DONT BOTHER.
          * @param newName
          * The new name that the map must have
          * @return true:
