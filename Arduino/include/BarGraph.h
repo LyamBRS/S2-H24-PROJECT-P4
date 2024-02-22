@@ -38,9 +38,12 @@ class BarGraph
          * @brief 
          * Value that represents all the LEDs of that bar graph.
          */
-        int bits;
+        int bits = 0;
 
     public:
+
+        BarGraph();
+
         /**
          * @brief Construct a new Bar Graph object
          * Builds a new bar graph while specifying

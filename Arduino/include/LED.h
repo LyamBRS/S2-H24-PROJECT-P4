@@ -37,6 +37,9 @@ class LED
         bool isInverted = false;
 
     public:
+
+        LED();
+
         /**
          * @brief Construct a new LED object.
          * Only sets the arduino pin associated with
