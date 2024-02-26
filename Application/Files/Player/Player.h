@@ -22,6 +22,7 @@
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
 #define PLAYER_BASE_BOMB_PLACEMENT_TIMER 2000
+#define boutonBombe 1
 // - CLASS - //
 
 /**
