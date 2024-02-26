@@ -5,57 +5,28 @@
             displayAttributes.Colour(wantedColour);
         }
 
-        /**
-         * @brief
-         * # PlacedABomb
-         * @brief
-         * Tells you if the player has pressed a button to
-         * place a bomb. This is only real if the player's
-         * counter to place bomb is available.
-         * @return true:
-         * The player NEEDS to place a bomb next frame
-         * @return false:
-         * The player SHOULDN'T place a bomb on the next frame.
-         */
         bool Player::PlacedABomb(){
-            
+            //UpdateFromController();
+            if(leftButton == true){
+                wantsToPlaceBomb = true;
+            }
+            return false;
         }
 
-        /**
-         * @brief
-         * # Health
-         * @brief
-         * Tells you how much health that player has.
-         * The value ranges from 0 to 100 and defaults
-         * at 100. You can use @ref GiveDamage to
-         * remove health from the player as well as
-         * @ref GiveHealth to give health back to a
-         * player.
-         * @return int 
-         */
-        int Health();
+        int Player::Health(){
+            return health;
+        }
 
-        /**
-         * @brief 
-         * # GiveHealth
-         * @brief 
-         * Gives a certain amount of health to the player.
-         * Certain powerups could give the player more
-         * health. However, the starting maximum health
-         * that a player can have is 100. Any value above
-         * that number won't add shit.
-         * @attention
-         * This gives X more health to the player. This
-         * does NOT set the player health to that number.
-         * @param healthPoint
-         * How much health should the player get?
-         * @return true:
-         * Successfully gave the player health
-         * @return false:
-         * Failed to give the player health. Already at
-         * max capacity or whatever.
-         */
-        bool GiveHealth(int healthPoint);
+        bool Player::GiveHealth(int healthPoint){
+            if(health == 100){
+                return false;
+            }
+            health = health + healthPoint;
+            if(health>100){
+                health = 100;
+            }
+            return true;
+        }
 
         /**
          * @brief
@@ -72,7 +43,17 @@
          * @return false:
          * The player cant take damages at the moment.
          */
-        bool GiveDamage(int damagePoints);
+        bool Player::GiveDamage(int damagePoints){
+            if(health == 0){
+                return false;
+            }
+            health = health - damagePoints;
+            if(health<0){
+                isAlive = false;
+                health = 0;
+            }
+            return true;            
+        }
 
         /**
          * @brief
@@ -110,7 +91,13 @@
          * @ref nullptr is returned. BE CAREFUL.
          * @return PowerUp* 
          */
-        PowerUp* GetActivatedPowerUp();
+        PowerUp* Player::GetActivatedPowerUp(){
+            //UpdateFromController();
+            if(rightButton == true){
+                wantsToUseSelectedItem = true;
+            }
+            
+        }
 
         /**
          * @brief
