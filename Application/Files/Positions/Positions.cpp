@@ -8,6 +8,7 @@
         bool Positions::SetNewCoordinates(int newX, int newY){
             x=newX;
             y=newY;
+            return true;
         }
 
         int Positions::X(){
