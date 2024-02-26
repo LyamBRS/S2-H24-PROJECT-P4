@@ -51,7 +51,7 @@ bool Movements::SetDeltas(int newDeltaX, int newDeltaY)
 {
     deltaX = newDeltaX;
     deltaY = newDeltaY;
-    return false;
+    return true;
 }
 
 /**
