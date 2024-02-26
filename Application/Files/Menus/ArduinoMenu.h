@@ -21,6 +21,7 @@
 #define APP_BAUD_RATE_MENU 1
 #define APP_COM_PORT_MENU 2
 #define APP_CONNECTING_MENU 3
+#define APP_IS_CONNECTING_MENU 10
 #define APP_DISCONNECTING_MENU 4
 
 // - CLASS - //
@@ -41,6 +42,7 @@ class ArduinoMenu : public Menu
         bool DrawComPortSelectionMenu();
         bool DrawConnectMenu();
         bool DrawDisconnectMenu();
+        bool DrawIsConnectingMenu();
 
         bool HandleKeyboardMainMenu(int keyBoardKey);
         bool HandleKeyboardBaudrateMenu(int keyBoardKey);

@@ -146,6 +146,7 @@
     <ClCompile Include="Files\Application\AppHandler.cpp" />
     <ClCompile Include="Files\Application\Application.cpp" />
     <ClCompile Include="Files\Arduino\Arduino.cpp" />
+    <ClCompile Include="Files\Arduino\ThreadManager.cpp" />
     <ClCompile Include="Files\Colour\Colour.cpp" />
     <ClCompile Include="Files\Communication\Communication.cpp" />
     <ClCompile Include="Files\Controller\Controller.cpp" />
@@ -193,6 +194,7 @@
     <ClInclude Include="Files\Application\AppHandler.h" />
     <ClInclude Include="Files\Application\Application.h" />
     <ClInclude Include="Files\Arduino\Arduino.h" />
+    <ClInclude Include="Files\Arduino\ThreadManager.hpp" />
     <ClInclude Include="Files\Colour\Colour.h" />
     <ClInclude Include="Files\Communication\Communication.h" />
     <ClInclude Include="Files\Controller\Controller.h" />

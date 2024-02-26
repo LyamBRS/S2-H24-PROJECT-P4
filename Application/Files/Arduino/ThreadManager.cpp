@@ -14,82 +14,113 @@
 
 /**
  * @brief 
- * # ArduinoThreadManager
- * @brief
- * This class is used to pass information
- * to the @ref Arduino class. NEVER use
- * the arduino class WITHOUT this class
- * as there can be read/write conflicts
- * otherwise.
- * This class is used to have an arduino class
- * that is completely seperated from the main
- * thread of the application. We multi tasking
- * in here fr.
- */    
-ArduinoThreadManager::ArduinoThreadManager()
+ * Function executed in another thread
+ */
+void ArduinoThreadManager::threadFunction(int newValue)
 {
+    while(shouldExecute)
+    {
+        try{
+            threadValues++;
+            while(delayBetweenMessageTimer.TimeLeft() != 0)
+            {
+                threadValues++;
+                switch(wantedFunction)
+                {
+                    case(Functions::endComPort):
+                        wantedFunction = Functions::nothing;
+                        if(arduinoObject.Disconnect() == false)
+                        {
+                            executionResult = -1;
+                        }
+                        executionResult = 1;
+                        break;
+    
+                    case(Functions::startComPort):
+                        wantedFunction = Functions::nothing;
+                        if(arduinoObject.Connect() == false)
+                        {
+                            executionResult = -1;
+                        }
+                        executionResult = 1;
+                        break;
+    
+                    case(Functions::reset):
+                        wantedFunction = Functions::nothing;
+                        executionResult = -1;
+                        break;
+                }
+            }
+            arduinoObject.Update();
+        }
+        catch(...)
+        {
+            std::cout << std::endl << "THREAD: ERROR" << std::endl;
+        }
+    }
+    std::cout << std::endl << "THREAD: FATAL WHILE ERROR" << std::endl;
+}
 
+/**
+ * @brief
+ * Tells you how well the function you wanted executed, executed.
+ * -1: "False / error"
+ * 0: No result yet
+ * 1: Success!
+ * @return int 
+ */
+int ArduinoThreadManager::GetFunctionExecutionResult()
+{
+    return executionResult;
+}
+
+bool ArduinoThreadManager::SetExecutionFunction(unsigned char newExecutionFunction)
+{
+    executionResult = 0;
+    wantedFunction = newExecutionFunction;
+    return true;
 }
 
 /**
  * @brief 
- * # CanWrite
- * @brief
- * Tells you if you can write in the class at any
- * given time.
- * @attention
- * ### ONLY WRITE IN THE CLASS WHEN THIS IS TRUE.
- * @return true:
- * You can safely write in the class
+ * Waits 2 seconds max until the queued function is
+ * successfully executed or not.
+ * @return true
+ * A new execution result is available.
  * @return false:
- * You cannot write in the class at the moment.
+ * Failed to get new execution result.
  */
-bool ArduinoThreadManager::CanWrite()
+bool ArduinoThreadManager::WaitTillFunctionExecuted()
 {
+    waitForExecutionTimer.Reset();
 
-}
-/**
- * @brief 
- * # BeginWrite
- * @brief
- * MUST be called when you are modifying values of the
- * private arduino class of this objet.
- * @return true:
- * You can write into @ref Controller classes safely
- * @return false:
- * You cannot currently write data in the arduino class
- */
-bool ArduinoThreadManager::BeginWrite()
-{
-
+    while(GetFunctionExecutionResult() == 0)
+    {
+        if(waitForExecutionTimer.TimeLeft()==0)
+        {
+            return false;
+        }
+    }
+    return true;
 }
 
-/**
- * @brief 
- * # EndWrite
- * @brief
- * @return true:
- * You successfully ended your writing period
- * @return false:
- * You failed to end your writing period.
- */
-bool ArduinoThreadManager::EndWrite()
+bool ArduinoThreadManager::GetThreadStatus()
 {
-
+    //std::cout << threadValues << " " << oldThreadValues << std::endl;
+    if(threadValues == oldThreadValues)
+    {
+        return false;
+    }
+    oldThreadValues = threadValues;
+    return true;
 }
 
 /**
- * @brief 
- * # CueFunctionForExecution
- * @brief
- * @param functionID
- * The function that needs to be executed next.
- * @return true:
- * Successfully set that as the next function to be executed.
- * @return false:
- * Failed to set the specified number as the next function to be executed.
+ * @brief Get the Arduino object
+ * used in the thread.
+ * @return Arduino 
  */
-bool ArduinoThreadManager::CueFunctionForExecution(unsigned char functionID)
+Arduino* ArduinoThreadManager::GetArduino()
 {
-
+    return &arduinoObject;
 }

@@ -14,96 +14,74 @@
 #include <thread>
 #include <mutex>
 #include "Arduino.h"
+#include "../SimpleTimer/SimpleTimer.h"
 
 // - A LITTLE TROLLLING - //
+enum Functions {
+    nothing = 0,
+    startComPort = 1,
+    endComPort = 2,
+    reset = 3
+};
 
-/**
- * @brief 
- * # ArduinoThreadManager
- * @brief
- * This class is used to pass information
- * to the @ref Arduino class. NEVER use
- * the arduino class WITHOUT this class
- * as there can be read/write conflicts
- * otherwise.
- * This class is used to have an arduino class
- * that is completely seperated from the main
- * thread of the application. We multi tasking
- * in here fr.
- */
-class ArduinoThreadManager
-{
-    private:
-        bool writeFlag = true;
-        Arduino arduino;
-    public:
-        /**
-         * @brief 
-         * # ArduinoThreadManager
-         * @brief
-         * This class is used to pass information
-         * to the @ref Arduino class. NEVER use
-         * the arduino class WITHOUT this class
-         * as there can be read/write conflicts
-         * otherwise.
-         * This class is used to have an arduino class
-         * that is completely seperated from the main
-         * thread of the application. We multi tasking
-         * in here fr.
-         */    
-        ArduinoThreadManager();
+class ArduinoThreadManager {
+private:
+    Arduino arduinoObject;
+    std::thread myThread;
+    unsigned char wantedFunction = Functions::nothing;
+    SimpleTimer waitForExecutionTimer = SimpleTimer(5000);
+    SimpleTimer delayBetweenMessageTimer = SimpleTimer(10);
+    int executionResult = 0;
+    int threadValues = 0;
+    int oldThreadValues = 0;
+    bool shouldExecute = true;
 
-        /**
-         * @brief 
-         * # CanWrite
-         * @brief
-         * Tells you if you can write in the class at any
-         * given time.
-         * @attention
-         * ### ONLY WRITE IN THE CLASS WHEN THIS IS TRUE.
-         * @return true:
-         * You can safely write in the class
-         * @return false:
-         * You cannot write in the class at the moment.
-         */
-        bool CanWrite();
+public:
+    ArduinoThreadManager() : myThread(&ArduinoThreadManager::threadFunction, this, 42) {}
 
-        /**
-         * @brief 
-         * # BeginWrite
-         * @brief
-         * MUST be called when you are modifying values of the
-         * private arduino class of this objet.
-         * @return true:
-         * You can write into @ref Controller classes safely
-         * @return false:
-         * You cannot currently write data in the arduino class
-         */
-        bool BeginWrite();
+    ~ArduinoThreadManager() {
+        shouldExecute = false;
+        // Make sure to join the thread in the destructor
+        if (myThread.joinable()) {
+            myThread.join();
+        }
+    }
 
-        /**
-         * @brief 
-         * # EndWrite
-         * @brief
-         * @return true:
-         * You successfully ended your writing period
-         * @return false:
-         * You failed to end your writing period.
-         */
-        bool EndWrite();
+    /**
+     * @brief 
+     * Function executed in another thread
+     */
+    void threadFunction(int newValue);
 
-        /**
-         * @brief 
-         * # CueFunctionForExecution
-         * @brief
-         * @param functionID
-         * The function that needs to be executed next.
-         * @return true:
-         * Successfully set that as the next function to be executed.
-         * @return false:
-         * Failed to set the specified number as the next function to be executed.
-         */
-        bool CueFunctionForExecution(unsigned char functionID);
+    /**
+     * @brief
+     * Tells you how well the function you wanted executed, executed.
+     * -1: "False / error"
+     * 0: No result yet
+     * 1: Success!
+     * @return int 
+     */
+    int GetFunctionExecutionResult();
 
-        void ThreadFunction();
+    /**
+     * @brief 
+     * Waits 2 seconds max until the queued function is
+     * successfully executed or not.
+     * @return true
+     * A new execution result is available.
+     * @return false:
+     * Failed to get new execution result.
+     */
+    bool WaitTillFunctionExecuted();
+
+    bool SetExecutionFunction(unsigned char newExecutionFunction);
+
+    bool GetThreadStatus();
+
+    /**
+     * @brief Get the Arduino object
+     * used in the thread.
+     * @return Arduino 
+     */
+    Arduino* GetArduino();
 };

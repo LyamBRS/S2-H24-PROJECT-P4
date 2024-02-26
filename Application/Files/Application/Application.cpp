@@ -103,9 +103,16 @@ bool Application::Update()
 
     if(appHandler.frameTimer.TimeLeft() == 0)
     {
-        appHandler.arduino.Update();
+        //appHandler.arduinoThread.GetArduino()->Update();
         appHandler.currentGame.Update();
     }
+
+    if(!appHandler.arduinoThread.GetThreadStatus())
+    {
+        std::cout << std::endl;
+        std::cout << "THREAD IS NO LONGER LIVING" << std::endl;
+    }
+
     return true;
 }
 
@@ -118,6 +125,9 @@ void Application::TemporaryLoop()
 {
     while(appHandler.wantedSelectedMenu != -1)
     {
-        Update();
+        if(!Update())
+        {
+            return;
+        }
     }
 }
