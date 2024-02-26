@@ -13,12 +13,6 @@
             return &movement;
         }
 
-        /**
-         * @brief Get the Position object
-         * Simply returns a pointer to this objects
-         * position attribute class.
-         * @return Positions* 
-         */
         Positions* Object::GetPosition(){
             return &position;
         }
