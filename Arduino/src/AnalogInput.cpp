@@ -67,10 +67,10 @@ bool AnalogInput::SetMin(int newMin)
 
 float AnalogInput::GetPourcent()
 {
-    float Valeur_Pourcent=(((rawInputValue)-minimumValue)/maximumValue-minimumValue);
-    return Valeur_Pourcent*100;
+    float Valeur_Pourcent=(((rawInputValue)-minimumValue)*100/(maximumValue-minimumValue));
     if (Valeur_Pourcent<minimumValue)
     {return 0.0;}
     if (Valeur_Pourcent>maximumValue)
     {return 100.0;}
+    return Valeur_Pourcent;
 }

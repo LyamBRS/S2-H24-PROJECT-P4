@@ -21,17 +21,14 @@
     }
 
     int Accelerometer::GetPourcentX(){
-        xAxis->UpdateRawValue();
         return (xAxis->GetPourcent());
     }
 
     int Accelerometer::GetPourcentY(){
-        yAxis->UpdateRawValue();
         return (yAxis->GetPourcent());
     }
 
     int Accelerometer::GetPourcentZ(){
-        zAxis->UpdateRawValue();
         return (zAxis->GetPourcent());
     }
 
