@@ -1,6 +1,17 @@
 #include "Accelerometer.h"
 #include <Arduino.h>
-    
+
+Accelerometer::Accelerometer()
+{
+}
+
+Accelerometer::Accelerometer(int xPin, int yPin, int zPin)
+{
+    xAxis = new AnalogInput(xPin);
+    yAxis = new AnalogInput(yPin);
+    zAxis = new AnalogInput(zPin);
+}
+
 int Accelerometer::GetPourcentX(){
     return (xAxis->GetPourcent());
 }

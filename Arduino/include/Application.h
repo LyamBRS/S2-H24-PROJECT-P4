@@ -14,10 +14,12 @@
 #pragma once
 
 // - INCLUDES - //
+#include <Arduino.h>
+#include <LiquidCrystal.h>
 #include "Controller.h"
 #include "MuonDetector.h"
 #include "Communication.h"
-#include "LCD.h"
+
 
 // - DEFINES - //
 
@@ -87,6 +89,16 @@
 #define PIN_CONTROLLER_B_ACCELEROMETER_Y 0
 #define PIN_CONTROLLER_B_ACCELEROMETER_Z 0
 
+// - LCD - //
+const int 
+rs = PIN_LCD_RS, // register select
+en = PIN_LCD_EN, // Enable
+d4 = PIN_LCD_D4, //data pins
+d5 = PIN_LCD_D5,
+d6 = PIN_LCD_D6,
+d7 = PIN_LCD_D7;
+LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+
 // - CLASS - //
 
 /**
@@ -98,9 +110,9 @@
 class Application 
 {
     private:
-        MuonDetector muonDetector;
-        Controller controllerA;
-        Controller controllerB;
+        MuonDetector* muonDetector;
+        Controller* controllerA;
+        Controller* controllerB;
         Communication communication;
         bool isConnectedToPC = false;
         /// @brief Each time a comm from the PC is receive, set this to the value that millis() returns.

@@ -12,6 +12,11 @@
 #include <Arduino.h>
 #include "Joystick.h"
 
+Joystick::Joystick()
+{
+    
+}
+
 Joystick::Joystick(int buttonPin, int xAxisPin, int yAxisPin)
 {
     button = new Button(buttonPin);

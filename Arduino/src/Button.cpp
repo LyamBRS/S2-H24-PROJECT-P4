@@ -12,6 +12,10 @@
 #include "Button.h"
 #include <Arduino.h>
 
+Button::Button()
+{
+}
+
 Button::Button(int pin)
 {
     arduinoPin = pin;

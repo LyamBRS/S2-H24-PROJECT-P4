@@ -58,6 +58,6 @@ class LCD
          */
         void print(int cursorRow, int cursorLine, char* display);
 
-        bool SetNewLocalMessage(String newMessage);
-        bool SetNewPCMessage(String newMessage);
+        bool SetNewLocalMessage(char* display);
+        bool SetNewPCMessage(char* display);
 };

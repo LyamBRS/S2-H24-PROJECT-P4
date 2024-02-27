@@ -26,7 +26,7 @@
  */
 Application::Application()
 {
-    
+
 }
 
 /**
@@ -94,7 +94,7 @@ bool Application::Setup()
 
     muonDetector = new MuonDetector(PIN_MUON);
 
-    LCD.lcdInit();
+    lcd.begin(16, 2);
 
     communication.StartSerial(115200);
     communication.LinkControllers(controllerA, controllerB);
@@ -111,8 +111,10 @@ bool Application::Setup()
  */
 bool Application::Reset()
 {
-    controllerA.Reset();
-    controllerB.Reset();
+    controllerA->Reset();
+    controllerB->Reset();
+    muonDetector->ResetCount();
+    lcd.clear();
     return true;
 }
 
@@ -127,9 +129,9 @@ bool Application::Reset()
  */
 bool Application::UpdateAll()
 {
-    controllerA.Update();
-    controllerB.Update();
-    muonDetector.Update();
+    controllerA->Update();
+    controllerB->Update();
+    muonDetector->Update();
     communication.Update();
     return true;
 }
@@ -147,7 +149,9 @@ bool Application::UpdateAll()
  */
 bool Application::UpdateLCD()
 {
-    return false;
+    lcd.setCursor(0, 0);
+    lcd.print("amogus          ");
+    return true;
 }
 
 /**

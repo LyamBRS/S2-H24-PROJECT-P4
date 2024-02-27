@@ -8,9 +8,8 @@
 
 
 #include "Application.h"
-#include "BarGraph.h"
 
-Application application();
+Application* application = new Application();
 
 // Initialize your BarGraph with the appropriate pin numbers
 //BarGraph myBarGraph(44, 38, 40, 36, 42, 45, 43, 41, 39, 37);
@@ -75,12 +74,11 @@ void setup() {
   //lcd.begin(16, 2);
   // Print a message to the LCD.
   //lcd.print("hello, world!");
-
-  application.Setup();
-
   //Serial.begin(115200); // Démarre la communication série à 9600 bauds
   //Serial.println("HERE");
   //testBarGraph();
+
+  application->Setup();
 }
 
 void loop() {
@@ -91,6 +89,6 @@ void loop() {
   //lcd.print(millis() / 1000);
   //Serial.println("LOOP");
 
-  application.UpdateAll();
+  application->UpdateAll();
 }
 
