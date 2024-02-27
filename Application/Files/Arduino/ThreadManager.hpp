@@ -27,6 +27,7 @@ enum Functions {
 class ArduinoThreadManager {
 private:
     Arduino arduinoObject;
+    Arduino fakeArduinoObject;
     std::thread myThread;
     unsigned char wantedFunction = Functions::nothing;
     SimpleTimer waitForExecutionTimer = SimpleTimer(5000);
@@ -35,6 +36,7 @@ private:
     int threadValues = 0;
     int oldThreadValues = 0;
     bool shouldExecute = true;
+    bool canReadArduino = true;
 
 public:
     ArduinoThreadManager() : myThread(&ArduinoThreadManager::threadFunction, this, 42) {}

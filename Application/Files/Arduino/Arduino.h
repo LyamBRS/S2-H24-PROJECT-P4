@@ -14,6 +14,7 @@
 
 // - INCLUDES - //
 #include <iostream>
+#include <mutex>
 #include "../Controller/Controller.h"
 #include "../Communication/Communication.h"
 #include "../JSON/json.hpp"
@@ -115,6 +116,7 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
 
             std::string wantedLCDMessage = "";
             std::string lastReceivedMessage = "";
+            std::mutex mutex;
         
             /**
              * @brief 

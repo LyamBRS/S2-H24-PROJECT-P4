@@ -59,6 +59,7 @@ bool VerifyBaudRate(unsigned int baudRateToverify)
  */
 bool Arduino::GenerateAndSendMessage()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to send a message while connection is not established" << std::endl;
@@ -94,6 +95,7 @@ bool Arduino::GenerateAndSendMessage()
  */
 bool Arduino::ParseReceivedMessage()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to parse a message while connection is not established" << std::endl;
@@ -173,6 +175,7 @@ bool Arduino::ParseReceivedMessage()
 
 std::string Arduino::GetLastRawMessage()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return lastReceivedMessage;
 }
 
@@ -190,6 +193,7 @@ std::string Arduino::GetLastRawMessage()
  */
 Arduino::Arduino()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     Controller controllerA = Controller();
     Controller controllerB = Controller();
 
@@ -216,6 +220,7 @@ Arduino::Arduino()
  */
 Arduino::Arduino(std::string arduinoComPort, int arduinoBaudRate)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     serialHandler.SetBaudRate(arduinoBaudRate);
     serialHandler.SetComPort(arduinoComPort);
 
@@ -241,6 +246,7 @@ Arduino::Arduino(std::string arduinoComPort, int arduinoBaudRate)
  */
 bool Arduino::Verify()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(!serialHandler.ConnectionStatus()) return false;
     if(attemptsSinceLastGoodParse > ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST) return false;
 
@@ -263,6 +269,7 @@ bool Arduino::Verify()
  */
 Controller* Arduino::GetPlayerController(int playerIndex)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(playerIndex > 1) playerIndex = 0;
     return controllers[playerIndex];
 }
@@ -279,6 +286,7 @@ Controller* Arduino::GetPlayerController(int playerIndex)
  */
 bool Arduino::GetPortState()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.ConnectionStatus();
 }
 
@@ -305,13 +313,14 @@ bool Arduino::Update()
             if(GenerateAndSendMessage())
             {
                 attemptsSinceLastGoodParse++;
-                return true;
+                //return true;
             }
         }
+
         if(ParseReceivedMessage())
         {
             attemptsSinceLastGoodParse = 0;
-            return true;
+            //return true;
         }
     }
     return false;
@@ -333,6 +342,7 @@ bool Arduino::Update()
  */
 bool Arduino::SetNewLCDMessage(std::string newMessage)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     if(newMessage.length() > 20)
     {
         return false;
@@ -349,6 +359,7 @@ bool Arduino::SetNewLCDMessage(std::string newMessage)
  */
 std::string Arduino::GetLCDMessage()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return wantedLCDMessage;
 }
 
@@ -366,6 +377,7 @@ std::string Arduino::GetLCDMessage()
  */
 int Arduino::AmountOfConnectedPlayers()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     int total = 0;
     for(int index=0; index < controllers.size(); ++index)
     {
@@ -390,6 +402,7 @@ int Arduino::AmountOfConnectedPlayers()
  */
 bool Arduino::SetComPort(std::string newComPort)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.SetComPort(newComPort);
 }
 
@@ -410,6 +423,7 @@ bool Arduino::SetComPort(std::string newComPort)
  */
 bool Arduino::SetBaudRate(int newBaudRate)
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.SetBaudRate(newBaudRate);
 }
 
@@ -421,6 +435,7 @@ bool Arduino::SetBaudRate(int newBaudRate)
  */
 std::string Arduino::GetComPort()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.GetComPort();
 }
 
@@ -432,6 +447,7 @@ std::string Arduino::GetComPort()
  */
 int Arduino::GetBaudRate()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.GetBaudRate();
 }
 
@@ -448,6 +464,7 @@ int Arduino::GetBaudRate()
  */
 bool Arduino::Connect()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.Connect();
 }
 
@@ -463,5 +480,6 @@ bool Arduino::Connect()
  */
 bool Arduino::Disconnect()
 {
+    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.Disconnect();
 }

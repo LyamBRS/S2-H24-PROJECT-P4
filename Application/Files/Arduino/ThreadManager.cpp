@@ -28,21 +28,25 @@ void ArduinoThreadManager::threadFunction(int newValue)
                 switch(wantedFunction)
                 {
                     case(Functions::endComPort):
+                        canReadArduino = false;
                         wantedFunction = Functions::nothing;
                         if(arduinoObject.Disconnect() == false)
                         {
                             executionResult = -1;
                         }
+                        canReadArduino = true;
                         executionResult = 1;
                         break;
     
                     case(Functions::startComPort):
+                        canReadArduino = false;
                         wantedFunction = Functions::nothing;
                         if(arduinoObject.Connect() == false)
                         {
                             executionResult = -1;
                         }
                         executionResult = 1;
+                        canReadArduino = true;
                         break;
     
                     case(Functions::reset):
@@ -51,7 +55,10 @@ void ArduinoThreadManager::threadFunction(int newValue)
                         break;
                 }
             }
+            canReadArduino = false;
             arduinoObject.Update();
+            threadValues++;
+            canReadArduino = true;
         }
         catch(...)
         {
@@ -136,22 +143,19 @@ bool ArduinoThreadManager::FunctionShouldBeExecuted()
 bool ArduinoThreadManager::GetThreadStatus()
 {
     //std::cout << threadValues << " " << oldThreadValues << std::endl;
-    static bool wasNotAnswering = false;
+    static int wasNotAnsweringCounter = 0;
 
     if(threadValues == oldThreadValues)
     {
-        if(wasNotAnswering)
+        wasNotAnsweringCounter++;
+        if(wasNotAnsweringCounter>100)
         {
             return false;
         }
-        else
-        {
-            wasNotAnswering = true;
-            return true;
-        }
+        return true;
     }
     oldThreadValues = threadValues;
-    wasNotAnswering = false;
+    wasNotAnsweringCounter = 0;
     return true;
 }
 
@@ -162,5 +166,9 @@ bool ArduinoThreadManager::GetThreadStatus()
  */
 Arduino* ArduinoThreadManager::GetArduino()
 {
+    if(!canReadArduino)
+    {
+        return &fakeArduinoObject;
+    }
     return &arduinoObject;
 }

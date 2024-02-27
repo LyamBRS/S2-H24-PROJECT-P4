@@ -541,8 +541,9 @@ bool TestMenu::Update()
 
     if(!appRef->arduinoThread.GetArduino()->GetPortState())
     {
-        selectedSubMenu = APP_NO_ARDUINO;
-        selection = 0;
+        //selectedSubMenu = APP_NO_ARDUINO;
+        //selection = 0;
+        //return false;
     }
     else
     {
@@ -555,12 +556,21 @@ bool TestMenu::Update()
     currentMessage = appRef->arduinoThread.GetArduino()->GetLastRawMessage();
     if(oldMessage != currentMessage)
     {
-        oldMessage = currentMessage;
         if(selectedSubMenu == APP_RECEIVED_MESSAGE)
         {
-            PrintInColour(std::cout, currentMessage, colors::aqua, colors::black);
+            std::string messageToShow = currentMessage;
+            int difference = oldMessage.size() - currentMessage.size();
+            if(difference>0)
+            {
+                for(int i=0; i<=difference; i++)
+                {
+                    messageToShow += " ";
+                }
+            }
+            PrintInColour(std::cout, messageToShow, colors::aqua, colors::black);
             std::cout << "\r" << std::flush;  
         }
+        oldMessage = currentMessage;
     }
 
     return true;
