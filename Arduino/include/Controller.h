@@ -19,6 +19,7 @@
 #include "Joystick.h"
 #include "BarGraph.h"
 #include "Accelerometer.h"
+#include "SimpleTimer.h"
 
 // - DEFINES - //
 #define HEARTHBEAT_TIME_MS 500
@@ -42,6 +43,7 @@ class Controller
         Joystick* joystick;
         BarGraph* barGraph;
         LED* hearthbeat;
+        SimpleTimer hearthbeatTimer(500);
 
         bool isConnected = false;
 

@@ -117,6 +117,7 @@ Controller::Controller(int detectionPin,
  */
 bool Controller::Reset()
 {
+    hearthbeatTimer.Reset();
     barGraph->TurnAllOff();
     hearthbeat->TurnOff();
     return false;
@@ -250,7 +251,7 @@ bool Controller::GetDetection()
  */
 bool Controller::Update()
 {
-    if(millis()%HEARTHBEAT_TIME_MS == 0)
+    if(hearthbeatTimer.TimeLeft() == 0)
     {
         hearthbeat->FlipState();
     }
