@@ -34,6 +34,8 @@ class MuonDetector
 
     public:
 
+        MuonDetector();
+
         /**
          * @brief Construct a new Muon Detector object.
          * 

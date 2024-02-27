@@ -39,6 +39,9 @@ class Accelerometer
         AnalogInput *zAxis;
 
     public:
+
+        Accelerometer();
+
         /**
          * @brief Construct a new Accelerometer object.
          * Sets a new analog 3.3V accelerometer.
@@ -105,7 +108,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        float GetPourcentX();
+        int GetPourcentX();
 
         /**
          * @brief
@@ -115,7 +118,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        float GetPourcentY();
+        int GetPourcentY();
 
         /**
          * @brief
@@ -125,7 +128,7 @@ class Accelerometer
          * @return int
          * Value ranging from 0 to 100.
          */
-        float GetPourcentZ();
+        int GetPourcentZ();
 
         /**
          * @brief 

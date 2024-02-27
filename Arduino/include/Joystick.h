@@ -31,6 +31,9 @@ class Joystick
         Potentiometer *yAxis;
 
     public:
+
+        Joystick();
+
         /**
          * @brief Construct a new Joystick object.
          * A joystick consists of 2 potentiometers

@@ -111,7 +111,7 @@ bool Controller::Reset()
  */
 BarGraph* Controller::GetBarGraph()
 {
-    return *barGraph;
+    return &barGraph;
 }
 
 /**
@@ -123,7 +123,7 @@ BarGraph* Controller::GetBarGraph()
  */
 Accelerometer* Controller::GetAccelerometer()
 {
-    return *accelerometer;
+    return &accelerometer;
 }
         
 /**
@@ -135,7 +135,7 @@ Accelerometer* Controller::GetAccelerometer()
  */
 Button* Controller::GetTopButton()
 {
-    return *topButton;
+    return &topButton;
 }
 
 /**
@@ -147,7 +147,7 @@ Button* Controller::GetTopButton()
  */
 Button* Controller::GetLeftButton()
 {
-    return *leftButton;
+    return &leftButton;
 }
 
 /**
@@ -159,7 +159,7 @@ Button* Controller::GetLeftButton()
  */
 Button* Controller::GetRightButton()
 {
-    return *rightButton;
+    return &rightButton;
 }
 
 /**
@@ -171,7 +171,7 @@ Button* Controller::GetRightButton()
  */
 Button* Controller::GetBottomButton()
 {
-    return *bottomButton;
+    return &bottomButton;
 }
 
 /**
@@ -183,7 +183,7 @@ Button* Controller::GetBottomButton()
  */
 Joystick* Controller::GetJoystick()
 {
-    return *joystick;
+    return &joystick;
 }
 
 /**

@@ -38,6 +38,9 @@ class Button
         int debounceTimer = 0;
 
     public:
+
+        Button();
+
         /**
          * @brief Construct a new Button object.
          * Default constructor only sets the pin

@@ -45,6 +45,8 @@ class Controller
 
     public:
 
+        Controller();
+
         /**
          * @brief
          * Builds a new controller based on the pins
