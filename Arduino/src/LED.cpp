@@ -34,7 +34,7 @@ bool LED::TurnOn(){
 }
 
 bool LED::TurnOff(){
-     if (state == true)
+    if (state == true)
     {
         state = false;
         return true;
@@ -43,11 +43,7 @@ bool LED::TurnOff(){
 }
 
 bool LED::FlipState(){
-    if(state == true){
-        state = false;
-    }else{
-        state = true;
-    }
+    state = !state;
     return true;
 }
 
@@ -67,4 +63,3 @@ bool LED::Update()
     }
     return true;
 }
-    

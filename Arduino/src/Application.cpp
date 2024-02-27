@@ -143,6 +143,11 @@ bool Application::Reset()
  */
 bool Application::UpdateAll()
 {
+    if(millis()%1000 == 0)
+    {
+        controllerA->GetBarGraph()->FlipAll();
+    }
+
     controllerA->Update();
     controllerB->Update();
     muonDetector->Update();

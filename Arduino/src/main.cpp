@@ -76,7 +76,7 @@ void setup() {
   //Serial.begin(115200); // Démarre la communication série à 9600 bauds
   //Serial.println("HERE");
   //testBarGraph();
-
+  pinMode(13, OUTPUT);
   application.Setup();
 }
 
@@ -87,7 +87,12 @@ void loop() {
   // print the number of seconds since reset:
   //lcd.print(millis() / 1000);
   //Serial.println("LOOP");
-
+  static bool state = false;
+  if(millis()%500==0)
+  {
+    state = !state;
+    digitalWrite(13, state);
+  }
   application.UpdateAll();
 }
 

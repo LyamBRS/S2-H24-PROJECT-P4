@@ -21,6 +21,7 @@
 #include "Accelerometer.h"
 
 // - DEFINES - //
+#define HEARTHBEAT_TIME_MS 500
 
 // - CLASS - //
 
@@ -33,13 +34,14 @@
 class Controller 
 {
     private:
-        Button topButton;
-        Button bottomButton;
-        Button leftButton;
-        Button rightButton;
-        Accelerometer accelerometer;
-        Joystick joystick;
-        BarGraph barGraph;
+        Button* topButton;
+        Button* bottomButton;
+        Button* leftButton;
+        Button* rightButton;
+        Accelerometer* accelerometer;
+        Joystick* joystick;
+        BarGraph* barGraph;
+        LED* hearthbeat;
 
         bool isConnected = false;
 

@@ -86,7 +86,25 @@ Controller::Controller(int detectionPin,
                     int barGraphJPin,
                     int ID)
 {
-
+    hearthbeat = new LED(hearthBeatPin);
+    topButton = new Button(topButtonPin);
+    bottomButton = new Button(bottomButtonPin);
+    leftButton = new Button(leftButtonPin);
+    rightButton = new Button(rightButtonPin);
+    joystick = new Joystick(joystickButtonPin, joystickXAxisPin, joystickYAxisPin);
+    accelerometer = new Accelerometer(accelerometerXAxisPin, accelerometerYAxisPin, accelerometerZAxisPin);
+    barGraph = new BarGraph(                    
+        barGraphAPin, 
+        barGraphBPin,
+        barGraphCPin,
+        barGraphDPin, 
+        barGraphEPin,
+        barGraphFPin,
+        barGraphGPin, 
+        barGraphHPin,
+        barGraphIPin,
+        barGraphJPin
+    );
 }
 
 /**
@@ -99,6 +117,8 @@ Controller::Controller(int detectionPin,
  */
 bool Controller::Reset()
 {
+    barGraph->TurnAllOff();
+    hearthbeat->TurnOff();
     return false;
 }
 
@@ -111,7 +131,7 @@ bool Controller::Reset()
  */
 BarGraph* Controller::GetBarGraph()
 {
-    return &barGraph;
+    return barGraph;
 }
 
 /**
@@ -123,7 +143,7 @@ BarGraph* Controller::GetBarGraph()
  */
 Accelerometer* Controller::GetAccelerometer()
 {
-    return &accelerometer;
+    return accelerometer;
 }
         
 /**
@@ -135,7 +155,7 @@ Accelerometer* Controller::GetAccelerometer()
  */
 Button* Controller::GetTopButton()
 {
-    return &topButton;
+    return topButton;
 }
 
 /**
@@ -147,7 +167,7 @@ Button* Controller::GetTopButton()
  */
 Button* Controller::GetLeftButton()
 {
-    return &leftButton;
+    return leftButton;
 }
 
 /**
@@ -159,7 +179,7 @@ Button* Controller::GetLeftButton()
  */
 Button* Controller::GetRightButton()
 {
-    return &rightButton;
+    return rightButton;
 }
 
 /**
@@ -171,7 +191,7 @@ Button* Controller::GetRightButton()
  */
 Button* Controller::GetBottomButton()
 {
-    return &bottomButton;
+    return bottomButton;
 }
 
 /**
@@ -183,7 +203,7 @@ Button* Controller::GetBottomButton()
  */
 Joystick* Controller::GetJoystick()
 {
-    return &joystick;
+    return joystick;
 }
 
 /**
@@ -201,7 +221,8 @@ Joystick* Controller::GetJoystick()
  */
 bool Controller::SetGraphDisplay(int bits)
 {
-    return false;
+    barGraph->SetBits(bits);
+    return true;
 }
 
 /**
@@ -229,5 +250,19 @@ bool Controller::GetDetection()
  */
 bool Controller::Update()
 {
-    return false;
+    if(millis()%HEARTHBEAT_TIME_MS == 0)
+    {
+        hearthbeat->FlipState();
+    }
+
+    barGraph->Update();
+    accelerometer->Update();
+    joystick->Update();
+    hearthbeat->Update();
+    topButton->Update();
+    leftButton->Update();
+    rightButton->Update();
+    bottomButton->Update();
+
+    return true;
 }
