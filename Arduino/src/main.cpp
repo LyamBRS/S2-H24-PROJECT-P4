@@ -9,7 +9,7 @@
 
 #include "Application.h"
 
-Application* application = new Application();
+Application application;
 
 // Initialize your BarGraph with the appropriate pin numbers
 //BarGraph myBarGraph(44, 38, 40, 36, 42, 45, 43, 41, 39, 37);
@@ -78,7 +78,7 @@ void setup() {
   //Serial.println("HERE");
   //testBarGraph();
 
-  application->Setup();
+  application.Setup();
 }
 
 void loop() {
@@ -89,6 +89,6 @@ void loop() {
   //lcd.print(millis() / 1000);
   //Serial.println("LOOP");
 
-  application->UpdateAll();
+  application.UpdateAll();
 }
 
