@@ -244,7 +244,14 @@ bool TestMenu::DrawBarGraphTestMenu()
 
 bool TestMenu::DrawReceivedMessageMenuKeyboard()
 {
-    return false;
+    system("cls");
+	std::cout << "############################################" << std::endl;
+    std::cout << "            - Application Tests -           " << std::endl;
+	std::cout << "--------------------------------------------" << std::endl;
+    std::cout << "- Displays RAW data  received from arduino -" << std::endl;
+    std::cout << "-            Press esc to leave            -" << std::endl;
+	std::cout << "--------------------------------------------" << std::endl;
+    return true;
 }
 
 bool TestMenu::DrawControllerMenu()
@@ -455,6 +462,14 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
 
 bool TestMenu::HandleReceivedMessageMenuKeyboard(int keyBoardKey)
 {
+    switch (keyBoardKey)
+    {    
+        case KB_ESCAPE:
+                appRef->currentSelectedMenu = APP_MAIN_MENU;
+                selectedSubMenu = APP_MAIN_MENU;
+                selection = 0;
+                return true;
+    }
     return false;
 }
 
@@ -521,6 +536,9 @@ bool TestMenu::OnExit()
 
 bool TestMenu::Update()
 {
+    static std::string currentMessage = "";
+    static std::string oldMessage = "";
+
     if(!appRef->arduinoThread.GetArduino()->GetPortState())
     {
         selectedSubMenu = APP_NO_ARDUINO;
@@ -533,5 +551,17 @@ bool TestMenu::Update()
             selectedSubMenu = APP_MAIN;
         }
     }
+
+    currentMessage = appRef->arduinoThread.GetArduino()->GetLastRawMessage();
+    if(oldMessage != currentMessage)
+    {
+        oldMessage = currentMessage;
+        if(selectedSubMenu == APP_RECEIVED_MESSAGE)
+        {
+            PrintInColour(std::cout, currentMessage, colors::aqua, colors::black);
+            std::cout << "\r" << std::flush;  
+        }
+    }
+
     return true;
 }

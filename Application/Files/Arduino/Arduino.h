@@ -114,6 +114,7 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
             int UpdatesBeforeNextHandshake = 0;
 
             std::string wantedLCDMessage = "";
+            std::string lastReceivedMessage = "";
         
             /**
              * @brief 
@@ -217,6 +218,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * Welp, I guess something went wrong eh?
              */
             bool Update();
+
+            std::string GetLastRawMessage();
 
             /**
              * @brief Set the New LCD Message.

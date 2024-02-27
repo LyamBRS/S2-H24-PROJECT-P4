@@ -116,7 +116,7 @@ bool Arduino::ParseReceivedMessage()
         // Not necessarly an error ofc.
         return false;
     }
-
+    lastReceivedMessage = receivedMessage;
     jsonToParse = nlohmann::json::parse(receivedMessage, nullptr, false);
     if(jsonToParse.is_discarded())
     {
@@ -171,6 +171,10 @@ bool Arduino::ParseReceivedMessage()
     return true;
 }
 
+std::string Arduino::GetLastRawMessage()
+{
+    return lastReceivedMessage;
+}
 
 /**
  * @brief Construct a new Arduino object.
