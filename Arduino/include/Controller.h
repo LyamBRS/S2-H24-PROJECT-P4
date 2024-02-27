@@ -116,8 +116,8 @@ class Controller
                     int barGraphGPin, 
                     int barGraphHPin,
                     int barGraphIPin,
-                    int ID
-                    );
+                    int barGraphJPin,
+                    int ID);
 
         /**
          * @brief 
