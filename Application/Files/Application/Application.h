@@ -65,6 +65,17 @@ class Application
          */
         bool HandleKeyboardActions();
 
+        /**
+         * @brief 
+         * Simple function which handles the generic update
+         * functions of the currently selected menu.
+         * @return true:
+         * Successfully updated the current menu
+         * @return false:
+         * Failed to update the current menu
+         */
+        bool HandleMenuUpdates();
+
         std::vector<Menu*> menus;
     public:
 

@@ -339,6 +339,17 @@ bool Arduino::SetNewLCDMessage(std::string newMessage)
 
 /**
  * @brief 
+ * Returns the current LCD message set to be
+ * sent to the arduino.
+ * @return std::string 
+ */
+std::string Arduino::GetLCDMessage()
+{
+    return wantedLCDMessage;
+}
+
+/**
+ * @brief 
  * Tells you how many controllers are currently
  * responding on the Arduino. To see which
  * controller specifically, you MUST obtain the

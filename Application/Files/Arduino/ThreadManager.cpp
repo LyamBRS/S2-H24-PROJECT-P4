@@ -76,10 +76,13 @@ int ArduinoThreadManager::GetFunctionExecutionResult()
 
 bool ArduinoThreadManager::SetExecutionFunction(unsigned char newExecutionFunction)
 {
+    waitForExecutionTimer.Reset();
     executionResult = 0;
     wantedFunction = newExecutionFunction;
     return true;
 }
+
+
 
 /**
  * @brief 
@@ -104,14 +107,51 @@ bool ArduinoThreadManager::WaitTillFunctionExecuted()
     return true;
 }
 
-bool ArduinoThreadManager::GetThreadStatus()
+/**
+ * @brief 
+ * Tells you if the function should be executed or not.
+ * It is a spinoff of @ref WaitTillFunctionExecuted
+ * which doesnt block the program.
+ * @return true:
+ * timeout happenned / function has executed
+ * @return false:
+ * Still waiting on the function to be executed.
+ */
+bool ArduinoThreadManager::FunctionShouldBeExecuted()
 {
-    //std::cout << threadValues << " " << oldThreadValues << std::endl;
-    if(threadValues == oldThreadValues)
+    int timeLeft = waitForExecutionTimer.TimeLeft();
+
+    if(timeLeft==0)
+    {
+        return true;
+    }
+
+    if(GetFunctionExecutionResult() == 0)
     {
         return false;
     }
+    return true;
+}
+
+bool ArduinoThreadManager::GetThreadStatus()
+{
+    //std::cout << threadValues << " " << oldThreadValues << std::endl;
+    static bool wasNotAnswering = false;
+
+    if(threadValues == oldThreadValues)
+    {
+        if(wasNotAnswering)
+        {
+            return false;
+        }
+        else
+        {
+            wasNotAnswering = true;
+            return true;
+        }
+    }
     oldThreadValues = threadValues;
+    wasNotAnswering = false;
     return true;
 }
 

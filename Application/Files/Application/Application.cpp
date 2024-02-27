@@ -81,6 +81,20 @@ bool Application::HandleMenuDrawings()
 
 /**
  * @brief 
+ * Simple function which handles the generic update
+ * functions of the currently selected menu.
+ * @return true:
+ * Successfully updated the current menu
+ * @return false:
+ * Failed to update the current menu
+ */
+bool Application::HandleMenuUpdates()
+{
+    return menus[appHandler.currentSelectedMenu]->Update();
+}
+
+/**
+ * @brief 
  * Updates the application each QT frames.
  * Calls all the Update functions of all the
  * things in the application.
@@ -100,6 +114,7 @@ bool Application::Update()
 
     HandleMenuDrawings();
     HandleKeyboardActions();
+    HandleMenuUpdates();
 
     if(appHandler.frameTimer.TimeLeft() == 0)
     {

@@ -445,8 +445,8 @@ bool ArduinoMenu::DrawIsConnectingMenu()
 {
     system("cls");
     std::cout << "############################################" << std::endl;
-    std::cout << "CONNECTING PLEASE WAIT" << std::endl;
-	std::cout << "--------------------------------------------" << std::endl;
+    std::cout << "CONNECTING PLEASE WAIT " << std::endl;
+    std::cout << "--------------------------------------------" << std::endl;
 
     auto drawConnectionResult = [](int selection)
     {
@@ -462,17 +462,72 @@ bool ArduinoMenu::DrawIsConnectingMenu()
         }
     };
 
-    appRef->arduinoThread.WaitTillFunctionExecuted();
+    const std::string spinner[] = { 
+        "[                                          ]",
+        "[#                                         ]",
+        "[##                                        ]",
+        "[###                                       ]",
+        "[ ####                                     ]",
+        "[  ####                                    ]",
+        "[   ####                                   ]",
+        "[    ####                                  ]",
+        "[     ####                                 ]",
+        "[      ####                                ]",
+        "[       ####                               ]",
+        "[        ####                              ]",
+        "[         ####                             ]",
+        "[          ####                            ]",
+        "[           ####                           ]",
+        "[            ####                          ]",
+        "[             ####                         ]",
+        "[              ####                        ]",
+        "[               ####                       ]",
+        "[                ####                      ]",
+        "[                 ####                     ]",
+        "[                  ####                    ]",
+        "[                   ####                   ]",
+        "[                    ####                  ]",
+        "[                     ####                 ]",
+        "[                      ####                ]",
+        "[                       ####               ]",
+        "[                        ####              ]",
+        "[                         ####             ]",
+        "[                          ####            ]",
+        "[                           ####           ]",
+        "[                            ####          ]",
+        "[                             ####         ]",
+        "[                              ####        ]",
+        "[                               ####       ]",
+        "[                                ####      ]",
+        "[                                 ####     ]",
+        "[                                  ####    ]",
+        "[                                   ####   ]",
+        "[                                    ####  ]",
+        "[                                     #### ]",
+        "[                                      ####]",
+        "[                                       ###]",
+        "[                                        ##]",
+        "[                                         #]",
+                                    };
+    int i = 0;
+    while(!appRef->arduinoThread.FunctionShouldBeExecuted())
+    {
+        i++;
+        PrintInColour(std::cout, spinner[i % 45], colors::aqua, colors::black);
+        std::cout << "\r" << std::flush;
+        Sleep(5);
+    }
+
     int result = appRef->arduinoThread.GetFunctionExecutionResult();
     drawConnectionResult(result);
-	std::cout << "--------------------------------------------" << std::endl;
+	std::cout << "\r--------------------------------------------" << std::endl;
     std::cout << "PRESS ANYTHING TO GO BACK TO MENUS" << std::endl;
     std::cout << "############################################" << std::endl;
 
     _getch();
     if(result == 1)
     {
-        selectedSubMenu = APP_ARDUINO_MENU;
+        selectedSubMenu = 0;
         return true;
     }
     selectedSubMenu = APP_CONNECTING_MENU;

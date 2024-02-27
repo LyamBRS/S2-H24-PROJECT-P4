@@ -74,6 +74,18 @@ public:
      */
     bool WaitTillFunctionExecuted();
 
+    /**
+     * @brief 
+     * Tells you if the function should be executed or not.
+     * It is a spinoff of @ref WaitTillFunctionExecuted
+     * which doesnt block the program.
+     * @return true:
+     * timeout happenned / function has executed
+     * @return false:
+     * Still waiting on the function to be executed.
+     */
+    bool FunctionShouldBeExecuted();
+
     bool SetExecutionFunction(unsigned char newExecutionFunction);
 
     bool GetThreadStatus();
