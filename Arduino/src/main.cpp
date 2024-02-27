@@ -7,9 +7,10 @@
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
 
-
+#include "Application.h"
 #include "BarGraph.h"
 
+Application application();
 
  // Initialize your BarGraph with the appropriate pin numbers
 BarGraph myBarGraph(44, 38, 40, 36, 42, 45, 43, 41, 39, 37);

@@ -31,6 +31,78 @@ Application::Application()
 
 /**
  * @brief 
+ * Sets up the entire application.
+ * This needs to be called in void setup.
+ * @return true:
+ * Successfully created the application.
+ * @return false:
+ * Failed to create the application.
+ */
+bool Application::Setup()
+{
+    controllerA = new Controller(
+        PIN_CONTROLLER_A_DETECTION,
+        PIN_CONTROLLER_A_TOP_BUTTON,
+        PIN_CONTROLLER_A_R_BUTTON,
+        PIN_CONTROLLER_A_L_BUTTON,
+        PIN_CONTROLLER_A_BOT_BUTTON,
+        PIN_CONTROLLER_A_JOY_BUTTON,
+        PIN_CONTROLLER_A_JOY_X,
+        PIN_CONTROLLER_A_JOY_Y,
+        PIN_CONTROLLER_A_ACCELEROMETER_X,
+        PIN_CONTROLLER_A_ACCELEROMETER_Y,
+        PIN_CONTROLLER_A_ACCELEROMETER_Z,
+        PIN_CONTROLLER_A_HEARTHBEAT,
+        PIN_CONTROLLER_A_BARGRAPH_A,
+        PIN_CONTROLLER_A_BARGRAPH_B,
+        PIN_CONTROLLER_A_BARGRAPH_C,
+        PIN_CONTROLLER_A_BARGRAPH_D,
+        PIN_CONTROLLER_A_BARGRAPH_E,
+        PIN_CONTROLLER_A_BARGRAPH_F,
+        PIN_CONTROLLER_A_BARGRAPH_G,
+        PIN_CONTROLLER_A_BARGRAPH_H,
+        PIN_CONTROLLER_A_BARGRAPH_I,
+        PIN_CONTROLLER_A_BARGRAPH_J,
+        0
+    );
+
+    controllerB = new Controller(
+        PIN_CONTROLLER_B_DETECTION,
+        PIN_CONTROLLER_B_TOP_BUTTON,
+        PIN_CONTROLLER_B_R_BUTTON,
+        PIN_CONTROLLER_B_L_BUTTON,
+        PIN_CONTROLLER_B_BOT_BUTTON,
+        PIN_CONTROLLER_B_JOY_BUTTON,
+        PIN_CONTROLLER_B_JOY_X,
+        PIN_CONTROLLER_B_JOY_Y,
+        PIN_CONTROLLER_B_ACCELEROMETER_X,
+        PIN_CONTROLLER_B_ACCELEROMETER_Y,
+        PIN_CONTROLLER_B_ACCELEROMETER_Z,
+        PIN_CONTROLLER_B_HEARTHBEAT,
+        PIN_CONTROLLER_B_BARGRAPH_A,
+        PIN_CONTROLLER_B_BARGRAPH_B,
+        PIN_CONTROLLER_B_BARGRAPH_C,
+        PIN_CONTROLLER_B_BARGRAPH_D,
+        PIN_CONTROLLER_B_BARGRAPH_E,
+        PIN_CONTROLLER_B_BARGRAPH_F,
+        PIN_CONTROLLER_B_BARGRAPH_G,
+        PIN_CONTROLLER_B_BARGRAPH_H,
+        PIN_CONTROLLER_B_BARGRAPH_I,
+        PIN_CONTROLLER_B_BARGRAPH_J,
+        1
+    );
+
+    muonDetector = new MuonDetector(PIN_MUON);
+
+    LCD.lcdInit();
+
+    communication.StartSerial(115200);
+    communication.LinkControllers(controllerA, controllerB);
+    communication.LinkMuonDetector(muonDetector);
+}
+
+/**
+ * @brief 
  * Resets everything to OFF.
  * @return true:
  * Successfully reset to its default state
@@ -39,7 +111,9 @@ Application::Application()
  */
 bool Application::Reset()
 {
-    return false;
+    controllerA.Reset();
+    controllerB.Reset();
+    return true;
 }
 
 /**
@@ -53,7 +127,11 @@ bool Application::Reset()
  */
 bool Application::UpdateAll()
 {
-    return false;
+    controllerA.Update();
+    controllerB.Update();
+    muonDetector.Update();
+    communication.Update();
+    return true;
 }
 
 /**
