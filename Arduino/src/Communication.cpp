@@ -154,7 +154,7 @@ Communication::Communication()
  * @return false:
  * Failed to start the serial.
  */
-bool Communication::StartSerial(int baudRate)
+bool Communication::StartSerial(unsigned long baudRate)
 {
     Serial.begin(BAUD);
     serialSetUp = true;

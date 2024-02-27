@@ -149,7 +149,7 @@ class Communication
          * @return false:
          * Failed to start the serial.
          */
-        bool StartSerial(int baudRate);
+        bool StartSerial(unsigned long baudRate);
 
         /**
          * @brief 

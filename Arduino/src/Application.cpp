@@ -18,6 +18,19 @@
 
 // - CLASS - //
 
+// - LCD - //
+#ifndef LCDCLASS
+#define LCDCLASS
+const int 
+rs = PIN_LCD_RS, // register select
+en = PIN_LCD_EN, // Enable
+d4 = PIN_LCD_D4, //data pins
+d5 = PIN_LCD_D5,
+d6 = PIN_LCD_D6,
+d7 = PIN_LCD_D7;
+ LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
+#endif
+
 /**
  * @brief Construct a new Application object.
  * This is done in void setup.
@@ -99,6 +112,7 @@ bool Application::Setup()
     communication.StartSerial(115200);
     communication.LinkControllers(controllerA, controllerB);
     communication.LinkMuonDetector(muonDetector);
+    return true;
 }
 
 /**
