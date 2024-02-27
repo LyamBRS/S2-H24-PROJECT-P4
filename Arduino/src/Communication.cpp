@@ -243,6 +243,8 @@ void Communication::Update()
         errorMessage = CE_COMMUNICATION_LOST;
     }
 
+
+
     if(shouldRead_) // Communication received on serial port.
     {
         millisWhenLastRead = millis();
@@ -250,6 +252,19 @@ void Communication::Update()
         if(!SendMessage())          {return;}
         errorMessage = CE_NO_ERRORS;
     }
+}
+
+/**
+ * @brief 
+ * Tells you if you are actively receiving a message or not
+ * @return true:
+ * A is being received
+ * @return false:
+ * No message is being received.
+ */
+bool Communication::IsReceivingAMessage()
+{
+    return true;
 }
 
 /**

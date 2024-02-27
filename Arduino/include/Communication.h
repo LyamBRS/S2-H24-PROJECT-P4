@@ -216,4 +216,15 @@ class Communication
          * @return string 
          */
         String GetErrorMessage();
+
+        /**
+         * @brief 
+         * Tells you if a message was received and if it was
+         * appended.
+         * @return true:
+         * A message was appended.
+         * @return false:
+         * No message was appended.
+         */
+        bool AppendIncommingMessage();
 };
