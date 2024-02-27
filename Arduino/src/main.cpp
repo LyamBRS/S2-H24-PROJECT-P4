@@ -7,8 +7,10 @@
 
 
 #include "Application.h"
+#include "SimpleTimer.h"
 
 Application application;
+SimpleTimer testLED = SimpleTimer(500);
 
 // Initialize your BarGraph with the appropriate pin numbers
 //BarGraph myBarGraph(44, 38, 40, 36, 42, 45, 43, 41, 39, 37);
@@ -88,7 +90,7 @@ void loop() {
   //lcd.print(millis() / 1000);
   //Serial.println("LOOP");
   static bool state = false;
-  if(millis()%500==0)
+  if(testLED.TimeLeft()==0)
   {
     state = !state;
     digitalWrite(13, state);

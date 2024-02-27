@@ -43,7 +43,7 @@ class Controller
         Joystick* joystick;
         BarGraph* barGraph;
         LED* hearthbeat;
-        SimpleTimer hearthbeatTimer(500);
+        SimpleTimer hearthbeatTimer = SimpleTimer(500);
 
         bool isConnected = false;
 

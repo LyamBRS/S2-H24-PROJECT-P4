@@ -21,7 +21,7 @@
  * milliseconds to get a timer.
  * @return uint64_t 
  */
-unsigned int SimpleTimer::GetCurrentMilliseconds()
+int SimpleTimer::GetCurrentMilliseconds()
 {
     return millis();
 }
@@ -44,7 +44,7 @@ unsigned int SimpleTimer::GetCurrentMilliseconds()
  * @param newTimerDurationInMS
  * How long should the timer be for?
  */
-SimpleTimer::SimpleTimer(unsigned int newTimerDurationInMS)
+SimpleTimer::SimpleTimer(int newTimerDurationInMS)
 {
     timerDurationMS = newTimerDurationInMS;
     lastCheckedValue = GetCurrentMilliseconds();
@@ -61,7 +61,7 @@ SimpleTimer::SimpleTimer(unsigned int newTimerDurationInMS)
  * @return false:
  * Failed to set a new duration to the timer.
  */
-bool SimpleTimer::SetDuration(unsigned int newTimerDurationInMS)
+bool SimpleTimer::SetDuration(int newTimerDurationInMS)
 {
     lastCheckedValue = GetCurrentMilliseconds();
     currentValue = GetCurrentMilliseconds();
@@ -94,7 +94,7 @@ bool SimpleTimer::Reset()
  * @return uint64_t
  * How long until it reaches 0 (milliseconds) 
  */
-uint64_t SimpleTimer::TimeLeft()
+int SimpleTimer::TimeLeft()
 {
     currentValue = GetCurrentMilliseconds();
     uint64_t delta = currentValue - lastCheckedValue;

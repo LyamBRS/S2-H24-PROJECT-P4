@@ -36,17 +36,17 @@ class SimpleTimer
 {
     private:
         /// @brief Stores how long the timer should be going for.
-        unsigned int timerDurationMS = 0;
+        int timerDurationMS = 0;
 
-        unsigned int lastCheckedValue = 0;
-        unsigned int currentValue = 0;
+        int lastCheckedValue = 0;
+        int currentValue = 0;
 
         /**
          * @brief
          * Returns How long the arduino has been running for.
          * @return uint64_t 
          */
-        unsigned int GetCurrentMilliseconds();
+        int GetCurrentMilliseconds();
     public:
 
         /**
@@ -67,7 +67,7 @@ class SimpleTimer
          * @param newTimerDurationInMS
          * How long should the timer be for?
          */
-        SimpleTimer(unsigned int newTimerDurationInMS);
+        SimpleTimer(int newTimerDurationInMS);
 
         /**
          * @brief
@@ -79,7 +79,7 @@ class SimpleTimer
          * @return false:
          * Failed to set a new duration to the timer.
          */
-        bool SetDuration(unsigned int newTimerDurationInMS);
+        bool SetDuration(int newTimerDurationInMS);
 
         /**
          * @brief 
@@ -101,5 +101,5 @@ class SimpleTimer
          * @return uint64_t
          * How long until it reaches 0 (milliseconds) 
          */
-        unsigned int TimeLeft();
+        int TimeLeft();
 };
