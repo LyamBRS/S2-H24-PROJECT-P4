@@ -802,10 +802,16 @@ bool ArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
                         return true;
                     }
 
-                    if(appRef->arduinoThread.SetExecutionFunction(Functions::startComPort))
+                   //if(appRef->arduinoThread.SetExecutionFunction(Functions::startComPort))
+                   //{
+                   //    selection = 4;
+                   //    selectedSubMenu = APP_IS_CONNECTING_MENU;
+                   //    return true;
+                   //}
+                    if(appRef->arduinoThread.GetArduino()->Connect())
                     {
-                        selection = 4;
-                        selectedSubMenu = APP_IS_CONNECTING_MENU;
+                        selection = 1;
+                        selectedSubMenu = APP_MAIN_MENU;
                         return true;
                     }
                     else

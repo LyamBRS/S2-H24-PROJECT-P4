@@ -116,17 +116,20 @@ bool Application::Update()
     HandleKeyboardActions();
     HandleMenuUpdates();
 
+    //appHandler.arduinoThread.threadFunction(0);
+    appHandler.arduinoThread.GetArduino()->Update();
+
     if(appHandler.frameTimer.TimeLeft() == 0)
     {
         //appHandler.arduinoThread.GetArduino()->Update();
         appHandler.currentGame.Update();
     }
 
-    if(!appHandler.arduinoThread.GetThreadStatus())
-    {
-        std::cout << std::endl;
-        std::cout << "THREAD IS NO LONGER LIVING" << std::endl;
-    }
+    //if(!appHandler.arduinoThread.GetThreadStatus())
+    //{
+    //   //std::cout << std::endl;
+    //   //std::cout << "THREAD IS NO LONGER LIVING" << std::endl;
+    //}
 
     return true;
 }

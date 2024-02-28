@@ -20,6 +20,7 @@ void ArduinoThreadManager::threadFunction(int newValue)
 {
     while(shouldExecute)
     {
+        shouldExecute = false;
         try{
             threadValues++;
             while(delayBetweenMessageTimer.TimeLeft() != 0)
@@ -65,7 +66,7 @@ void ArduinoThreadManager::threadFunction(int newValue)
             std::cout << std::endl << "THREAD: ERROR" << std::endl;
         }
     }
-    std::cout << std::endl << "THREAD: FATAL WHILE ERROR" << std::endl;
+    //std::cout << std::endl << "THREAD: FATAL WHILE ERROR" << std::endl;
 }
 
 /**

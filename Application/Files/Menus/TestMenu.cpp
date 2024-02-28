@@ -91,7 +91,7 @@ bool TestMenu::DrawLCDTestMenu()
 
     // CHARACTER LEFT
     PrintInColour(std::cout, "Characters left: ", colors::lightgrey, colors::black);
-    PrintInColour(std::cout, std::to_string(20-newLCDMessage.length()), colors::darkpurple, colors::black);
+    PrintInColour(std::cout, std::to_string(16-newLCDMessage.length()), colors::darkpurple, colors::black);
     std::cout << std::endl;
 
 
@@ -109,8 +109,8 @@ bool TestMenu::DrawLCDTestMenu()
         case(LCD_REMOVED_A_LETTER):         PrintInColour(std::cout, "-       Letters successfully removed       -", colors::leaf, colors::black); break;
         case(LCD_ADDED_A_LETTER):           PrintInColour(std::cout, "-        Letters successfully added        -", colors::leaf, colors::black); break;
         case(LCD_ALREADY_EMPTY):            PrintInColour(std::cout, "-  No need,  the message is already empty  -", colors::gold, colors::black); break;
-        case(LCD_MESSAGE_TOO_LONG):         PrintInColour(std::cout, "- Message's lenght of  20 already acheived -", colors::gold, colors::black); break;
-        case(LCD_MESSAGE_MUST_BE_20_LONG):  PrintInColour(std::cout, "-    Your message must be 20 characters    -", colors::red, colors::black); break;
+        case(LCD_MESSAGE_TOO_LONG):         PrintInColour(std::cout, "- Message's lenght of  16 already acheived -", colors::gold, colors::black); break;
+        case(LCD_MESSAGE_MUST_BE_20_LONG):  PrintInColour(std::cout, "-    Your message must be 16 characters    -", colors::red, colors::black); break;
         case(LCD_INCORRECT_KEYBOARD):       PrintInColour(std::cout, "- INVALID KEY PRESSED.  WATCHU DOING BREH? -", colors::white, colors::red); break;
         case(LCD_MESSAGE_UPDATED):          PrintInColour(std::cout, "-      YOUR MESSAGE IS NOW BEING SENT      -", colors::black, colors::green); break;
     }
@@ -176,18 +176,18 @@ bool TestMenu::DrawBarGraphTestMenu()
 	std::cout << "\n--------------------------------------------" << std::endl;
     std::cout << "- ";
 
-    int bitsA = appRef->arduinoThread.GetArduino()->GetPlayerController(0)->barGraphBits;
-    int bitsB = appRef->arduinoThread.GetArduino()->GetPlayerController(1)->barGraphBits;
+    int bitsA = appRef->arduinoThread.GetArduino()->GetPlayerController(0)->ReceivedBarGraphBits;
+    int bitsB = appRef->arduinoThread.GetArduino()->GetPlayerController(1)->ReceivedBarGraphBits;
 
     if(bitsA > 0b1111111111 || bitsA<0)
     {
-        appRef->arduinoThread.GetArduino()->GetPlayerController(0)->barGraphBits = 0;
+        appRef->arduinoThread.GetArduino()->GetPlayerController(0)->ReceivedBarGraphBits = 0;
         bitsA = 0;
     }
 
     if(bitsB > 0b1111111111 || bitsB<0)
     {
-        appRef->arduinoThread.GetArduino()->GetPlayerController(1)->barGraphBits = 0;
+        appRef->arduinoThread.GetArduino()->GetPlayerController(1)->ReceivedBarGraphBits = 0;
         bitsB = 0;
     }
 
@@ -330,7 +330,7 @@ bool TestMenu::HandleLCDTestMenuKeyboard(int keyBoardKey)
                 return true;
 
         case KB_ENTER:
-                if(newLCDMessage.length() != 20)
+                if(newLCDMessage.length() != 16)
                 {
                     selection = LCD_MESSAGE_MUST_BE_20_LONG;
                     return true;
@@ -341,7 +341,7 @@ bool TestMenu::HandleLCDTestMenuKeyboard(int keyBoardKey)
     }
     if(keyBoardKey>31 && keyBoardKey<127)
     {
-        if(newLCDMessage.length() >= 20)
+        if(newLCDMessage.length() >= 16)
         {
             selection = LCD_MESSAGE_TOO_LONG;
             return true;
@@ -453,8 +453,8 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
 
         case KB_ENTER:
                 bargraphMessage = "         Updated sent bargraph data";
-                appRef->arduinoThread.GetArduino()->GetPlayerController(0)->barGraphBits = wantedBitsPlayerA;
-                appRef->arduinoThread.GetArduino()->GetPlayerController(1)->barGraphBits = wantedBitsPlayerB;
+                appRef->arduinoThread.GetArduino()->GetPlayerController(0)->SentBarGraphBits = wantedBitsPlayerA;
+                appRef->arduinoThread.GetArduino()->GetPlayerController(1)->SentBarGraphBits = wantedBitsPlayerB;
                 return false;
     }
     return false;
@@ -554,8 +554,13 @@ bool TestMenu::Update()
     }
 
     currentMessage = appRef->arduinoThread.GetArduino()->GetLastRawMessage();
-    if(oldMessage != currentMessage)
+    //if(oldMessage != currentMessage)
+    if(true)
     {
+        if(currentMessage.size() == 0)
+        {
+            return true;
+        }
         if(selectedSubMenu == APP_RECEIVED_MESSAGE)
         {
             std::string messageToShow = currentMessage;
@@ -567,8 +572,10 @@ bool TestMenu::Update()
                     messageToShow += " ";
                 }
             }
+            SetTerminalCursorPosition(0,6);
             PrintInColour(std::cout, messageToShow, colors::aqua, colors::black);
-            std::cout << "\r" << std::flush;  
+            //PrintInColour(std::cout, std::to_string(appRef->arduinoThread.GetArduino()->AmountOfTimesSent), colors::aqua, colors::black);
+            std::cout << std::flush;  
         }
         oldMessage = currentMessage;
     }

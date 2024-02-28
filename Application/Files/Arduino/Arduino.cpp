@@ -59,7 +59,6 @@ bool VerifyBaudRate(unsigned int baudRateToverify)
  */
 bool Arduino::GenerateAndSendMessage()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to send a message while connection is not established" << std::endl;
@@ -67,11 +66,13 @@ bool Arduino::GenerateAndSendMessage()
         return false;
     }
 
+    AmountOfTimesSent++;
+
     nlohmann::json jsonToSend;
 
     jsonToSend[CA_LCD_MESSAGE] = wantedLCDMessage;
-    jsonToSend[CA_BAR_GRAPH_A] = controllers[0]->barGraphBits;
-    jsonToSend[CA_BAR_GRAPH_B] = controllers[1]->barGraphBits;
+    jsonToSend[CA_BAR_GRAPH_A] = GetPlayerController(0)->SentBarGraphBits;
+    jsonToSend[CA_BAR_GRAPH_B] = GetPlayerController(1)->SentBarGraphBits;
 
     if(!serialHandler.SendToSerial(jsonToSend))
     {
@@ -95,7 +96,6 @@ bool Arduino::GenerateAndSendMessage()
  */
 bool Arduino::ParseReceivedMessage()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     if(!serialHandler.ConnectionStatus())
     {
         std::cerr << "Attempted to parse a message while connection is not established" << std::endl;
@@ -103,23 +103,12 @@ bool Arduino::ParseReceivedMessage()
         return false;
     }
 
-    std::string receivedMessage;
+    lastReceivedMessage = currentMessage;
+
     nlohmann::json jsonToParse;
     jsonToParse.clear();
-
-    if(!serialHandler.GetSerialMessage(receivedMessage))
-    {
-        std::cerr << "Failed to get a message back from serial port" << std::endl;
-        return false;
-    }
-
-    if(receivedMessage.size() == 0)
-    {
-        // Not necessarly an error ofc.
-        return false;
-    }
-    lastReceivedMessage = receivedMessage;
-    jsonToParse = nlohmann::json::parse(receivedMessage, nullptr, false);
+    jsonToParse = nlohmann::json::parse(currentMessage, nullptr, false);
+    currentMessage = "";
     if(jsonToParse.is_discarded())
     {
         return false;
@@ -134,48 +123,47 @@ bool Arduino::ParseReceivedMessage()
     }
 
     // - ACCELEROMETER - //
-    if(!jsonToParse[CA_ACCELEROMETER_X_A].is_null())    controllers[0]->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_A].template get<int>(); else controllers[0]->accelerometerX = -1;
-    if(!jsonToParse[CA_ACCELEROMETER_Y_A].is_null())    controllers[0]->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_A].template get<int>(); else controllers[0]->accelerometerY = -1;
-    if(!jsonToParse[CA_ACCELEROMETER_Z_A].is_null())    controllers[0]->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_A].template get<int>(); else controllers[0]->accelerometerZ = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_X_A].is_null())    GetPlayerController(0)->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_A].template get<int>(); else GetPlayerController(0)->accelerometerX = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_Y_A].is_null())    GetPlayerController(0)->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_A].template get<int>(); else GetPlayerController(0)->accelerometerY = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_Z_A].is_null())    GetPlayerController(0)->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_A].template get<int>(); else GetPlayerController(0)->accelerometerZ = -1;
     
-    if(!jsonToParse[CA_ACCELEROMETER_X_B].is_null())    controllers[1]->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_B].template get<int>(); else controllers[1]->accelerometerX = -1;
-    if(!jsonToParse[CA_ACCELEROMETER_Y_B].is_null())    controllers[1]->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_B].template get<int>(); else controllers[1]->accelerometerY = -1;
-    if(!jsonToParse[CA_ACCELEROMETER_Z_B].is_null())    controllers[1]->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_B].template get<int>(); else controllers[1]->accelerometerZ = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_X_B].is_null())    GetPlayerController(1)->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_B].template get<int>(); else GetPlayerController(1)->accelerometerX = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_Y_B].is_null())    GetPlayerController(1)->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_B].template get<int>(); else GetPlayerController(1)->accelerometerY = -1;
+    if(!jsonToParse[CA_ACCELEROMETER_Z_B].is_null())    GetPlayerController(1)->accelerometerZ = jsonToParse[CA_ACCELEROMETER_Z_B].template get<int>(); else GetPlayerController(1)->accelerometerZ = -1;
 
     // - JOYSTICK - //
-    if(!jsonToParse[CA_JOYSTICK_X_A].is_null())         controllers[0]->joystickX = jsonToParse[CA_JOYSTICK_X_A].template get<int>(); else controllers[0]->joystickX = -1;
-    if(!jsonToParse[CA_JOYSTICK_Y_A].is_null())         controllers[0]->joystickY = jsonToParse[CA_JOYSTICK_Y_A].template get<int>(); else controllers[0]->joystickY = -1;
-    if(!jsonToParse[CA_JOYSTICK_BUTTON_A].is_null())    controllers[0]->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_A].template get<int>(); else controllers[0]->joystickButton = -1;
+    if(!jsonToParse[CA_JOYSTICK_X_A].is_null())         GetPlayerController(0)->joystickX = jsonToParse[CA_JOYSTICK_X_A].template get<int>(); else GetPlayerController(0)->joystickX = -1;
+    if(!jsonToParse[CA_JOYSTICK_Y_A].is_null())         GetPlayerController(0)->joystickY = jsonToParse[CA_JOYSTICK_Y_A].template get<int>(); else GetPlayerController(0)->joystickY = -1;
+    if(!jsonToParse[CA_JOYSTICK_BUTTON_A].is_null())    GetPlayerController(0)->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_A].template get<int>(); else GetPlayerController(0)->joystickButton = -1;
     
-    if(!jsonToParse[CA_JOYSTICK_X_B].is_null())         controllers[1]->joystickX = jsonToParse[CA_JOYSTICK_X_B].template get<int>(); else controllers[1]->joystickX = -1;
-    if(!jsonToParse[CA_JOYSTICK_Y_B].is_null())         controllers[1]->joystickY = jsonToParse[CA_JOYSTICK_Y_B].template get<int>(); else controllers[1]->joystickY = -1;
-    if(!jsonToParse[CA_JOYSTICK_BUTTON_B].is_null())    controllers[1]->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_B].template get<bool>(); else controllers[1]->joystickButton = false;
+    if(!jsonToParse[CA_JOYSTICK_X_B].is_null())         GetPlayerController(1)->joystickX = jsonToParse[CA_JOYSTICK_X_B].template get<int>(); else GetPlayerController(1)->joystickX = -1;
+    if(!jsonToParse[CA_JOYSTICK_Y_B].is_null())         GetPlayerController(1)->joystickY = jsonToParse[CA_JOYSTICK_Y_B].template get<int>(); else GetPlayerController(1)->joystickY = -1;
+    if(!jsonToParse[CA_JOYSTICK_BUTTON_B].is_null())    GetPlayerController(1)->joystickButton = jsonToParse[CA_JOYSTICK_BUTTON_B].template get<bool>(); else GetPlayerController(1)->joystickButton = false;
 
     // - BUTTONS - //
-    if(!jsonToParse[CA_BOTTOM_BUTTON_A].is_null())      controllers[0]->bottomButton = jsonToParse[CA_BOTTOM_BUTTON_A].template get<bool>(); else controllers[0]->bottomButton = false;
-    if(!jsonToParse[CA_TOP_BUTTON_A].is_null())         controllers[0]->topButton = jsonToParse[CA_TOP_BUTTON_A].template get<bool>(); else controllers[0]->topButton = false;
-    if(!jsonToParse[CA_RIGHT_BUTTON_A].is_null())       controllers[0]->rightButton = jsonToParse[CA_RIGHT_BUTTON_A].template get<bool>(); else controllers[0]->rightButton = false;
-    if(!jsonToParse[CA_LEFT_BUTTON_A].is_null())        controllers[0]->leftButton = jsonToParse[CA_LEFT_BUTTON_A].template get<bool>(); else controllers[0]->leftButton = false;
+    if(!jsonToParse[CA_BOTTOM_BUTTON_A].is_null())      GetPlayerController(0)->bottomButton = jsonToParse[CA_BOTTOM_BUTTON_A].template get<bool>(); else GetPlayerController(0)->bottomButton = false;
+    if(!jsonToParse[CA_TOP_BUTTON_A].is_null())         GetPlayerController(0)->topButton = jsonToParse[CA_TOP_BUTTON_A].template get<bool>(); else GetPlayerController(0)->topButton = false;
+    if(!jsonToParse[CA_RIGHT_BUTTON_A].is_null())       GetPlayerController(0)->rightButton = jsonToParse[CA_RIGHT_BUTTON_A].template get<bool>(); else GetPlayerController(0)->rightButton = false;
+    if(!jsonToParse[CA_LEFT_BUTTON_A].is_null())        GetPlayerController(0)->leftButton = jsonToParse[CA_LEFT_BUTTON_A].template get<bool>(); else GetPlayerController(0)->leftButton = false;
     
-    if(!jsonToParse[CA_BOTTOM_BUTTON_B].is_null())      controllers[1]->bottomButton = jsonToParse[CA_BOTTOM_BUTTON_B].template get<bool>(); else controllers[1]->bottomButton = false;
-    if(!jsonToParse[CA_TOP_BUTTON_B].is_null())         controllers[1]->topButton = jsonToParse[CA_TOP_BUTTON_B].template get<bool>(); else controllers[1]->topButton = false;
-    if(!jsonToParse[CA_RIGHT_BUTTON_B].is_null())       controllers[1]->rightButton = jsonToParse[CA_RIGHT_BUTTON_B].template get<bool>(); else controllers[1]->rightButton = false;
-    if(!jsonToParse[CA_LEFT_BUTTON_B].is_null())        controllers[1]->leftButton = jsonToParse[CA_LEFT_BUTTON_B].template get<bool>(); else controllers[1]->leftButton = false;
+    if(!jsonToParse[CA_BOTTOM_BUTTON_B].is_null())      GetPlayerController(1)->bottomButton = jsonToParse[CA_BOTTOM_BUTTON_B].template get<bool>(); else GetPlayerController(1)->bottomButton = false;
+    if(!jsonToParse[CA_TOP_BUTTON_B].is_null())         GetPlayerController(1)->topButton = jsonToParse[CA_TOP_BUTTON_B].template get<bool>(); else GetPlayerController(1)->topButton = false;
+    if(!jsonToParse[CA_RIGHT_BUTTON_B].is_null())       GetPlayerController(1)->rightButton = jsonToParse[CA_RIGHT_BUTTON_B].template get<bool>(); else GetPlayerController(1)->rightButton = false;
+    if(!jsonToParse[CA_LEFT_BUTTON_B].is_null())        GetPlayerController(1)->leftButton = jsonToParse[CA_LEFT_BUTTON_B].template get<bool>(); else GetPlayerController(1)->leftButton = false;
 
     // - BAR GRAPHS - //
-    if(!jsonToParse[CA_BAR_GRAPH_A].is_null())          controllers[0]->barGraphBits = jsonToParse[CA_BAR_GRAPH_A].template get<int>(); else controllers[0]->barGraphBits = -1;
-    if(!jsonToParse[CA_BAR_GRAPH_B].is_null())          controllers[1]->barGraphBits = jsonToParse[CA_BAR_GRAPH_B].template get<int>(); else controllers[1]->barGraphBits = -1;
+    if(!jsonToParse[CA_BAR_GRAPH_A].is_null())          GetPlayerController(0)->ReceivedBarGraphBits = jsonToParse[CA_BAR_GRAPH_A].template get<int>();
+    if(!jsonToParse[CA_BAR_GRAPH_B].is_null())          GetPlayerController(1)->ReceivedBarGraphBits = jsonToParse[CA_BAR_GRAPH_B].template get<int>();
 
     // - CONNECTION - //
-    if(!jsonToParse[CA_CONTROLLER_CONNECTED_A].is_null())          controllers[0]->isConnected = jsonToParse[CA_CONTROLLER_CONNECTED_A].template get<bool>(); else controllers[0]->isConnected = false;
-    if(!jsonToParse[CA_CONTROLLER_CONNECTED_B].is_null())          controllers[1]->isConnected = jsonToParse[CA_CONTROLLER_CONNECTED_B].template get<bool>(); else controllers[1]->isConnected = false;
+    if(!jsonToParse[CA_CONTROLLER_CONNECTED_A].is_null())          GetPlayerController(0)->isConnected = jsonToParse[CA_CONTROLLER_CONNECTED_A].template get<bool>(); else GetPlayerController(0)->isConnected = false;
+    if(!jsonToParse[CA_CONTROLLER_CONNECTED_B].is_null())          GetPlayerController(1)->isConnected = jsonToParse[CA_CONTROLLER_CONNECTED_B].template get<bool>(); else GetPlayerController(1)->isConnected = false;
 
     return true;
 }
 
 std::string Arduino::GetLastRawMessage()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return lastReceivedMessage;
 }
 
@@ -193,12 +181,10 @@ std::string Arduino::GetLastRawMessage()
  */
 Arduino::Arduino()
 {
-    std::lock_guard<std::mutex> lock(mutex);
-    Controller controllerA = Controller();
-    Controller controllerB = Controller();
-
-    controllers.push_back(&controllerA);
-    controllers.push_back(&controllerB);
+    //Controller controllerA = Controller();
+    //Controller controllerB = Controller();
+    //controllers.push_back(controllerA);
+    //controllers.push_back(controllerB);
 }
 
 /**
@@ -220,15 +206,14 @@ Arduino::Arduino()
  */
 Arduino::Arduino(std::string arduinoComPort, int arduinoBaudRate)
 {
-    std::lock_guard<std::mutex> lock(mutex);
     serialHandler.SetBaudRate(arduinoBaudRate);
     serialHandler.SetComPort(arduinoComPort);
 
-    Controller controllerA = Controller();
-    Controller controllerB = Controller();
+    //Controller* controllerA = new Controller();
+    //Controller* controllerB = new Controller();
 
-    controllers.push_back(&controllerA);
-    controllers.push_back(&controllerB);
+    //controllers.push_back(controllerA);
+    //controllers.push_back(controllerB);
 }
 
 /**
@@ -246,7 +231,7 @@ Arduino::Arduino(std::string arduinoComPort, int arduinoBaudRate)
  */
 bool Arduino::Verify()
 {
-    std::lock_guard<std::mutex> lock(mutex);
+
     if(!serialHandler.ConnectionStatus()) return false;
     if(attemptsSinceLastGoodParse > ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST) return false;
 
@@ -269,9 +254,17 @@ bool Arduino::Verify()
  */
 Controller* Arduino::GetPlayerController(int playerIndex)
 {
-    std::lock_guard<std::mutex> lock(mutex);
-    if(playerIndex > 1) playerIndex = 0;
-    return controllers[playerIndex];
+    if(playerIndex==0)
+    {
+        return &controllerA;
+    }
+    else
+    {
+        return &controllerB;
+    }
+
+    //if(playerIndex > 1) playerIndex = 0;
+    //return controllers[playerIndex];
 }
 
 /**
@@ -286,8 +279,74 @@ Controller* Arduino::GetPlayerController(int playerIndex)
  */
 bool Arduino::GetPortState()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.ConnectionStatus();
+}
+
+/**
+ * @brief 
+ * Takes in messages and appends them
+ * @return true:
+ * A new message was appended
+ * @return false:
+ * No message was appended.
+ */
+bool Arduino::HandleMessageReception()
+{
+    static bool receiving = false;
+    std::string receivedMessage = "";
+    std::string parsedMessage = "";
+
+    if(!serialHandler.GetSerialMessage(receivedMessage))
+    {
+        std::cerr << "Failed to get a message back from serial port" << std::endl;
+        return false;
+    }
+
+    if(receivedMessage.size() == 0)
+    {
+        return false;
+    }
+
+    if(receiving)
+    {
+        for(int i=0; i<receivedMessage.length(); ++i)
+        {
+            parsedMessage += receivedMessage[i];
+
+            if(receivedMessage[i] == '}')
+            {
+                receiving = false;
+                currentMessage += parsedMessage;
+                return true;
+            }      
+        }
+    }
+
+    // We havnt detected a message yet.
+    if(!receiving)
+    {
+        for(int i=0; i<receivedMessage.length(); ++i)
+        {
+            if(receivedMessage[i] == '{')
+            {
+                receiving = true;
+            }
+
+            if(receiving)
+            {
+                parsedMessage += receivedMessage[i];
+            }
+
+            if(receivedMessage[i] == '}' && receiving)
+            {
+                receiving = false;
+                currentMessage += parsedMessage;
+                return true;
+            }      
+        }
+    }
+    currentMessage += parsedMessage;
+    return false;
 }
 
 /**
@@ -304,23 +363,40 @@ bool Arduino::GetPortState()
  */
 bool Arduino::Update()
 {
+    static bool shouldSend = true;
+    static int counterBeforeGivingUp = 0;
+
     if(serialHandler.ConnectionStatus())
     {
-        UpdatesBeforeNextHandshake--;
-        if(UpdatesBeforeNextHandshake <= 0)
+        if((timeBetweenHandshakes.TimeLeft()==0) || shouldSend)
         {
+            shouldSend = false;
             UpdatesBeforeNextHandshake = UPDATES_BETWEEN_HANDSHAKES;
             if(GenerateAndSendMessage())
             {
                 attemptsSinceLastGoodParse++;
-                //return true;
+                return true;
             }
         }
 
-        if(ParseReceivedMessage())
+        if(timeBetweenChecks.TimeLeft() == 0)
         {
-            attemptsSinceLastGoodParse = 0;
-            //return true;
+            if(HandleMessageReception())
+            {
+                shouldSend = true;
+                if(ParseReceivedMessage())
+                {
+                    attemptsSinceLastGoodParse = 0;
+                    return true;
+                }
+                return false;
+            }
+            //counterBeforeGivingUp++;
+            //if(counterBeforeGivingUp > 1000)
+            //{
+            //    shouldSend = true;
+            //    currentMessage.clear();
+            //}
         }
     }
     return false;
@@ -342,8 +418,7 @@ bool Arduino::Update()
  */
 bool Arduino::SetNewLCDMessage(std::string newMessage)
 {
-    std::lock_guard<std::mutex> lock(mutex);
-    if(newMessage.length() > 20)
+    if(newMessage.length() > 16)
     {
         return false;
     }
@@ -359,7 +434,6 @@ bool Arduino::SetNewLCDMessage(std::string newMessage)
  */
 std::string Arduino::GetLCDMessage()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return wantedLCDMessage;
 }
 
@@ -377,13 +451,23 @@ std::string Arduino::GetLCDMessage()
  */
 int Arduino::AmountOfConnectedPlayers()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     int total = 0;
-    for(int index=0; index < controllers.size(); ++index)
+    //for(int index=0; index < controllers.size(); ++index)
+    //{
+    //    Controller* controller = controllers[index];
+    //    if(controller->isConnected) total++;
+    //}
+
+    if(controllerA.isConnected)
     {
-        Controller* controller = controllers[index];
-        if(controller->isConnected) total++;
+        total++;
     }
+
+    if(controllerB.isConnected)
+    {
+        total++;
+    } 
+
     return total;
 }
 
@@ -402,7 +486,6 @@ int Arduino::AmountOfConnectedPlayers()
  */
 bool Arduino::SetComPort(std::string newComPort)
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.SetComPort(newComPort);
 }
 
@@ -423,7 +506,6 @@ bool Arduino::SetComPort(std::string newComPort)
  */
 bool Arduino::SetBaudRate(int newBaudRate)
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.SetBaudRate(newBaudRate);
 }
 
@@ -435,7 +517,6 @@ bool Arduino::SetBaudRate(int newBaudRate)
  */
 std::string Arduino::GetComPort()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.GetComPort();
 }
 
@@ -447,7 +528,6 @@ std::string Arduino::GetComPort()
  */
 int Arduino::GetBaudRate()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.GetBaudRate();
 }
 
@@ -464,7 +544,6 @@ int Arduino::GetBaudRate()
  */
 bool Arduino::Connect()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.Connect();
 }
 
@@ -480,6 +559,5 @@ bool Arduino::Connect()
  */
 bool Arduino::Disconnect()
 {
-    std::lock_guard<std::mutex> lock(mutex);
     return serialHandler.Disconnect();
 }

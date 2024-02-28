@@ -39,14 +39,17 @@ private:
     bool canReadArduino = true;
 
 public:
-    ArduinoThreadManager() : myThread(&ArduinoThreadManager::threadFunction, this, 42) {}
+    ArduinoThreadManager()
+    {
+
+    } //: myThread(&ArduinoThreadManager::threadFunction, this, 42) {}
 
     ~ArduinoThreadManager() {
         shouldExecute = false;
         // Make sure to join the thread in the destructor
-        if (myThread.joinable()) {
-            myThread.join();
-        }
+        //if (myThread.joinable()) {
+        //    myThread.join();
+        //}
     }
 
     /**

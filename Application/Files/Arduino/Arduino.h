@@ -18,6 +18,7 @@
 #include "../Controller/Controller.h"
 #include "../Communication/Communication.h"
 #include "../JSON/json.hpp"
+#include "../SimpleTimer/SimpleTimer.h"
 
 // - DEFINES - //
 #define ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST 50
@@ -114,9 +115,15 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
 
             int UpdatesBeforeNextHandshake = 0;
 
-            std::string wantedLCDMessage = "";
+            std::string wantedLCDMessage = "  MESSAGE SENT  ";
             std::string lastReceivedMessage = "";
-            std::mutex mutex;
+            std::string currentMessage = "";
+
+            Controller controllerA;
+            Controller controllerB;
+
+            SimpleTimer timeBetweenChecks = SimpleTimer(5);
+            SimpleTimer timeBetweenHandshakes = SimpleTimer(1000);
         
             /**
              * @brief 
@@ -156,6 +163,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * arduino.
              */
             Arduino();
+
+            unsigned int AmountOfTimesSent = 0;
 
             /**
              * @brief Construct a new Arduino object.
@@ -345,4 +354,14 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * already disconnected.
              */
             bool Disconnect();
+
+            /**
+             * @brief 
+             * Takes in messages and appends them
+             * @return true:
+             * A new message was appended
+             * @return false:
+             * No message was appended.
+             */
+            bool HandleMessageReception();
     };
