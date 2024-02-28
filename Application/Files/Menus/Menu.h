@@ -100,7 +100,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnEnter();
+        virtual bool OnEnter() = 0;
 
         /**
          * @brief 
@@ -109,5 +109,5 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnExit();
+        virtual bool OnExit() = 0;
 };

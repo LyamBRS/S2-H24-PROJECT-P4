@@ -56,10 +56,12 @@ class TestMenu : public Menu
         bool HandleControllerMenuKeyboard(int keyBoardKey);
 
         int selectedSubMenu = 0;
+        int oldSelectedSubMenu = -1;
         int wantedBitsPlayerA = 0;
         int wantedBitsPlayerB = 0;
         std::string newLCDMessage = "";
         std::string bargraphMessage = "";
+
     public:
         TestMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);

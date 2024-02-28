@@ -33,7 +33,12 @@ ArduinoMenu::ArduinoMenu(AppHandler* currentAppHandler)
  */
 bool ArduinoMenu::DrawArduinoMainMenu()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -202,7 +207,12 @@ bool ArduinoMenu::DrawArduinoMainMenu()
 
 bool ArduinoMenu::DrawBaudrateSelectionMenu()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -280,7 +290,7 @@ bool ArduinoMenu::DrawBaudrateSelectionMenu()
 
 bool ArduinoMenu::DrawComPortSelectionMenu()
 {
-   system("cls");
+    system("cls");
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -425,7 +435,12 @@ bool ArduinoMenu::DrawConnectMenu()
         std::cout << std::endl;
     };
 
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
     std::cout << "############################################" << std::endl;
     std::cout << "               - Connection -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -598,7 +613,12 @@ bool ArduinoMenu::DrawDisconnectMenu()
         std::cout << std::endl;
     };
 
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
     std::cout << "############################################" << std::endl;
     std::cout << "               - Connection -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -916,6 +936,7 @@ bool ArduinoMenu::Draw()
 bool ArduinoMenu::OnEnter()
 {
     selectedSubMenu = 0;
+    oldSelectedSubMenu = -1;
     selection = 0;
     return true;
 }
@@ -923,6 +944,7 @@ bool ArduinoMenu::OnEnter()
 bool ArduinoMenu::OnExit()
 {
     selectedSubMenu = 0;
+    oldSelectedSubMenu = -1;
     selection = 0;
     return true;
 }

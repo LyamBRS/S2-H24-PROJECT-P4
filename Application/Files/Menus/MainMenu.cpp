@@ -26,6 +26,18 @@ bool MainMenu::Update()
     return false;
 }
 
+bool MainMenu::OnEnter()
+{
+    oldSelection = -1;
+    return true;
+}
+
+bool MainMenu::OnExit()
+{
+    oldSelection = -1;
+    return true;
+}
+
 bool MainMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
@@ -55,7 +67,12 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
 
 bool MainMenu::Draw()
 {
-    system("cls");
+    if(oldSelection != appRef->currentSelectedMenu)
+    {
+        oldSelection = appRef->currentSelectedMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;

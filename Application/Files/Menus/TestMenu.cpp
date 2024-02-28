@@ -18,7 +18,12 @@
 
 bool TestMenu::DrawNoArduinoMenu()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "            - Application Tests -           " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -32,7 +37,12 @@ bool TestMenu::DrawNoArduinoMenu()
 
 bool TestMenu::DrawMainTestMenu()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "            - Application Tests -           " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -73,7 +83,12 @@ bool TestMenu::DrawMainTestMenu()
 
 bool TestMenu::DrawLCDTestMenu()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "            - Application Tests -           " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -117,6 +132,7 @@ bool TestMenu::DrawLCDTestMenu()
     std::cout << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
     std::cout << newLCDMessage;
+    std::cout << "                 ";
     return true;
 }
 
@@ -163,7 +179,12 @@ bool TestMenu::DrawBarGraphTestMenu()
         }
     };
 
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "            - Application Tests -           " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -193,16 +214,16 @@ bool TestMenu::DrawBarGraphTestMenu()
 
     PrintInColour(std::cout, "Current PlayerA: ", colors::grey, colors::black);
     PrintInColour(std::cout, std::to_string(bitsA), colors::darkpurple, colors::black);
-    std::cout << ":\t";
+    std::cout << ": ";
     drawABarGraph(bitsA);
-    std::cout << std::endl;
+    std::cout << "          " << std::endl;
     std::cout << "- ";
 
     PrintInColour(std::cout, "Current PlayerB: ", colors::grey, colors::black);
     PrintInColour(std::cout, std::to_string(bitsB), colors::darkpurple, colors::black);
-    std::cout << ":\t";
+    std::cout << ": ";
     drawABarGraph(bitsB);
-    std::cout << std::endl;
+    std::cout << "          " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
     
     // UPPER ARROWS, PLAYER A
@@ -244,7 +265,12 @@ bool TestMenu::DrawBarGraphTestMenu()
 
 bool TestMenu::DrawReceivedMessageMenuKeyboard()
 {
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "            - Application Tests -           " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -370,7 +396,7 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
 
                 if(selection>9)
                 {
-                    bargraphMessage.append("B's  LED number ");
+                    bargraphMessage.append("B's LED number ");
                     bargraphMessage.append(std::to_string(selection-10));
                     bargraphMessage.append(" state");
                 }
@@ -418,11 +444,13 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
             {
                 bargraphMessage.append("B's  LED number ");
                 bargraphMessage.append(std::to_string(selection-10));
+                bargraphMessage.append("      ");
             }
             else
             {
                 bargraphMessage.append("A's LED number ");
                 bargraphMessage.append(std::to_string(selection));
+                bargraphMessage.append("      ");
             }
             return true;
 
@@ -437,11 +465,13 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
             {
                 bargraphMessage.append("B's LED number ");
                 bargraphMessage.append(std::to_string(selection-10));
+                bargraphMessage.append("      ");
             }
             else
             {
                 bargraphMessage.append("A's LED number ");
                 bargraphMessage.append(std::to_string(selection));
+                bargraphMessage.append("      ");
             }
 
             return true;      
@@ -452,7 +482,7 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
                 return true;
 
         case KB_ENTER:
-                bargraphMessage = "         Updated sent bargraph data";
+                bargraphMessage = "         Updated sent bargraph data         ";
                 appRef->arduinoThread.GetArduino()->GetPlayerController(0)->SentBarGraphBits = wantedBitsPlayerA;
                 appRef->arduinoThread.GetArduino()->GetPlayerController(1)->SentBarGraphBits = wantedBitsPlayerB;
                 return false;
@@ -524,6 +554,7 @@ bool TestMenu::Draw()
 
 bool TestMenu::OnEnter()
 {
+    oldSelectedSubMenu = -1;
     selection = 0;
     return false;
 }
@@ -531,6 +562,7 @@ bool TestMenu::OnEnter()
 bool TestMenu::OnExit()
 {
     selection = 0;
+    oldSelectedSubMenu = -1;
     return false;
 }
 

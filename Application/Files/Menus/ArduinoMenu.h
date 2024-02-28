@@ -30,7 +30,7 @@ class ArduinoMenu : public Menu
     private:
         bool DrawArduinoMainMenu();
         bool DrawBaudrateSelectionMenu();
-
+        int oldSelectedSubMenu = -1;
         /**
          * @brief 
         * Draws the menu that allows the user to select

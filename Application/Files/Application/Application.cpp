@@ -105,6 +105,8 @@ bool Application::HandleMenuUpdates()
  */
 bool Application::Update()
 {
+    static int oldSelectedMenu = 0;
+
     // Allows you to immediately see if a COM port change occurs
     if(appHandler.oldAmountOfComPorts != GetAvailableComPorts().size())
     {
@@ -115,6 +117,13 @@ bool Application::Update()
     HandleMenuDrawings();
     HandleKeyboardActions();
     HandleMenuUpdates();
+
+    if(oldSelectedMenu != appHandler.currentSelectedMenu)
+    {
+        menus[oldSelectedMenu]->OnExit();
+        menus[appHandler.currentSelectedMenu]->OnEnter();
+        oldSelectedMenu = appHandler.currentSelectedMenu;
+    }
 
     //appHandler.arduinoThread.threadFunction(0);
     appHandler.arduinoThread.GetArduino()->Update();
