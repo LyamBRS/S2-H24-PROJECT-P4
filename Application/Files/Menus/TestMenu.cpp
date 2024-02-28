@@ -282,7 +282,297 @@ bool TestMenu::DrawReceivedMessageMenuKeyboard()
 
 bool TestMenu::DrawControllerMenu()
 {
-    return false;
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+        std::cout << "############################################" << std::endl;
+        std::cout << "            - Application Tests -           " << std::endl;
+        std::cout << "--------------------------------------------" << std::endl;
+        std::cout << "- Visualize players controller values here -" << std::endl;
+        std::cout << "-            Press esc to leave            -" << std::endl;
+        std::cout << "--------------------------------------------" << std::endl;
+    }
+    SetTerminalCursorPosition(0,7);
+
+    auto drawABarGraph = [](int bargraphBits)
+    {
+        for(int i=0; i<10; ++i)
+        {
+            bool result = bargraphBits&(1<<i);
+            if(i<3) // GREEN
+            {
+                if(result)
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::green);
+                }
+                else
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::lightgrey);
+                }
+            }
+            else if(i<7) // YELLOW
+            {
+                if(result)
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::gold);
+                }
+                else
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::lightgrey);
+                }
+            }
+            else // RED
+            {
+                if(result)
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::red);
+                }
+                else
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::lightgrey);
+                }
+            }
+        }
+    };
+
+    auto drawButton = [](bool state)
+    {
+        if(state)
+        {
+            PrintInColour(std::cout, " ", colors::black, colors::green);  
+        }
+        else
+        {
+            PrintInColour(std::cout, " ", colors::black, colors::lightgrey);  
+        }
+    };
+
+    auto drawAccelerometerGraph = [](int value)
+    {
+        value = (5*value)/100;
+
+        for(int i=0; i<6; i++)
+        {
+            if(i<value)
+            {
+                PrintInColour(std::cout, " ", colors::black, colors::green);       
+            }
+            else
+            {
+                PrintInColour(std::cout, " ", colors::black, colors::red);    
+            }
+        }
+    };
+
+    auto drawJoystick = [](int x, int y, bool button, int rowNumber)
+    {
+        x = ((7*x)/100);
+        y = ((5*y)/100);
+
+        if(x<0) x=0;
+        if(x>6) x=6;
+
+        if(y<0) y=0;
+        if(y>4) y=4;      
+
+        int backColor = colors::lightgrey;
+        if(button)
+        {
+            backColor = colors::green;
+        }
+
+        if(y!=rowNumber)
+        {
+            PrintInColour(std::cout, "       ", colors::black, backColor);
+        }
+        else
+        {
+            for(int i=0; i<7; i++)
+            {
+                if(x==i)
+                {
+                    PrintInColour(std::cout, " ", colors::black, colors::darkpurple);   
+                }
+                else
+                {
+                    PrintInColour(std::cout, " ", colors::black, backColor);   
+                }
+            }
+        }
+    };
+
+    // ROW 1
+    std::cout << "    ";
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+
+    if(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->isConnected)
+    {
+        PrintInColour(std::cout, "CO", colors::green, colors::grey);
+    }
+    else
+    {
+        PrintInColour(std::cout, "XX", colors::red, colors::grey);
+    }
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+    std::cout << "    \n";
+
+    // ROW 2
+    std::cout << "  ";
+    PrintInColour(std::cout, "  ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickButton, 0);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    drawABarGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->ReceivedBarGraphBits);
+    PrintInColour(std::cout, "               ", colors::black, colors::grey);
+    std::cout << "  \n";
+
+    // ROW 3
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickButton, 1);
+    PrintInColour(std::cout, "                         ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->topButton);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 4
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickButton, 2);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "X", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->accelerometerX);
+    PrintInColour(std::cout, "         ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->leftButton);
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->rightButton);
+    PrintInColour(std::cout, "    ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 5
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickButton, 3);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "Y", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->accelerometerY);
+    PrintInColour(std::cout, "           ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->bottomButton);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 6
+    std::cout << "  ";
+    PrintInColour(std::cout, "  ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(0)->joystickButton, 4);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "Z", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(0)->accelerometerY);
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+    std::cout << "  \n";
+
+    // ROW 7
+    std::cout << "    ";
+    PrintInColour(std::cout, "       ", colors::black, colors::grey);
+    std::cout << "                      ";
+    PrintInColour(std::cout, "       ", colors::black, colors::grey);
+    std::cout << "    \n";
+
+    ///////////////////////////////////////////////////////////////////////////////////
+    std::cout << "--------------------------------------------" << std::endl;
+
+    // ROW 1
+    std::cout << "    ";
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+
+    if(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->isConnected)
+    {
+        PrintInColour(std::cout, "CO", colors::green, colors::grey);
+    }
+    else
+    {
+        PrintInColour(std::cout, "XX", colors::red, colors::grey);
+    }
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+    std::cout << "    \n";
+
+    // ROW 2
+    std::cout << "  ";
+    PrintInColour(std::cout, "  ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickButton, 0);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    drawABarGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->ReceivedBarGraphBits);
+    PrintInColour(std::cout, "               ", colors::black, colors::grey);
+    std::cout << "  \n";
+
+    // ROW 3
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickButton, 1);
+    PrintInColour(std::cout, "                         ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->topButton);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 4
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickButton, 2);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "X", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->accelerometerX);
+    PrintInColour(std::cout, "         ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->leftButton);
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->rightButton);
+    PrintInColour(std::cout, "    ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 5
+    std::cout << " ";
+    PrintInColour(std::cout, "   ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickButton, 3);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "Y", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->accelerometerY);
+    PrintInColour(std::cout, "           ", colors::black, colors::grey);
+    drawButton(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->bottomButton);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    std::cout << " \n";
+
+    // ROW 6
+    std::cout << "  ";
+    PrintInColour(std::cout, "  ", colors::black, colors::grey);
+    drawJoystick(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickX, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickY, appRef->arduinoThread.GetArduino()->GetPlayerController(1)->joystickButton, 4);
+    PrintInColour(std::cout, "      ", colors::black, colors::grey);
+    PrintInColour(std::cout, "Z", colors::black, colors::grey);
+    PrintInColour(std::cout, " ", colors::black, colors::grey);
+    drawAccelerometerGraph(appRef->arduinoThread.GetArduino()->GetPlayerController(1)->accelerometerY);
+    PrintInColour(std::cout, "                 ", colors::black, colors::grey);
+    std::cout << "  \n";
+
+    // ROW 7
+    std::cout << "    ";
+    PrintInColour(std::cout, "       ", colors::black, colors::grey);
+    std::cout << "                      ";
+    PrintInColour(std::cout, "       ", colors::black, colors::grey);
+    std::cout << "    \n";
+
+	//std::cout << "     ----------------==----------------     " << std::endl;
+	//std::cout << "  --=======------          ---------------  " << std::endl;
+	//std::cout << " ---=======------------------------O------- " << std::endl;
+	//std::cout << " ---=======------X-======--------O---O----- " << std::endl;
+	//std::cout << " ---=======------Y-======----------O------- " << std::endl;
+	//std::cout << "  --=======------Z-======-----------------  " << std::endl;
+	//std::cout << "     -------                    -------     " << std::endl;
+
+    std::cout << "############################################" << std::endl;
+    return true;
 }
 
 
@@ -505,7 +795,8 @@ bool TestMenu::HandleReceivedMessageMenuKeyboard(int keyBoardKey)
 
 bool TestMenu::HandleControllerMenuKeyboard(int keyBoardKey)
 {
-    return false;
+    selectedSubMenu = APP_MAIN;
+    return true;
 }
 
 
@@ -610,6 +901,12 @@ bool TestMenu::Update()
             std::cout << std::flush;  
         }
         oldMessage = currentMessage;
+    }
+
+    // Allows constant updating of the remote drawings.
+    if(selectedSubMenu == APP_CONTROLLER)
+    {
+        Draw();
     }
 
     return true;
