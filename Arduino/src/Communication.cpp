@@ -43,8 +43,16 @@ bool Communication::ParseReceivedMessage()
     if (error) {
         Serial1.print("deserialize() failed: ");
         Serial1.println(error.c_str());
-        errorMessage = CE_PARSING_FAILED;
+        if(errorMessage == CE_NO_ERRORS)
+        {
+            errorMessage = CE_PARSING_FAILED;
+        }
         return false;
+    }
+
+    if(errorMessage == CE_PARSING_FAILED)
+    {
+        errorMessage = CE_NO_ERRORS;
     }
 
     // - BAR GRAPHS - //
@@ -61,8 +69,8 @@ bool Communication::ParseReceivedMessage()
     // - LCD - //
     parse_msg = doc[CA_LCD_MESSAGE];
     if (!parse_msg.isNull()) {
-        Serial1.println(doc[CA_BAR_GRAPH_B].as<String>());
-        PCMessage = doc[CA_BAR_GRAPH_B].as<String>();
+        Serial1.println(doc[CA_LCD_MESSAGE].as<String>());
+        PCMessage = doc[CA_LCD_MESSAGE].as<String>();
     }
 
     return true;
@@ -260,7 +268,10 @@ void Communication::Update()
         if(result || giveUpCounter>100)
         {
             giveUpCounter = 0;
-            millisWhenLastRead = millis();
+            if(result)
+            {
+                millisWhenLastRead = millis();
+            }
             wasReading = false;
             if(!ParseReceivedMessage()) {
                 return;
@@ -301,6 +312,11 @@ bool Communication::HasReceivedAMessage()
     if(currentAmountOfCharacters == 0)
     {
         return false;
+    }
+
+    if(errorMessage == CE_COMMUNICATION_LOST)
+    {
+        errorMessage = CE_NO_ERRORS;
     }
 
     // CLEAR SERIAL PORT
