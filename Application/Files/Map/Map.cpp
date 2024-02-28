@@ -32,15 +32,21 @@ bool Map::SetTileDataAtPosition(int x, int y, int wantedTile)
 	return false;
 }
 
-bool Map::LoadSavedMap(std::wstring filePath)
+bool Map::LoadMap(nlohmann::json mapAsJSON)
 {
-	return false;
+	
+	return true;
 }
 
-bool Map::SaveCurrentMap(std::wstring filePath)
-{
-	return false;
-}
+// bool Map::LoadSavedMap(std::wstring filePath)
+// {
+// 	return false;
+// }
+
+// bool Map::SaveCurrentMap(std::wstring filePath)
+// {
+// 	return false;
+// }
 
 bool Map::SetMapName(std::string newName)
 {
