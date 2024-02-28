@@ -91,7 +91,7 @@ Controller::Controller(int detectionPin,
     bottomButton = new Button(bottomButtonPin);
     leftButton = new Button(leftButtonPin);
     rightButton = new Button(rightButtonPin);
-    joystick = new Joystick(joystickButtonPin, joystickXAxisPin, joystickXAxisPin);
+    joystick = new Joystick(joystickButtonPin, joystickXAxisPin, joystickYAxisPin);
     accelerometer = new Accelerometer(accelerometerXAxisPin, accelerometerYAxisPin, accelerometerZAxisPin);
     barGraph = new BarGraph(                    
         barGraphAPin, 
