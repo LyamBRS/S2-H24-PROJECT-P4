@@ -19,6 +19,7 @@
 #include "../Arduino/Arduino.h"
 #include "../SimpleTimer/SimpleTimer.h"
 #include "../Game/Game.h"
+#include "../Arduino/ThreadManager.hpp"
 
 // - DEFINES - //
 
@@ -41,7 +42,7 @@ class AppHandler
     public:
         AppHandler();
 
-        Arduino arduino;
+        ArduinoThreadManager arduinoThread;
         Game currentGame;
 
         SimpleTimer frameTimer = SimpleTimer(10);

@@ -14,9 +14,11 @@
 
 // - INCLUDES - //
 #include <iostream>
+#include <mutex>
 #include "../Controller/Controller.h"
 #include "../Communication/Communication.h"
 #include "../JSON/json.hpp"
+#include "../SimpleTimer/SimpleTimer.h"
 
 // - DEFINES - //
 #define ARDUINO_MAX_ATTEMPT_BEFORE_CONNECTION_LOST 50
@@ -113,7 +115,15 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
 
             int UpdatesBeforeNextHandshake = 0;
 
-            std::string wantedLCDMessage = "";
+            std::string wantedLCDMessage = "  MESSAGE SENT  ";
+            std::string lastReceivedMessage = "";
+            std::string currentMessage = "";
+
+            Controller controllerA;
+            Controller controllerB;
+
+            SimpleTimer timeBetweenChecks = SimpleTimer(5);
+            SimpleTimer timeBetweenHandshakes = SimpleTimer(1000);
         
             /**
              * @brief 
@@ -153,6 +163,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * arduino.
              */
             Arduino();
+
+            unsigned int AmountOfTimesSent = 0;
 
             /**
              * @brief Construct a new Arduino object.
@@ -218,6 +230,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              */
             bool Update();
 
+            std::string GetLastRawMessage();
+
             /**
              * @brief Set the New LCD Message.
              * The string MUST be 20 or below characters.
@@ -233,6 +247,14 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * Invalid message bruh
              */
             bool SetNewLCDMessage(std::string newMessage);
+
+            /**
+             * @brief 
+             * Returns the current LCD message set to be
+             * sent to the arduino.
+             * @return std::string 
+             */
+            std::string GetLCDMessage();
 
             /**
              * @brief 
@@ -332,4 +354,14 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * already disconnected.
              */
             bool Disconnect();
+
+            /**
+             * @brief 
+             * Takes in messages and appends them
+             * @return true:
+             * A new message was appended
+             * @return false:
+             * No message was appended.
+             */
+            bool HandleMessageReception();
     };

@@ -29,7 +29,7 @@
 class MainMenu : public Menu
 {
     private:
-
+        int oldSelection = 0;
     public:
         MainMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);

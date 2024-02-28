@@ -38,7 +38,12 @@ class Accelerometer
         /// @brief Object that reads the values of the Z axis.
         AnalogInput *zAxis;
 
+        bool canBeUsed = false;
+
     public:
+
+        Accelerometer();
+
         /**
          * @brief Construct a new Accelerometer object.
          * Sets a new analog 3.3V accelerometer.
@@ -53,7 +58,7 @@ class Accelerometer
          * @param zPin
          * The arduino pin where the Z axis is connected.
          */
-        Accelerometer(int xPin, int yPin, int zPin);
+        Accelerometer(uint8_t xPin, uint8_t yPin, uint8_t zPin);
 
         /**
          * @brief Set the Min object

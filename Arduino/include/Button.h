@@ -37,7 +37,12 @@ class Button
         /// @brief How long until the button is no longer seen as HIGH.
         int debounceTimer = 0;
 
+        bool canBeUsed = false;
+
     public:
+
+        Button();
+
         /**
          * @brief Construct a new Button object.
          * Default constructor only sets the pin

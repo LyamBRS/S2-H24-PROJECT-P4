@@ -26,6 +26,18 @@ bool MainMenu::Update()
     return false;
 }
 
+bool MainMenu::OnEnter()
+{
+    oldSelection = -1;
+    return true;
+}
+
+bool MainMenu::OnExit()
+{
+    oldSelection = -1;
+    return true;
+}
+
 bool MainMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
@@ -55,7 +67,12 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
 
 bool MainMenu::Draw()
 {
-    system("cls");
+    if(oldSelection != appRef->currentSelectedMenu)
+    {
+        oldSelection = appRef->currentSelectedMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -70,9 +87,9 @@ bool MainMenu::Draw()
         selection = 1;
     }
 
-    if(!appRef->arduino.GetPortState())                              PrintInColour(std::cout, "-      No arduino connected to the PC      -", colors::red, colors::black);
-    if(appRef->arduino.GetPortState() && !appRef->arduino.Verify())  PrintInColour(std::cout, "- Connected devices not answering requests -", colors::black, colors::gold);
-    if(appRef->arduino.GetPortState() && appRef->arduino.Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
+    if(!appRef->arduinoThread.GetArduino()->GetPortState())                              PrintInColour(std::cout, "-      No arduino connected to the PC      -", colors::red, colors::black);
+    if(appRef->arduinoThread.GetArduino()->GetPortState() && !appRef->arduinoThread.GetArduino()->Verify())  PrintInColour(std::cout, "- Connected devices not answering requests -", colors::black, colors::gold);
+    if(appRef->arduinoThread.GetArduino()->GetPortState() && appRef->arduinoThread.GetArduino()->Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
     std::cout << std::endl;
 
 	std::cout << "--------------------------------------------" << std::endl;

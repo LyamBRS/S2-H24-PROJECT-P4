@@ -38,7 +38,7 @@ class ScreenAttributes
         std::string ascii = "";
 
         /// @brief The current colour of that object.
-        char colour = ' ';
+        int colour = ' ';
 
     public:
 
@@ -54,7 +54,7 @@ class ScreenAttributes
          * Wanted colour of the object. Used when drawing
          * the ASCII on a terminal or a screen.
          */
-        ScreenAttributes(std::string wantedASCII, char wantedColour);
+        ScreenAttributes(std::string wantedASCII, int wantedColour);
 
         /**
          * @brief 
@@ -86,7 +86,7 @@ class ScreenAttributes
          * by hand.
          * @return char 
          */
-        char Colour();
+        int Colour();
 
         /**
          * @brief 
@@ -102,5 +102,5 @@ class ScreenAttributes
          * screen.
          * @return char 
          */
-        char Colour(char newColour);
+        int Colour(int newColour);
 };

@@ -24,6 +24,14 @@ std::string ExePath() {
     return resultString;
 }
 
+void SetTerminalCursorPosition(int row, int column)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD pos = {row, column};
+    SetConsoleCursorPosition(hConsole, pos);
+    return;
+}
+
 
 void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour)
 {
