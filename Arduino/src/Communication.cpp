@@ -34,17 +34,19 @@ bool Communication::ParseReceivedMessage()
     JsonVariant parse_msg;
 
     // Gets potential JSON parsing errors.
-    DeserializationError error = deserializeJson(doc, Serial);
+    DeserializationError error = deserializeJson(doc, currentMessage);
+    //Serial.println(currentMessage);
+    currentMessage = "";
     shouldRead_ = false;
 
     // Raise concerns if an error prevents the JSON from being read.
     if (error) {
-        //Serial.print("deserialize() failed: ");
-        //Serial.println(error.c_str());
+        Serial1.print("deserialize() failed: ");
+        Serial1.println(error.c_str());
         errorMessage = CE_PARSING_FAILED;
         return false;
     }
-  
+
     // - BAR GRAPHS - //
     parse_msg = doc[CA_BAR_GRAPH_A];
     if (!parse_msg.isNull()) {
@@ -59,7 +61,8 @@ bool Communication::ParseReceivedMessage()
     // - LCD - //
     parse_msg = doc[CA_LCD_MESSAGE];
     if (!parse_msg.isNull()) {
-        // TODO
+        Serial1.println(doc[CA_BAR_GRAPH_B].as<String>());
+        PCMessage = doc[CA_BAR_GRAPH_B].as<String>();
     }
 
     return true;
@@ -103,6 +106,8 @@ bool Communication::SendMessage()
     doc[CA_BOTTOM_BUTTON_A] = controllerPlayerA->GetBottomButton()->GetState();
     doc[CA_LEFT_BUTTON_A]   = controllerPlayerA->GetLeftButton()->GetState();
     doc[CA_RIGHT_BUTTON_A]  = controllerPlayerA->GetRightButton()->GetState();
+
+    digitalWrite(13, controllerPlayerA->GetTopButton()->GetState());
 
     doc[CA_TOP_BUTTON_B]    = controllerPlayerB->GetTopButton()->GetState();
     doc[CA_BOTTOM_BUTTON_B] = controllerPlayerB->GetBottomButton()->GetState();
@@ -220,6 +225,9 @@ bool Communication::LinkMuonDetector(MuonDetector* muonDetector)
  */
 void Communication::Update()
 {
+    static bool wasReading = false;
+    static int giveUpCounter = 0;
+
     if(!controllersLinked)
     {
         errorMessage = CE_CONTROLLER_LINKAGE_FAILURE;
@@ -243,15 +251,37 @@ void Communication::Update()
         errorMessage = CE_COMMUNICATION_LOST;
     }
 
+    //if(timeBetweenReadChecks.TimeLeft() == 0)
+    //{
+        // Check if we are receiving messages at the moment
+        bool result = HasReceivedAMessage();
+        giveUpCounter++;
+        // We finished reading a message because we were previously reading and we aint no more.
+        if(result || giveUpCounter>100)
+        {
+            giveUpCounter = 0;
+            millisWhenLastRead = millis();
+            wasReading = false;
+            if(!ParseReceivedMessage()) {
+                return;
+            }
+            if(!SendMessage())          
+            {
+                return;
+            }
+            errorMessage = CE_NO_ERRORS;  
+        }
 
+        // We are not reading and we weren't previously.
+    //}
 
-    if(shouldRead_) // Communication received on serial port.
-    {
-        millisWhenLastRead = millis();
-        if(!ParseReceivedMessage()) {return;}
-        if(!SendMessage())          {return;}
-        errorMessage = CE_NO_ERRORS;
-    }
+    //if(shouldRead_) // Communication received on serial port.
+    //{
+    //    millisWhenLastRead = millis();
+    //    if(!ParseReceivedMessage()) {return;}
+    //    if(!SendMessage())          {return;}
+    //    errorMessage = CE_NO_ERRORS;
+    //}
 }
 
 /**
@@ -262,9 +292,64 @@ void Communication::Update()
  * @return false:
  * No message is being received.
  */
-bool Communication::IsReceivingAMessage()
+bool Communication::HasReceivedAMessage()
 {
-    return true;
+    static bool receiving = false;
+    String parsedMessage = "";
+    currentAmountOfCharacters = Serial.available();
+    
+    if(currentAmountOfCharacters == 0)
+    {
+        return false;
+    }
+
+    // CLEAR SERIAL PORT
+    while(Serial.available())
+    {
+        int byte = Serial.read();
+
+        if(byte < 32 || byte > 127)
+        {
+        }
+        else
+        {
+            // New message is seen despite never seing the end of the other one
+            if(receiving && (byte == '{'))
+            {
+                currentMessage = "";
+                parsedMessage = "";
+            }
+
+            // The start of a fresh new message is seen
+            if(!receiving && (byte == '{'))
+            {
+                receiving = true;
+            }
+
+            // In the middle of receiving the message
+            if(receiving)
+            {
+                parsedMessage += ((char)byte);
+            }
+
+            // The end of the message is received.
+            if(receiving && (byte == '}'))
+            {
+                receiving = false;
+                currentMessage += parsedMessage;
+
+                while(Serial.available())
+                {
+                    Serial.read();
+                }
+
+                return true;
+            }
+        }
+    }
+
+    currentMessage += parsedMessage;
+    return false;
 }
 
 /**
@@ -293,4 +378,14 @@ void Communication::SerivalEventHandler()
 String Communication::GetErrorMessage()
 {
     return errorMessage;
+}
+
+/**
+ * @brief 
+ * Returns the message that the PC wants written on
+ * the LCD of the arduino.
+ */
+String Communication::GetPCMessage()
+{
+    return PCMessage;
 }

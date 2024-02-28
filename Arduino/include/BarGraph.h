@@ -40,6 +40,8 @@ class BarGraph
          */
         int bits = 0;
 
+        bool canBeUsed = false;
+
     public:
 
         BarGraph();

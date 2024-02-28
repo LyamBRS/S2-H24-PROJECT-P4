@@ -46,6 +46,7 @@ class Controller
         SimpleTimer hearthbeatTimer = SimpleTimer(500);
 
         bool isConnected = false;
+        bool canBeUsed = false;
 
     public:
 

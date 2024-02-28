@@ -36,6 +36,8 @@ class Potentiometer
         /// @brief Specifies the maximum needed before the potentiometer gets no longer stuck at 50. defaults to -1 (disabled)
         int deadZoneMax = -1;
 
+        bool canBeUsed = false;
+
     public:
         /**
          * @brief Construct a new Potentiometer object.

@@ -105,6 +105,7 @@ Controller::Controller(int detectionPin,
         barGraphIPin,
         barGraphJPin
     );
+    canBeUsed = true;
 }
 
 /**
@@ -117,6 +118,7 @@ Controller::Controller(int detectionPin,
  */
 bool Controller::Reset()
 {
+    if(!canBeUsed) return false;
     hearthbeatTimer.Reset();
     barGraph->TurnAllOff();
     hearthbeat->TurnOff();
@@ -222,6 +224,7 @@ Joystick* Controller::GetJoystick()
  */
 bool Controller::SetGraphDisplay(int bits)
 {
+    if(!canBeUsed) return false;
     barGraph->SetBits(bits);
     return true;
 }
@@ -237,6 +240,7 @@ bool Controller::SetGraphDisplay(int bits)
  */
 bool Controller::GetDetection()
 {
+    if(!canBeUsed) return false;
     return false;
 }
 
@@ -251,16 +255,37 @@ bool Controller::GetDetection()
  */
 bool Controller::Update()
 {
+    if(!canBeUsed) return false;
     if(hearthbeatTimer.TimeLeft() == 0)
     {
         hearthbeat->FlipState();
     }
 
-    barGraph->Update();
-    accelerometer->Update();
-    joystick->Update();
-    hearthbeat->Update();
-    topButton->Update();
+    if(!barGraph->Update())
+    {
+        Serial1.println("Controller.cpp.261");
+    }
+
+    if(!accelerometer->Update())
+    {
+        Serial1.println("Controller.cpp.266");
+    }
+
+    if(!joystick->Update())
+    {
+        Serial1.println("Controller.cpp.271");
+    }
+
+    if(!hearthbeat->Update())
+    {
+        Serial1.println("Controller.cpp.276");
+    }
+
+    if(!topButton->Update())
+    {
+        //Serial1.println("Controller.cpp.281");
+    }
+
     leftButton->Update();
     rightButton->Update();
     bottomButton->Update();

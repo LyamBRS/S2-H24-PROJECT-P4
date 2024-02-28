@@ -80,6 +80,7 @@ void setup() {
   //testBarGraph();
   pinMode(13, OUTPUT);
   application.Setup();
+  Serial1.begin(115200);
 }
 
 void loop() {
@@ -93,7 +94,7 @@ void loop() {
   if(testLED.TimeLeft()==0)
   {
     state = !state;
-    digitalWrite(13, state);
+    //digitalWrite(13, state);
   }
   application.UpdateAll();
 }

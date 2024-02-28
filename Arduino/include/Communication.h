@@ -17,6 +17,7 @@
 #include <ArduinoJson.h>
 #include "Controller.h"
 #include "MuonDetector.h"
+#include "SimpleTimer.h"
 #include "string.h"
 
 // - DEFINES - //
@@ -24,13 +25,13 @@
 
 // - ERROR MESSAGES - (CE = Communication errors)
 #define MS_BEFORE_CONNECTION_LOST        1000
-#define CE_SERIAL_NOT_SETUP              "Serial undefined    "
-#define CE_PARSING_FAILED                "RX parsing error    "
-#define CE_CONTROLLER_LINKAGE_FAILURE    "Controllers not link"
-#define CE_COMMUNICATION_LOST            "Connection lost     "
-#define CE_NO_ERRORS                     ""
-#define CE_FAILURE_TO_SEND_MESSAGE       "TX error            "
-#define CE_MUON_DETECTOR_LINKAGE_FAILURE "Muon class not link "
+#define CE_SERIAL_NOT_SETUP              "Serial undefined"
+#define CE_PARSING_FAILED                "RX parsing error"
+#define CE_CONTROLLER_LINKAGE_FAILURE    "Controller nlink"
+#define CE_COMMUNICATION_LOST            "Connection lost "
+#define CE_NO_ERRORS                     "                "
+#define CE_FAILURE_TO_SEND_MESSAGE       "TX error        "
+#define CE_MUON_DETECTOR_LINKAGE_FAILURE "Muon not linked "
 
 // - JSON ATTRIBUTES - (CA = Communication Attributes)
 #define CA_JOYSTICK_X_A "JXA"
@@ -86,14 +87,21 @@ class Communication
         volatile bool shouldRead_ = false;
 
         String errorMessage = CE_NO_ERRORS;
+        String currentMessage = "";
+        SimpleTimer timeBetweenReadChecks = SimpleTimer(2);
 
         MuonDetector* randomMuonDetector;
         Controller* controllerPlayerA;
         Controller* controllerPlayerB;
 
+        String PCMessage = "NO MESSAGE RX   ";
+
         bool controllersLinked = false;
         bool serialSetUp = false;
         bool muonDetectorLinked = false;
+
+        int oldAmountOfCharacters = 0;
+        int currentAmountOfCharacters = 0;
 
         /// @brief Keeps track of how long it has been since a message was received.
         int millisWhenLastRead = 0;
@@ -226,5 +234,12 @@ class Communication
          * @return false:
          * No message was appended.
          */
-        bool AppendIncommingMessage();
+        bool HasReceivedAMessage();
+
+        /**
+         * @brief 
+         * Returns the message that the PC wants written on
+         * the LCD of the arduino.
+         */
+        String GetPCMessage();
 };

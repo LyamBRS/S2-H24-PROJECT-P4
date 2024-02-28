@@ -41,6 +41,8 @@ class AnalogInput
         /// @brief The absolute maximum that the input value can reach. Anything above will be seen as 100. Defaults to 1023.
         int maximumValue = 1023;
 
+        bool canBeUsed = false;
+
     public:
 
         /**

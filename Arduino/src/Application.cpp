@@ -147,6 +147,7 @@ bool Application::UpdateAll()
     controllerB->Update();
     muonDetector->Update();
     communication.Update();
+    UpdateLCD();
     return true;
 }
 
@@ -163,8 +164,22 @@ bool Application::UpdateAll()
  */
 bool Application::UpdateLCD()
 {
-    lcd.setCursor(0, 0);
-    lcd.print("amogus          ");
+    static String oldErrorMessage = "";
+    static String oldPCMessage = "";
+
+    if(communication.GetErrorMessage() != oldErrorMessage)
+    {
+        oldErrorMessage = communication.GetErrorMessage();
+        lcd.setCursor(0, 1);
+        lcd.print(oldErrorMessage);
+    }
+
+    if(oldPCMessage != communication.GetPCMessage())
+    {
+        oldPCMessage = communication.GetPCMessage();
+        lcd.setCursor(0, 0);
+        lcd.print(oldPCMessage);
+    }
     return true;
 }
 

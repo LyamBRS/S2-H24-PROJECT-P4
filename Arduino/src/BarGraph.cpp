@@ -16,7 +16,7 @@ BarGraph::BarGraph(int pinA, int pinB, int pinC, int pinD, int pinE, int pinF, i
     Leds[7] = new LED(pinH);
     Leds[8] = new LED(pinI);
     Leds[9] = new LED(pinJ);
-
+    canBeUsed = true;
 }
 
 int BarGraph::GetBits(){
@@ -24,16 +24,19 @@ int BarGraph::GetBits(){
 }
 
 bool BarGraph::SetBits(int newBits){
+    if(!canBeUsed) return false;
     bits = newBits;
     return true;
 }
 
 bool BarGraph::FlipAll(){
+    if(!canBeUsed) return false;
     bits = ~bits;
     return true;
 }
 
 bool BarGraph::TurnAllOff(){
+    if(!canBeUsed) return false;
     for (int i = 0; i < 10; i++)
     {
         Leds[i]->TurnOff();
@@ -43,6 +46,7 @@ bool BarGraph::TurnAllOff(){
 }
 
 bool BarGraph::TurnAllOn(){
+    if(!canBeUsed) return false;
     for (int i = 0; i < 10; i++)
     {
         Leds[i]->TurnOn();
@@ -52,10 +56,12 @@ bool BarGraph::TurnAllOn(){
 }
 
 bool BarGraph::GetIndividualState(int ledNumber){
+    if(!canBeUsed) return false;
     return Leds[ledNumber]->GetState();
 }
 
 bool BarGraph::SetIndividualState(int ledNumber, bool wantedState){
+    if(!canBeUsed) return false;
     if (wantedState == true)
     {
         bits = bits | ((unsigned int)(1) << (unsigned int)(ledNumber));
@@ -68,6 +74,7 @@ bool BarGraph::SetIndividualState(int ledNumber, bool wantedState){
 }
 
 bool BarGraph::Update(){
+    if(!canBeUsed) return false;
     for(int index=0; index<10; index++)
     {
         unsigned int shiftedBits = (unsigned int)(bits) >> index;

@@ -14,12 +14,24 @@ AnalogInput::AnalogInput()
 
 AnalogInput::AnalogInput(int pin)
 {
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin=pin;
     pinMode(pin,INPUT);
+    canBeUsed = true;
 }
 
 AnalogInput::AnalogInput(int pin, int min, int max)
 {
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
+
     pinMode(pin,INPUT);
     arduinoPin=pin;
      if (min<0)
@@ -34,10 +46,12 @@ AnalogInput::AnalogInput(int pin, int min, int max)
     {max=1023;}
     minimumValue=min;
     maximumValue=max;
+    canBeUsed = true;
 }
 
 bool AnalogInput::UpdateRawValue()
 {
+    if(!canBeUsed) return false;
     rawInputValue=analogRead(arduinoPin);
     if (rawInputValue>maximumValue||rawInputValue<minimumValue)
     {
@@ -49,6 +63,7 @@ bool AnalogInput::UpdateRawValue()
 
 bool AnalogInput::SetMax(int newMax)
 {
+    if(!canBeUsed) return false;
     if (1023<newMax || 0<minimumValue)
     {return false;}
     maximumValue=newMax;
@@ -58,6 +73,7 @@ bool AnalogInput::SetMax(int newMax)
  
 bool AnalogInput::SetMin(int newMin)
 {
+    if(!canBeUsed) return false;
   if (0>newMin||newMin>1023)
     {return false;}
     minimumValue=newMin;
@@ -67,6 +83,7 @@ bool AnalogInput::SetMin(int newMin)
 
 float AnalogInput::GetPourcent()
 {
+    if(!canBeUsed) return 0.0f;
     float plage=maximumValue-minimumValue;
     float Valeur_Pourcent=((rawInputValue-minimumValue)/(plage))*100;
     if (Valeur_Pourcent<minimumValue)

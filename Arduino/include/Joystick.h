@@ -30,6 +30,8 @@ class Joystick
         /// @brief X axis potentiometer object
         Potentiometer *yAxis;
 
+        bool canBeUsed = false;
+
     public:
 
         Joystick();

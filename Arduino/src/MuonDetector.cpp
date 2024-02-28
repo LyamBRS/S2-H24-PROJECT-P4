@@ -29,7 +29,12 @@ MuonDetector::MuonDetector()
  */
 MuonDetector::MuonDetector(int pin)
 {
-    // AMOGUS
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
+    canBeUsed = true;
 }
 
 /**
@@ -41,6 +46,7 @@ MuonDetector::MuonDetector(int pin)
  */
 int MuonDetector::GetTotal()
 {
+    if(!canBeUsed) return 0;
     return 0;
 }
 
@@ -55,6 +61,7 @@ int MuonDetector::GetTotal()
  */
 bool MuonDetector::ResetCount()
 {
+    if(!canBeUsed) return false;
     return false;
 }
 
@@ -69,6 +76,7 @@ bool MuonDetector::ResetCount()
  */
 bool MuonDetector::Update()
 {
+    if(!canBeUsed) return false;
     return false;
 }
 

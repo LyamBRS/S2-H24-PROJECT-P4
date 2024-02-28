@@ -38,6 +38,8 @@ class Accelerometer
         /// @brief Object that reads the values of the Z axis.
         AnalogInput *zAxis;
 
+        bool canBeUsed = false;
+
     public:
 
         Accelerometer();

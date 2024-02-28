@@ -26,12 +26,12 @@
 //const int rs = 34, en = 32, d4 = 30, d5 =28, d6 = 26, d7 = 24;
 //LiquidCrystal lcd(rs, en, d4, d5, d6, d7);
 
-#define PIN_LCD_RS 34
-#define PIN_LCD_EN 32
-#define PIN_LCD_D4 30
-#define PIN_LCD_D5 28
-#define PIN_LCD_D6 26
-#define PIN_LCD_D7 24
+#define PIN_LCD_RS 2//34
+#define PIN_LCD_EN 3//32
+#define PIN_LCD_D4 4//30
+#define PIN_LCD_D5 5//28
+#define PIN_LCD_D6 6//26
+#define PIN_LCD_D7 7//24
 
 #define PIN_MUON 0
 
@@ -42,10 +42,10 @@
 #define PIN_CONTROLLER_B_HEARTHBEAT 11
 
 #define PIN_CONTROLLER_A_JOY_BUTTON 0
-#define PIN_CONTROLLER_A_TOP_BUTTON 0
-#define PIN_CONTROLLER_A_BOT_BUTTON 0
-#define PIN_CONTROLLER_A_L_BUTTON 0
-#define PIN_CONTROLLER_A_R_BUTTON 0
+#define PIN_CONTROLLER_A_TOP_BUTTON 31
+#define PIN_CONTROLLER_A_BOT_BUTTON 33
+#define PIN_CONTROLLER_A_L_BUTTON 35
+#define PIN_CONTROLLER_A_R_BUTTON 29
 
 #define PIN_CONTROLLER_B_JOY_BUTTON 0
 #define PIN_CONTROLLER_B_TOP_BUTTON 0
