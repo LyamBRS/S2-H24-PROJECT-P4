@@ -48,7 +48,7 @@ class Potentiometer
          * @param pin
          * The ANALOG pin number where data will be read
          */
-        Potentiometer(int pin);
+        Potentiometer(uint8_t pin);
 
         /**
          * @brief Construct a new Analog Input object.
@@ -71,7 +71,7 @@ class Potentiometer
          * @param maxDeadZone
          * Maximum deadzone value. Maximum needed before the potentiometer gets no longer stuck at 50.
          */
-        Potentiometer(int pin, int minAnalogValue, int maxAnalogValue, int minDeadZone, int maxDeadZone);
+        Potentiometer(uint8_t pin, int minAnalogValue, int maxAnalogValue, int minDeadZone, int maxDeadZone);
 
         /**
          * @brief

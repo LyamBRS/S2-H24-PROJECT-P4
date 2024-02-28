@@ -47,7 +47,7 @@ class Joystick
          * @param yAxisPin 
          * Arduino pin number where the analog Y axis is connected.
          */
-        Joystick(int buttonPin, int xAxisPin, int yAxisPin);
+        Joystick(int buttonPin, uint8_t xAxisPin, uint8_t yAxisPin);
 
         /**
          * @brief Sets new maximum values for all

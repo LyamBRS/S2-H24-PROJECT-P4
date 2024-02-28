@@ -1,13 +1,12 @@
 #include "Potentiometer.h"
 
-Potentiometer::Potentiometer(int pin)
+Potentiometer::Potentiometer(uint8_t pin)
 {
     if(pin==0)
     {
         canBeUsed = false;
         return;
     }
-    delete analogInput;
     analogInput = new AnalogInput(pin);
     canBeUsed = true;
 }

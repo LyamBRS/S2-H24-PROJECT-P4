@@ -5,7 +5,7 @@ Accelerometer::Accelerometer()
 {
 }
 
-Accelerometer::Accelerometer(int xPin, int yPin, int zPin)
+Accelerometer::Accelerometer(uint8_t xPin, uint8_t yPin, uint8_t zPin)
 {
     xAxis = new AnalogInput(xPin);
     yAxis = new AnalogInput(yPin);

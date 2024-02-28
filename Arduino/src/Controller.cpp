@@ -67,12 +67,12 @@ Controller::Controller(int detectionPin,
                     int rightButtonPin,
                     int leftButtonPin, 
                     int bottomButtonPin, 
-                    int joystickButtonPin, 
-                    int joystickXAxisPin, 
-                    int joystickYAxisPin, 
-                    int accelerometerXAxisPin, 
-                    int accelerometerYAxisPin, 
-                    int accelerometerZAxisPin, 
+                    uint8_t joystickButtonPin, 
+                    uint8_t joystickXAxisPin, 
+                    uint8_t joystickYAxisPin, 
+                    uint8_t accelerometerXAxisPin, 
+                    uint8_t accelerometerYAxisPin, 
+                    uint8_t accelerometerZAxisPin, 
                     int hearthBeatPin, 
                     int barGraphAPin, 
                     int barGraphBPin,
@@ -91,7 +91,7 @@ Controller::Controller(int detectionPin,
     bottomButton = new Button(bottomButtonPin);
     leftButton = new Button(leftButtonPin);
     rightButton = new Button(rightButtonPin);
-    joystick = new Joystick(joystickButtonPin, joystickXAxisPin, joystickYAxisPin);
+    joystick = new Joystick(joystickButtonPin, joystickXAxisPin, joystickXAxisPin);
     accelerometer = new Accelerometer(accelerometerXAxisPin, accelerometerYAxisPin, accelerometerZAxisPin);
     barGraph = new BarGraph(                    
         barGraphAPin, 

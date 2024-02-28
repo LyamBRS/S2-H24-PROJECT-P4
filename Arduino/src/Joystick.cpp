@@ -17,7 +17,7 @@ Joystick::Joystick()
 
 }
 
-Joystick::Joystick(int buttonPin, int xAxisPin, int yAxisPin)
+Joystick::Joystick(int buttonPin, uint8_t xAxisPin, uint8_t yAxisPin)
 {
     button = new Button(buttonPin);
     xAxis = new Potentiometer(xAxisPin);

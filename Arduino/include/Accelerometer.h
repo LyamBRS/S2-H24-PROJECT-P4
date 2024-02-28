@@ -58,7 +58,7 @@ class Accelerometer
          * @param zPin
          * The arduino pin where the Z axis is connected.
          */
-        Accelerometer(int xPin, int yPin, int zPin);
+        Accelerometer(uint8_t xPin, uint8_t yPin, uint8_t zPin);
 
         /**
          * @brief Set the Min object

@@ -12,7 +12,7 @@ AnalogInput::AnalogInput()
     // DOES NOTHING ON PURPOSE.
 }
 
-AnalogInput::AnalogInput(int pin)
+AnalogInput::AnalogInput(uint8_t pin)
 {
     if(pin == 0)
     {
@@ -24,7 +24,7 @@ AnalogInput::AnalogInput(int pin)
     canBeUsed = true;
 }
 
-AnalogInput::AnalogInput(int pin, int min, int max)
+AnalogInput::AnalogInput(uint8_t pin, int min, int max)
 {
     if(pin == 0)
     {

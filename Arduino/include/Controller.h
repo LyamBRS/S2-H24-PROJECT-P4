@@ -14,6 +14,7 @@
 #pragma once
 
 // - INCLUDES - //
+#include <Arduino.h>
 #include "Button.h"
 #include "LED.h"
 #include "Joystick.h"
@@ -107,12 +108,12 @@ class Controller
                     int rightButtonPin,
                     int leftButtonPin, 
                     int bottomButtonPin, 
-                    int joystickButtonPin, 
-                    int joystickXAxisPin, 
-                    int joystickYAxisPin, 
-                    int accelerometerXAxisPin, 
-                    int accelerometerYAxisPin, 
-                    int accelerometerZAxisPin, 
+                    uint8_t joystickButtonPin, 
+                    uint8_t joystickXAxisPin, 
+                    uint8_t joystickYAxisPin, 
+                    uint8_t accelerometerXAxisPin, 
+                    uint8_t accelerometerYAxisPin, 
+                    uint8_t accelerometerZAxisPin, 
                     int hearthBeatPin, 
                     int barGraphAPin, 
                     int barGraphBPin,
