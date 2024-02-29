@@ -45,7 +45,7 @@ bool Communication::ParseReceivedMessage()
         Serial1.println(error.c_str());
         if(errorMessage == CE_NO_ERRORS)
         {
-            errorMessage = CE_PARSING_FAILED;
+            //errorMessage = CE_PARSING_FAILED;
         }
         return false;
     }
@@ -95,19 +95,23 @@ bool Communication::SendMessage()
 
     // - JOYSTICK ATTRIBUTES - //
     doc[CA_JOYSTICK_X_A] = controllerPlayerA->GetJoystick()->GetPourcentX();
-    doc[CA_JOYSTICK_X_B] = controllerPlayerB->GetJoystick()->GetPourcentX();
     doc[CA_JOYSTICK_Y_A] = controllerPlayerA->GetJoystick()->GetPourcentY();
+
+    doc[CA_JOYSTICK_X_B] = controllerPlayerB->GetJoystick()->GetPourcentX();
     doc[CA_JOYSTICK_Y_B] = controllerPlayerB->GetJoystick()->GetPourcentY();
+    
     doc[CA_JOYSTICK_BUTTON_A] = controllerPlayerA->GetJoystick()->GetButtonState();
     doc[CA_JOYSTICK_BUTTON_B] = controllerPlayerB->GetJoystick()->GetButtonState();
 
     // - ACCELEROMETER ATTRIBUTES - //
     doc[CA_ACCELEROMETER_X_A] = controllerPlayerA->GetAccelerometer()->GetPourcentX();
-    doc[CA_ACCELEROMETER_X_B] = controllerPlayerB->GetAccelerometer()->GetPourcentX();
     doc[CA_ACCELEROMETER_Y_A] = controllerPlayerA->GetAccelerometer()->GetPourcentY();
-    doc[CA_ACCELEROMETER_Y_B] = controllerPlayerB->GetAccelerometer()->GetPourcentY();
     doc[CA_ACCELEROMETER_Z_A] = controllerPlayerA->GetAccelerometer()->GetPourcentZ();
+
+    doc[CA_ACCELEROMETER_X_B] = controllerPlayerB->GetAccelerometer()->GetPourcentX();
+    doc[CA_ACCELEROMETER_Y_B] = controllerPlayerB->GetAccelerometer()->GetPourcentY();
     doc[CA_ACCELEROMETER_Z_B] = controllerPlayerB->GetAccelerometer()->GetPourcentZ();
+
 
     // - BUTTONS - //
     doc[CA_TOP_BUTTON_A]    = controllerPlayerA->GetTopButton()->GetState();

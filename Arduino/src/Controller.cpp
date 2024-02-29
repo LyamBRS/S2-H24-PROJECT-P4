@@ -86,6 +86,7 @@ Controller::Controller(int detectionPin,
                     int barGraphJPin,
                     int ID)
 {
+    detection = new Button(detectionPin, false, 0);
     hearthbeat = new LED(hearthBeatPin);
     topButton = new Button(topButtonPin);
     bottomButton = new Button(bottomButtonPin);
@@ -241,7 +242,7 @@ bool Controller::SetGraphDisplay(int bits)
 bool Controller::GetDetection()
 {
     if(!canBeUsed) return false;
-    return false;
+    return detection->GetState();
 }
 
 /**
@@ -286,6 +287,7 @@ bool Controller::Update()
         //Serial1.println("Controller.cpp.281");
     }
 
+    detection->Update();
     leftButton->Update();
     rightButton->Update();
     bottomButton->Update();
