@@ -49,7 +49,7 @@ bool Communication::ParseReceivedMessage()
         }
         return false;
     }
-
+    millisWhenLastRead = millis();
     if(errorMessage == CE_PARSING_FAILED)
     {
         errorMessage = CE_NO_ERRORS;
@@ -93,13 +93,23 @@ bool Communication::SendMessage()
 {
     StaticJsonDocument<500> doc;
 
+    if(!controllerPlayerA->GetDetection())
+    {
+        controllerPlayerA->Reset();
+    }
+
+    if(!controllerPlayerB->GetDetection())
+    {
+        controllerPlayerB->Reset();
+    }
+
     // - JOYSTICK ATTRIBUTES - //
     doc[CA_JOYSTICK_X_A] = controllerPlayerA->GetJoystick()->GetPourcentX();
     doc[CA_JOYSTICK_Y_A] = controllerPlayerA->GetJoystick()->GetPourcentY();
 
     doc[CA_JOYSTICK_X_B] = controllerPlayerB->GetJoystick()->GetPourcentX();
     doc[CA_JOYSTICK_Y_B] = controllerPlayerB->GetJoystick()->GetPourcentY();
-    
+
     doc[CA_JOYSTICK_BUTTON_A] = controllerPlayerA->GetJoystick()->GetButtonState();
     doc[CA_JOYSTICK_BUTTON_B] = controllerPlayerB->GetJoystick()->GetButtonState();
 
@@ -261,13 +271,22 @@ void Communication::Update()
     if((millis() - millisWhenLastRead) > MS_BEFORE_CONNECTION_LOST)
     {
         errorMessage = CE_COMMUNICATION_LOST;
+        millisWhenLastRead = millis();
+    }
+
+    if(!controllerPlayerA->GetDetection())
+    {
+        if(!controllerPlayerB->GetDetection())
+        {
+            errorMessage = CE_NO_CONTROLLERS_CONNECTED;
+        }
     }
 
     //if(timeBetweenReadChecks.TimeLeft() == 0)
     //{
         // Check if we are receiving messages at the moment
         bool result = HasReceivedAMessage();
-        giveUpCounter++;
+        //giveUpCounter++;
         // We finished reading a message because we were previously reading and we aint no more.
         if(result || giveUpCounter>100)
         {
@@ -284,6 +303,7 @@ void Communication::Update()
             {
                 return;
             }
+
             errorMessage = CE_NO_ERRORS;  
         }
 
@@ -318,10 +338,10 @@ bool Communication::HasReceivedAMessage()
         return false;
     }
 
-    if(errorMessage == CE_COMMUNICATION_LOST)
-    {
-        errorMessage = CE_NO_ERRORS;
-    }
+    //if(errorMessage == CE_COMMUNICATION_LOST)
+    //{
+    //    errorMessage = CE_NO_ERRORS;
+    //}
 
     // CLEAR SERIAL PORT
     while(Serial.available())

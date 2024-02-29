@@ -36,3 +36,11 @@ bool Accelerometer::Update(){
     zAxis->UpdateRawValue();
     return true;
 }
+
+bool Accelerometer::Reset()
+{
+    xAxis->Reset();
+    yAxis->Reset();
+    zAxis->Reset();
+    return true;
+}

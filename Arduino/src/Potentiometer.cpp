@@ -38,6 +38,11 @@ bool Potentiometer::Update(){
     return analogInput->UpdateRawValue();
 }
 
+bool Potentiometer::Reset()
+{
+    analogInput->Reset();
+    return true;
+}
 
 
 

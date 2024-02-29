@@ -66,3 +66,11 @@ bool Joystick::Update()
     return true;
 }
 
+bool Joystick::Reset()
+{
+    button->Reset();
+    xAxis->Reset();
+    yAxis->Reset();
+    return true;
+}
+

@@ -79,3 +79,9 @@ void Button::SetState()
         state = false;
     }
 }
+
+bool Button::Reset()
+{
+    state = false;
+    return true;
+}

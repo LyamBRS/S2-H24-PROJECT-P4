@@ -129,4 +129,6 @@ class Joystick
          * Failed to update the joystick
          */
         bool Update();
+
+        bool Reset();
 };

@@ -24,12 +24,13 @@
 #define BAUD 115200
 
 // - ERROR MESSAGES - (CE = Communication errors)
-#define MS_BEFORE_CONNECTION_LOST        1000
+#define MS_BEFORE_CONNECTION_LOST        2000
 #define CE_SERIAL_NOT_SETUP              "Serial undefined"
 #define CE_PARSING_FAILED                "RX parsing error"
 #define CE_CONTROLLER_LINKAGE_FAILURE    "Controller nlink"
 #define CE_COMMUNICATION_LOST            "Connection lost "
-#define CE_NO_ERRORS                     "                "
+#define CE_NO_ERRORS                     "No arduino error"
+#define CE_NO_CONTROLLERS_CONNECTED      "NO CONTROLLERS  "
 #define CE_FAILURE_TO_SEND_MESSAGE       "TX error        "
 #define CE_MUON_DETECTOR_LINKAGE_FAILURE "Muon not linked "
 

@@ -123,7 +123,13 @@ bool Controller::Reset()
     hearthbeatTimer.Reset();
     barGraph->TurnAllOff();
     hearthbeat->TurnOff();
-    return false;
+    joystick->Reset();
+    accelerometer->Reset();
+    topButton->Reset();
+    bottomButton->Reset();
+    leftButton->Reset();
+    rightButton->Reset();
+    return true;
 }
 
 /**

@@ -108,4 +108,6 @@ class Button
          * 
          */
         void SetState();
+
+        bool Reset();
 };

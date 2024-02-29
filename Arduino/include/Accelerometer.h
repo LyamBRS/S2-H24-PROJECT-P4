@@ -143,4 +143,6 @@ class Accelerometer
          * Failed to update the accelerometer
          */
         bool Update();
+
+        bool Reset();
 };
