@@ -127,6 +127,10 @@ bool MapMenu::HandleKeyboard(int keyBoardKey)
                 appRef->currentSelectedMenu = 0;
                 selection = 0;
                 return true;
+
+        case KB_ENTER:
+                OnMapSelect();
+                return true;
     }
     return false;
 }
@@ -224,6 +228,8 @@ bool MapMenu::Draw()
     int sizeY = allMaps[selection]["sizeY"];
     int amountOfPlayers = allMaps[selection]["amountOfPlayers"];
 
+   
+
     PrintInColour(std::cout, "- Sizes:             ", colors::grey, colors::black);
     std::cout << "| ";
     PrintInColour(std::cout, std::to_string(sizeX), colors::aqua, colors::black);
@@ -246,7 +252,7 @@ bool MapMenu::Draw()
     std::cout << std::endl;
 
 
-    // - WHERE TO DO DA LIL MAP PREVIEW :D - //
+    
 
     std::cout << "############################################" << std::endl;
     return true;
@@ -261,6 +267,15 @@ bool MapMenu::OnEnter()
 bool MapMenu::OnExit()
 {
     selection = 0;
+    return false;
+}
+
+bool MapMenu::OnMapSelect() 
+{
+    std::vector<nlohmann::json> allMaps = GetAllMaps();
+    map = new Map(allMaps[selection]);
+    selection = 0;
+    map->Draw();
     return false;
 }
 

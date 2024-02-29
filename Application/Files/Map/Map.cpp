@@ -1,4 +1,4 @@
-#pragma once
+﻿#pragma once
 
  // - INCLUDES - //
 #include "Map.h"
@@ -7,9 +7,17 @@
 
  // - CLASS - //
 
-Map::Map()
+Map::Map(nlohmann::json MapData)
 {
-
+	sizeX = MapData["sizeX"];
+	sizeY = MapData["sizeY"];
+	mapName = MapData["name"];
+	mapAsString = "NOT IMPLEMENTED";
+	for (int i = 0; i < sizeY; ++i) {
+		for (int j = 0; j < sizeX; ++j) {
+			map[i][j] = MapData["map"][i][j];
+		}
+	}
 }
 
 bool Map::Update()
@@ -18,8 +26,36 @@ bool Map::Update()
 }
 
 bool Map::Draw()
-{
-	return false;
+{	
+	std::string PermaWall = "[|]";
+	std::string Wall = "###";
+	std::string Empty = " . ";
+	std::string Player = " @ ";
+
+	for (int i = 0; i < sizeY; ++i) {
+		for (int j = 0; j < sizeX; ++j) {
+			switch (map[i][j])
+			{
+				case 0:
+					std::cout << Empty;
+					break;
+				case 1:
+					std::cout << PermaWall;
+					break;
+				case 2:
+					std::cout << Wall;
+					break;
+				case 3:
+					std::cout << Player;
+					break;
+			}
+
+
+		}
+		std::cout << std::endl;
+	}
+
+	return true;
 }
 
 int Map::GetTileDataAtPosition(int x, int y)

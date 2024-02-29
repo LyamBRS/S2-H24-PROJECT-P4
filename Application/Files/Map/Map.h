@@ -16,6 +16,7 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../JSON/json.hpp"
+#include "../Colour/Colour.h"
 // - DEFINES - //
 
 
@@ -221,7 +222,7 @@ class Map
         /// @brief How big the map is vertically.
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
-        int map[1][1] = {};
+        int map[13][15] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
@@ -235,7 +236,7 @@ class Map
          * map through @ref LoadSavedMap
          * otherwise the map IS NOT USABLE AS IS.
          */
-        Map();
+        Map(nlohmann::json MapData);
 
         /**
          * @brief 
