@@ -53,6 +53,15 @@ bool Game::DisplayMap()
  */
 bool Game::HandleNextMouvements()
 {
+    for(int i=0; i<players.size();i++)
+    {
+        if (players.at(i)->joystickX >0)
+        {
+            
+        }
+        
+    }
+    
     return false;
 }
 
@@ -177,7 +186,7 @@ Game::Game()
  */
 Game::Game(int connectedPlayerCount, std::wstring pathToMap)
 {
-
+    players.resize(connectedPlayerCount);
 }
 
 /**
@@ -210,7 +219,9 @@ bool Game::Update()
  */
 bool Game::Start()
 {
-    return false;
+    startTimer.Reset();
+    gameIsReady = false;
+    return true;
 }
 
 /**
@@ -232,5 +243,19 @@ bool Game::Start()
  */
 bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
+    players.at(associatedPlayer-1)->rightButton = controllerToUpdate->rightButton;
+    players.at(associatedPlayer-1)->leftButton = controllerToUpdate->leftButton;
+    players.at(associatedPlayer-1)->topButton = controllerToUpdate->topButton;
+    players.at(associatedPlayer-1)->bottomButton = controllerToUpdate->bottomButton;
+    players.at(associatedPlayer-1)->SentBarGraphBits = controllerToUpdate->SentBarGraphBits;
+    players.at(associatedPlayer-1)->ReceivedBarGraphBits = controllerToUpdate->ReceivedBarGraphBits;
+    players.at(associatedPlayer-1)->accelerometerX = controllerToUpdate->accelerometerX;
+    players.at(associatedPlayer-1)->accelerometerY = controllerToUpdate->accelerometerY;
+    players.at(associatedPlayer-1)->accelerometerZ = controllerToUpdate->accelerometerZ;
+    players.at(associatedPlayer-1)->isConnected = controllerToUpdate->isConnected;
+    players.at(associatedPlayer-1)->joystickX = controllerToUpdate->joystickX;
+    players.at(associatedPlayer-1)->joystickY = controllerToUpdate->joystickY;
+    players.at(associatedPlayer-1)->joystickButton = controllerToUpdate->joystickButton;
+
     return false;
 }

@@ -20,6 +20,8 @@
 #include "../Controller/Controller.h"
 #include "../PlacedBomb/PlacedBomb.h"
 #include "../PlacedPowerUp/PlacedPowerUp.h"
+#include "../SimpleTimer/SimpleTimer.h"
+#include "../Movements/Movements.h"
 
 // - DEFINES - //
 
@@ -52,7 +54,8 @@ class Game
         /// @brief How long has the game been going for? (in milliseconds)
         int timeSinceStart = 0;
         /// @brief How long until the game starts and players can move
-        int countDownTimer = 0;
+        SimpleTimer startTimer = SimpleTimer(3000);
+        bool gameIsReady = false;
         
         /**
          * @brief 
