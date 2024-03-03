@@ -21,7 +21,7 @@
 #include "../JSON/json.hpp"
 
 // - DEFINES - //
-#define COMMUNICATION_MESSAGE_MAX_SIZE 1024
+#define COMMUNICATION_MESSAGE_MAX_SIZE 2048
 
 // - CLASS - //
 

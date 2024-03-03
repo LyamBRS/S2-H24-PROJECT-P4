@@ -14,6 +14,7 @@
 #pragma once
 
 // - INCLUDES - //
+#include <Arduino.h>
 
 // - DEFINES - //
 
@@ -33,13 +34,15 @@ class AnalogInput
 {
     private:
         /// @brief The pin number where the analog data will be read. -1 by default.
-        int arduinoPin = -1;
+        uint8_t arduinoPin = -1;
         /// @brief The last raw input that was gathered when @ref UpdateRawValue was called.
-        int rawInputValue = 0;
+        float rawInputValue = 0;
         /// @brief The absolute lowest that the input value can reach. Anything below will be seen as 0.
         int minimumValue = 0;
         /// @brief The absolute maximum that the input value can reach. Anything above will be seen as 100. Defaults to 1023.
         int maximumValue = 1023;
+
+        bool canBeUsed = false;
 
     public:
 
@@ -59,7 +62,7 @@ class AnalogInput
          * @param pin
          * The ANALOG pin number where data will be read
          */
-        AnalogInput(int pin);
+        AnalogInput(uint8_t pin);
 
         /**
          * @brief Construct a new Analog Input object.
@@ -77,7 +80,7 @@ class AnalogInput
          * @param max
          * Maximum value that this input will reach. 0-1023.
          */
-        AnalogInput(int pin, int min, int max);
+        AnalogInput(uint8_t pin, int min, int max);
 
         /**
          * @brief 
@@ -127,5 +130,7 @@ class AnalogInput
          * @return int
          * Value from 0 to 100.
          */
-        int GetPourcent();
+        float GetPourcent();
+
+        bool Reset();
 };

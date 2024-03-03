@@ -1,22 +1,50 @@
 #include "LED.h"
 #include <Arduino.h>
 
+//arduino pin Output??
+
+LED::LED(){
+}
+
 LED::LED(int pin){
+    if(pin==0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin = pin;
+    pinMode(arduinoPin, OUTPUT);
+    canBeUsed = true;
 }
 
 LED::LED(int pin, bool initialState){
+    if(pin==0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin = pin;
+    pinMode(arduinoPin, OUTPUT);
     state = initialState;
+    canBeUsed = true;
 }
 
 LED::LED(int pin, bool initialState, bool inverted){
+    if(pin==0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin = pin;
+    pinMode(arduinoPin, OUTPUT);
     state = initialState;
     isInverted=inverted;
+    canBeUsed = true;
 }
 
 bool LED::TurnOn(){
+    if(!canBeUsed) return false;
+
     if (state == false)
     {
         state = true;
@@ -26,7 +54,8 @@ bool LED::TurnOn(){
 }
 
 bool LED::TurnOff(){
-     if (state == true)
+    if(!canBeUsed) return false;
+    if (state == true)
     {
         state = false;
         return true;
@@ -35,29 +64,26 @@ bool LED::TurnOff(){
 }
 
 bool LED::FlipState(){
-    if(state == true){
-        state = false;
-    }else{
-        state = true;
-    }
+    if(!canBeUsed) return false;
+    state = !state;
     return true;
 }
 
 bool LED::GetState(){
+    if(!canBeUsed) return false;
     return state;
 }
 
 bool LED::Update()
 {
-    int resultat = digitalRead(arduinoPin);
-    if (resultat == HIGH)
+    if(!canBeUsed) return false;
+    if (GetState() == true)
     {
-        TurnOn();
+        digitalWrite(arduinoPin, HIGH);
     }
     else
     {
-        TurnOff();
+        digitalWrite(arduinoPin, LOW);
     }
     return true;
 }
-    

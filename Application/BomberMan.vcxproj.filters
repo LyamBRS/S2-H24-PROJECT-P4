@@ -82,6 +82,30 @@
     <ClCompile Include="Files\Serial\PortDetector.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\Menus\ArduinoMenu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\ExitMenu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\MainMenu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\MapMenu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\Menu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\TestMenu.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Application\AppHandler.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Arduino\ThreadManager.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -146,6 +170,30 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Files\Serial\PortDetector.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\ArduinoMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\ExitMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\MainMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\MapMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\Menu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Menus\TestMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Application\AppHandler.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Arduino\ThreadManager.hpp">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

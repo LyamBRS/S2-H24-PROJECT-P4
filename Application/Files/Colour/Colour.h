@@ -34,4 +34,6 @@ enum colors {
 
 void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour);
 
+void SetTerminalCursorPosition(int row, int column);
+
 std::string ExePath();

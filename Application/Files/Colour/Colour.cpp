@@ -21,12 +21,15 @@ std::string ExePath() {
     
     std::wstring_convert<std::codecvt_utf8_utf16<wchar_t>> conv;
     std::string resultString =  conv.to_bytes(result);
-
-    std::string wss = "\\RESULTAT_TEST.txt";
-
-    resultString.append(wss);
-
     return resultString;
+}
+
+void SetTerminalCursorPosition(int row, int column)
+{
+    HANDLE hConsole = GetStdHandle(STD_OUTPUT_HANDLE);
+    COORD pos = {row, column};
+    SetConsoleCursorPosition(hConsole, pos);
+    return;
 }
 
 

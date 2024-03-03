@@ -12,14 +12,26 @@ AnalogInput::AnalogInput()
     // DOES NOTHING ON PURPOSE.
 }
 
-AnalogInput::AnalogInput(int pin)
+AnalogInput::AnalogInput(uint8_t pin)
 {
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin=pin;
     pinMode(pin,INPUT);
+    canBeUsed = true;
 }
 
-AnalogInput::AnalogInput(int pin, int min, int max)
+AnalogInput::AnalogInput(uint8_t pin, int min, int max)
 {
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
+
     pinMode(pin,INPUT);
     arduinoPin=pin;
      if (min<0)
@@ -34,12 +46,14 @@ AnalogInput::AnalogInput(int pin, int min, int max)
     {max=1023;}
     minimumValue=min;
     maximumValue=max;
+    canBeUsed = true;
 }
 
 bool AnalogInput::UpdateRawValue()
 {
+    if(!canBeUsed) return false;
     rawInputValue=analogRead(arduinoPin);
-    if (rawInputValue==NULL)
+    if (rawInputValue>maximumValue||rawInputValue<minimumValue)
     {
         return false;
     }
@@ -49,7 +63,8 @@ bool AnalogInput::UpdateRawValue()
 
 bool AnalogInput::SetMax(int newMax)
 {
-    if (maximumValue<newMax || newMax<minimumValue)
+    if(!canBeUsed) return false;
+    if (1023<newMax || 0<minimumValue)
     {return false;}
     maximumValue=newMax;
     return true;
@@ -58,20 +73,36 @@ bool AnalogInput::SetMax(int newMax)
  
 bool AnalogInput::SetMin(int newMin)
 {
-  if (minimumValue>newMin||newMin>maximumValue)
+    if(!canBeUsed) return false;
+  if (0>newMin||newMin>1023)
     {return false;}
-    maximumValue=newMin;
+    minimumValue=newMin;
     return true;
 }
 
 
-int AnalogInput::GetPourcent()
+float AnalogInput::GetPourcent()
 {
-    if (rawInputValue<minimumValue)
-    {return 0;}
-    if (rawInputValue>maximumValue)
-    {return 100;}
-    int Valeur_Pourcent=((rawInputValue-minimumValue)*100/(maximumValue-(minimumValue)));
+    if(!canBeUsed) return 0.0f;
+
+    int clampedValue = rawInputValue;
+    if(clampedValue>maximumValue)
+    {
+        clampedValue = maximumValue;
+    }
+
+    if(clampedValue<minimumValue)
+    {
+        clampedValue = minimumValue;
+    }
+
+    float plage=maximumValue-minimumValue;
+    float Valeur_Pourcent=((clampedValue-minimumValue)/(plage))*100;
     return Valeur_Pourcent;
 }
 
+bool AnalogInput::Reset()
+{
+    rawInputValue = 0;
+    return true;
+}
