@@ -228,8 +228,6 @@ bool MapMenu::Draw()
     int sizeY = allMaps[selection]["sizeY"];
     int amountOfPlayers = allMaps[selection]["amountOfPlayers"];
 
-   
-
     PrintInColour(std::cout, "- Sizes:             ", colors::grey, colors::black);
     std::cout << "| ";
     PrintInColour(std::cout, std::to_string(sizeX), colors::aqua, colors::black);
@@ -252,7 +250,9 @@ bool MapMenu::Draw()
     std::cout << std::endl;
 
 
-    
+    // - TEMPORARY - DRAW SELECTED MAP - //
+    map = new Map(allMaps[selection]);
+    map->Draw();
 
     std::cout << "############################################" << std::endl;
     return true;
