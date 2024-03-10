@@ -15,7 +15,7 @@ Map::Map(nlohmann::json MapData)
 	mapAsString = "NOT IMPLEMENTED";
 	for (int i = 0; i < sizeY; ++i) {
 		for (int j = 0; j < sizeX; ++j) {
-			map[i][j] = MapData["map"][i][j];
+			map[j][i] = MapData["map"][i][j];
 		}
 	}
 }
@@ -34,8 +34,8 @@ bool Map::Draw()
 	std::string Smoke = "%&%";
 	std::string Power = " + ";
 
-	for (int i = 0; i < sizeY; ++i) {
-		for (int j = 0; j < sizeX; ++j) {
+	for (int j = 0; j < sizeY; ++j) {
+		for (int i = 0; i < sizeX; ++i) {
 			switch (map[i][j])
 			{
 				case 0:
@@ -69,11 +69,20 @@ bool Map::Draw()
 
 int Map::GetTileDataAtPosition(int x, int y)
 {
-	return 0;
+	return map[x][y];
 }
 
 bool Map::SetTileDataAtPosition(int x, int y, int wantedTile)
 {
+	for (int i = 0; i < sizeY; ++i) {
+		for (int j = 0; j < sizeX; ++j) {
+			if (i == x && j == y)
+			{
+				map[i][j] = wantedTile;
+				return true;
+			}
+		}
+	}
 	return false;
 }
 

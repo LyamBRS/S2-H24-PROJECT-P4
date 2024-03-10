@@ -222,7 +222,7 @@ class Map
         /// @brief How big the map is vertically.
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
-        int map[13][15] = {};
+        int map[15][13] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED

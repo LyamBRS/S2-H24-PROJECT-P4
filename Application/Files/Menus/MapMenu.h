@@ -38,6 +38,9 @@ class MapMenu : public Menu
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
         bool Update();
+        void setSelection(int selected);
+        void SelectionNext();
+        void SelectionPrevious();
         bool OnEnter();
         bool OnExit();
         bool OnMapSelect();

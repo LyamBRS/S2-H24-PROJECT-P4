@@ -29,23 +29,21 @@ bool MapMenu::HandleKeyboard(int keyBoardKey)
     switch (keyBoardKey)
     {    
         case KB_RIGHT:
-                selection--;
-                if(selection<0) selection=amountOfMaps-1;
-                if(selection<0) selection = 0;
+                SelectionPrevious();
                 return true;            
     
         case KB_LEFT:
-                selection++;
-                if(selection>amountOfMaps-1) selection=0;
+                SelectionNext();
                 return true;                  
 
         case KB_ESCAPE:
                 appRef->currentSelectedMenu = 0;
-                selection = 0;
+                setSelection(0);
                 return true;
 
         case KB_ENTER:
-               // OnMapSelect();
+                map->SetTileDataAtPosition(1, 5, 5);
+                int a = map->GetTileDataAtPosition(1, 4);
                 return true;
     }
     return false;
@@ -74,7 +72,7 @@ bool MapMenu::Draw()
         std::cout << "                    ";
         PrintInColour(std::cout, "[OK]", colors::white, colors::electric);
         std::cout << "                    " << std::endl;
-        selection = 0;
+        setSelection(0);
         std::cout << "############################################" << std::endl;
         return false;
     }
@@ -176,7 +174,7 @@ bool MapMenu::Draw()
     // PRINT NAVIGATION BAR
     std::cout << std::endl;
 
-    OnMapSelect();
+    map->Draw();
 
     std::cout << "############################################" << std::endl;
     return true;
@@ -184,13 +182,13 @@ bool MapMenu::Draw()
 
 bool MapMenu::OnEnter()
 {
-    selection = 0;
+    setSelection(0);
     return false;
 }
 
 bool MapMenu::OnExit()
 {
-    selection = 0;
+    setSelection(0);
     return false;
 }
 
@@ -198,11 +196,28 @@ bool MapMenu::OnMapSelect()
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
     map = new Map(allMaps[selection]);
-    map->Draw();
     return true;
 }
 
 bool MapMenu::Update()
 {
     return false;
+}
+
+void MapMenu::setSelection(int selected) {
+    selection = selected;
+    OnMapSelect();
+}
+
+void MapMenu::SelectionNext() {
+    selection++;
+    if (selection > amountOfMaps - 1) selection = 0;
+    OnMapSelect();
+}
+
+void MapMenu::SelectionPrevious() {
+    selection--;
+    if (selection < 0) selection = amountOfMaps - 1;
+    if (selection < 0) selection = 0;
+    OnMapSelect();
 }
