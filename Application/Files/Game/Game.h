@@ -24,6 +24,15 @@
 #include "../Movements/Movements.h"
 
 // - DEFINES - //
+#define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
+#define EM_GAME_MAP_VALUE_WRONG_TYPE    "A map value is of the wrong type"
+#define EM_GAME_MISSING_MAP_INFO   "Critical map info missing from JSON"
+#define EM_GAME_UNDEFINED_ERROR    "UNDEFINED ERROR. PLEASE DEFINE"
+#define EM_GAME_CORRUPTED_MAP      "The specified map is corrupted."
+#define EM_GAME_NO_JSON_GIVEN      "No JSON was returned from the MAP obj"
+#define EM_GAME_MAP_IS_NULLPTR     "The passed map is a nullptr        "
+#define EM_GAME_TOO_MANY_PLAYERS   "There is too many players to play  "
+#define EM_GAME_NOT_ENOUGH_PLAYERS "There is not enough players to play"
 
 // - CLASS - //
 
@@ -51,11 +60,21 @@ class Game
         /// @brief All the potential power ups on the map that a player can pick up.
         std::vector<PlacedPowerUp*> itemsOnMap;
 
+        std::string errorMessage = "";
+
         /// @brief How long has the game been going for? (in milliseconds)
         int timeSinceStart = 0;
         /// @brief How long until the game starts and players can move
         SimpleTimer startTimer = SimpleTimer(3000);
+
+        /// @brief Tells if the game is ready to be PLAYED
         bool gameIsReady = false;
+
+        /// @brief Is set to true if the Game object is structurally ready to be used.
+        bool canBeUsed = false;
+
+        /// @brief Is set to true if the game should no longer update.
+        bool isPaused = false;
         
         /**
          * @brief 
@@ -171,6 +190,21 @@ class Game
          */
         bool CheckForPlayerDamage();
 
+        /**
+         * @brief 
+         * # SelfCheck
+         * @brief
+         * This function verifies the entirety of the Game
+         * object, including its map and players. If false
+         * is returned, it failed the test and the first
+         * encountered error is written in @ref errorMessage
+         * @return true:
+         * Passed the test
+         * @return false:
+         * Failed the test 
+         */
+        bool SelfCheck();
+
     public:
 
         /**
@@ -192,11 +226,11 @@ class Game
          * or or there is only one left.
          * @param connectedPlayerCount
          * How many players should be on the map?
-         * @param pathToMap
-         * path to a JSON file that contains the layout
-         * of the map to use.
+         * @param MapData
+         * JSON file as an object which corresponds to the loaded
+         * map that will be played on.
          */
-        Game(int connectedPlayerCount, std::wstring pathToMap);
+        Game(int connectedPlayerCount, Map* MapData);
 
         /**
          * @brief 

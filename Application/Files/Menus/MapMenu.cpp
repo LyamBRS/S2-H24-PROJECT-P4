@@ -16,90 +16,6 @@
 
 
 // - FUNCTIONS - //
-std::vector<nlohmann::json> GetAllMaps()
-{
-    std::vector<nlohmann::json> allFoundMaps;
-
-    // Get the path to this application.
-    std::string applicationPath = ExePath();
-
-    // Adds the Maps directory to the end of the current path.
-    applicationPath.append("\\Maps\\");
-    // std::cout << applicationPath << std::endl;
-    // std::cout << std::endl;
-
-    // Check if directory exists
-    if(!std::filesystem::exists(applicationPath))
-    {
-        return allFoundMaps;
-    }
-
-    // Iterate through all files found in that directory
-    for (const auto & entry : std::filesystem::directory_iterator(applicationPath))
-        if(VerifyMap(entry.path().generic_string()))
-        {
-            allFoundMaps.push_back(GetMapJson(entry.path().generic_string()));
-        }
-    return allFoundMaps;
-}
-
-bool VerifyMap(std::string path)
-{
-    // Check if the file exists.
-    if(!std::filesystem::exists(path))
-    {
-        return false;
-    }
-
-    auto directoryEntry = std::filesystem::directory_entry(path);
-
-    if(directoryEntry.path().extension() != ".json")
-    {
-        std::cout << directoryEntry.path().extension() << std::endl;
-        return false;
-    }
-
-    // Get the json at that location (yet to know if its good or nah)
-    nlohmann::json fileContent = GetMapJson(path);
-
-    if(fileContent.is_discarded())
-    {
-        // Invalid JSON file. There's errors n shit innit bruh
-        return false;
-    }
-
-    return true;
-}
-
-nlohmann::json GetMapJson(std::string path)
-{
-    // Open the file
-    std::ifstream inputFile(path);
-    nlohmann::json fileContent;
-
-    // Check if the file is successfully opened
-    if (inputFile.is_open()) {
-        // Read the content into a string
-        std::string fileContent(
-            (std::istreambuf_iterator<char>(inputFile)),
-            (std::istreambuf_iterator<char>())
-        );
-
-        // Close the file
-        inputFile.close();
-
-        nlohmann::json jsonContents = nlohmann::json::parse(fileContent, nullptr, false);
-        return jsonContents;
-
-        // Display the content
-        //std::cout << "File content:\n" << fileContent << std::endl;
-    } else {
-        std::cerr << "Unable to open file: " << path << std::endl;
-        return fileContent;
-    }
-
-    return fileContent;
-}
 
 // - CLASS - //
 
@@ -217,6 +133,24 @@ bool MapMenu::Draw()
     }
     std::cout << std::endl;
 
+    PrintInColour(std::cout, "-                ",           colors::white, colors::darkpurple);
+    PrintInColour(std::cout, "< ",                          colors::white, colors::darkpurple);
+    PrintInColour(std::cout, std::to_string(selection+1),   colors::white, colors::darkpurple);
+    PrintInColour(std::cout, " // ",                         colors::white, colors::darkpurple);
+    PrintInColour(std::cout, std::to_string(amountOfMaps),  colors::white, colors::darkpurple);
+    PrintInColour(std::cout, " >                -\n",       colors::white, colors::darkpurple);
+
+    // VERIFY THE MAP PRIOR TO PULLING ITS DATA
+    std::string error = GetMapJsonError(allMaps[selection]);
+    if(error != EM_MAP_NO_ERROR)
+    {
+        PrintInColour(std::cout, "-           MAP CORRUPTION FOUND           -\n", colors::white, colors::red);
+        std::cout <<             "--------------------------------------------" << std::endl;
+        PrintInColour(std::cout, error, colors::lightred, colors::black);
+        std::cout << "\n############################################" << std::endl;
+        return false;
+    }
+
 
     // PRINT MAP STATS
     PrintInColour(std::cout, "- Name:              ", colors::grey, colors::black);
@@ -239,17 +173,10 @@ bool MapMenu::Draw()
     std::cout << "| ";
     PrintInColour(std::cout, std::to_string(amountOfPlayers), colors::aqua, colors::black);
     std::cout << std::endl;
-
-    PrintInColour(std::cout, "-                ",           colors::white, colors::darkpurple);
-    PrintInColour(std::cout, "< ",                          colors::white, colors::darkpurple);
-    PrintInColour(std::cout, std::to_string(selection+1),   colors::white, colors::darkpurple);
-    PrintInColour(std::cout, " // ",                         colors::white, colors::darkpurple);
-    PrintInColour(std::cout, std::to_string(amountOfMaps),  colors::white, colors::darkpurple);
-    PrintInColour(std::cout, " >                -\n",       colors::white, colors::darkpurple);
     // PRINT NAVIGATION BAR
     std::cout << std::endl;
 
-        OnMapSelect();
+    OnMapSelect();
 
     std::cout << "############################################" << std::endl;
     return true;

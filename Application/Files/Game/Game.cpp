@@ -13,7 +13,30 @@
 #include "Game.h"
 
 // - PROGRAM - //
-        
+
+/**
+ * @brief 
+ * # SelfCheck
+ * @brief
+ * This function verifies the entirety of the Game
+ * object, including its map and players. If false
+ * is returned, it failed the test and the first
+ * encountered error is written in @ref errorMessage
+ * @return true:
+ * Passed the test
+ * @return false:
+ * Failed the test 
+ */
+bool Game::SelfCheck()
+{
+    // Check if there is any maps in the Game object
+    if(map == nullptr)
+    {
+        errorMessage = EM_GAME_MAP_IS_NULLPTR;
+        return false;
+    }
+}
+
 /**
  * @brief 
  * # DisplayMap
@@ -53,14 +76,14 @@ bool Game::DisplayMap()
  */
 bool Game::HandleNextMouvements()
 {
-    for(int i=0; i<players.size();i++)
-    {
-        if (players.at(i)->joystickX >0)
-        {
-            
-        }
-        
-    }
+    //for(int i=0; i<players.size();i++)
+    //{
+    //    if (players.at(i)->joystickX >0)
+    //    {
+    //        
+    //    }
+    //    
+    //}
     
     return false;
 }
@@ -180,13 +203,14 @@ Game::Game()
  * or or there is only one left.
  * @param connectedPlayerCount
  * How many players should be on the map?
- * @param pathToMap
- * path to a JSON file that contains the layout
- * of the map to use.
+ * @param MapData
+ * JSON file as an object which corresponds to the loaded
+ * map that will be played on.
  */
-Game::Game(int connectedPlayerCount, std::wstring pathToMap)
+Game::Game(int connectedPlayerCount, Map* MapData)
 {
-    players.resize(connectedPlayerCount);
+    // Saving the map inside of the game.
+    map = MapData;
 }
 
 /**
@@ -243,19 +267,19 @@ bool Game::Start()
  */
 bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
-    players.at(associatedPlayer-1)->rightButton = controllerToUpdate->rightButton;
-    players.at(associatedPlayer-1)->leftButton = controllerToUpdate->leftButton;
-    players.at(associatedPlayer-1)->topButton = controllerToUpdate->topButton;
-    players.at(associatedPlayer-1)->bottomButton = controllerToUpdate->bottomButton;
-    players.at(associatedPlayer-1)->SentBarGraphBits = controllerToUpdate->SentBarGraphBits;
-    players.at(associatedPlayer-1)->ReceivedBarGraphBits = controllerToUpdate->ReceivedBarGraphBits;
-    players.at(associatedPlayer-1)->accelerometerX = controllerToUpdate->accelerometerX;
-    players.at(associatedPlayer-1)->accelerometerY = controllerToUpdate->accelerometerY;
-    players.at(associatedPlayer-1)->accelerometerZ = controllerToUpdate->accelerometerZ;
-    players.at(associatedPlayer-1)->isConnected = controllerToUpdate->isConnected;
-    players.at(associatedPlayer-1)->joystickX = controllerToUpdate->joystickX;
-    players.at(associatedPlayer-1)->joystickY = controllerToUpdate->joystickY;
-    players.at(associatedPlayer-1)->joystickButton = controllerToUpdate->joystickButton;
+    //players.at(associatedPlayer-1)->rightButton = controllerToUpdate->rightButton;
+    //players.at(associatedPlayer-1)->leftButton = controllerToUpdate->leftButton;
+    //players.at(associatedPlayer-1)->topButton = controllerToUpdate->topButton;
+    //players.at(associatedPlayer-1)->bottomButton = controllerToUpdate->bottomButton;
+    //players.at(associatedPlayer-1)->SentBarGraphBits = controllerToUpdate->SentBarGraphBits;
+    //players.at(associatedPlayer-1)->ReceivedBarGraphBits = controllerToUpdate->ReceivedBarGraphBits;
+    //players.at(associatedPlayer-1)->accelerometerX = controllerToUpdate->accelerometerX;
+    //players.at(associatedPlayer-1)->accelerometerY = controllerToUpdate->accelerometerY;
+    //players.at(associatedPlayer-1)->accelerometerZ = controllerToUpdate->accelerometerZ;
+    //players.at(associatedPlayer-1)->isConnected = controllerToUpdate->isConnected;
+    //players.at(associatedPlayer-1)->joystickX = controllerToUpdate->joystickX;
+    //players.at(associatedPlayer-1)->joystickY = controllerToUpdate->joystickY;
+    //players.at(associatedPlayer-1)->joystickButton = controllerToUpdate->joystickButton;
 
     return false;
 }
