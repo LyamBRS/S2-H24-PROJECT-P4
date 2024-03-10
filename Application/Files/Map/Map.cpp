@@ -27,7 +27,7 @@ bool Map::Update()
 
 bool Map::Draw()
 {	
-	std::string PermaWall = "[|]";
+	std::string PermaWall = "   ";
 	std::string Wall = "###";
 	std::string Empty = " . ";
 	std::string Player = " @ ";
@@ -37,16 +37,17 @@ bool Map::Draw()
 			switch (map[i][j])
 			{
 				case 0:
-					std::cout << Empty;
+					PrintInColour(std::cout, Empty, colors::grey, colors::black);
 					break;
 				case 1:
-					std::cout << PermaWall;
+					PrintInColour(std::cout, PermaWall, colors::grey, colors::grey);
+					
 					break;
 				case 2:
-					std::cout << Wall;
+					PrintInColour(std::cout, Wall, colors::grey, colors::black);
 					break;
 				case 3:
-					std::cout << Player;
+					PrintInColour(std::cout, Player, colors::red, colors::black);
 					break;
 			}
 
