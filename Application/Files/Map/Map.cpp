@@ -31,6 +31,8 @@ bool Map::Draw()
 	std::string Wall = "###";
 	std::string Empty = " . ";
 	std::string Player = " @ ";
+	std::string Smoke = "%&%";
+	std::string Power = " + ";
 
 	for (int i = 0; i < sizeY; ++i) {
 		for (int j = 0; j < sizeX; ++j) {
@@ -48,6 +50,12 @@ bool Map::Draw()
 					break;
 				case 3:
 					PrintInColour(std::cout, Player, colors::red, colors::black);
+					break;
+				case 4:
+					PrintInColour(std::cout, Smoke, colors::grey, colors::black);
+					break;
+				case 5:
+					PrintInColour(std::cout, Power, colors::yellow, colors::black);
 					break;
 			}
 
