@@ -129,7 +129,7 @@ bool MapMenu::HandleKeyboard(int keyBoardKey)
                 return true;
 
         case KB_ENTER:
-                OnMapSelect();
+               // OnMapSelect();
                 return true;
     }
     return false;
@@ -251,8 +251,7 @@ bool MapMenu::Draw()
     // PRINT NAVIGATION BAR
     std::cout << std::endl;
 
-
-    
+        OnMapSelect();
 
     std::cout << "############################################" << std::endl;
     return true;
@@ -274,9 +273,8 @@ bool MapMenu::OnMapSelect()
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
     map = new Map(allMaps[selection]);
-    selection = 0;
     map->Draw();
-    return false;
+    return true;
 }
 
 bool MapMenu::Update()
