@@ -7,9 +7,9 @@ Accelerometer::Accelerometer()
 
 Accelerometer::Accelerometer(uint8_t xPin, uint8_t yPin, uint8_t zPin)
 {
-    xAxis = new AnalogInput(xPin);
-    yAxis = new AnalogInput(yPin);
-    zAxis = new AnalogInput(zPin);
+    xAxis = new AnalogInput(xPin, 260, 450);
+    yAxis = new AnalogInput(yPin, 260, 450);
+    zAxis = new AnalogInput(zPin, 260, 450);
 
     canBeUsed = true;
 }
@@ -34,5 +34,13 @@ bool Accelerometer::Update(){
     xAxis->UpdateRawValue();
     yAxis->UpdateRawValue();
     zAxis->UpdateRawValue();
+    return true;
+}
+
+bool Accelerometer::Reset()
+{
+    xAxis->Reset();
+    yAxis->Reset();
+    zAxis->Reset();
     return true;
 }

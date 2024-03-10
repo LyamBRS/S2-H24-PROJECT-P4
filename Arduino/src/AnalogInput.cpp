@@ -84,12 +84,25 @@ bool AnalogInput::SetMin(int newMin)
 float AnalogInput::GetPourcent()
 {
     if(!canBeUsed) return 0.0f;
+
+    int clampedValue = rawInputValue;
+    if(clampedValue>maximumValue)
+    {
+        clampedValue = maximumValue;
+    }
+
+    if(clampedValue<minimumValue)
+    {
+        clampedValue = minimumValue;
+    }
+
     float plage=maximumValue-minimumValue;
-    float Valeur_Pourcent=((rawInputValue-minimumValue)/(plage))*100;
-    if (Valeur_Pourcent<minimumValue)
-    {return 0.0;}
-    if (Valeur_Pourcent>maximumValue)
-    {return 100.0;}
+    float Valeur_Pourcent=((clampedValue-minimumValue)/(plage))*100;
     return Valeur_Pourcent;
 }
 
+bool AnalogInput::Reset()
+{
+    rawInputValue = 0;
+    return true;
+}

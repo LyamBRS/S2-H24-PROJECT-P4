@@ -40,6 +40,7 @@ class Controller
         Button* bottomButton;
         Button* leftButton;
         Button* rightButton;
+        Button* detection;
         Accelerometer* accelerometer;
         Joystick* joystick;
         BarGraph* barGraph;

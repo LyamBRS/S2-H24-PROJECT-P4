@@ -131,4 +131,6 @@ class AnalogInput
          * Value from 0 to 100.
          */
         float GetPourcent();
+
+        bool Reset();
 };

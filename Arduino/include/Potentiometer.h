@@ -136,4 +136,6 @@ class Potentiometer
          * One or more problems prevent this object from updating.
          */
         bool Update();
+
+        bool Reset();
 };

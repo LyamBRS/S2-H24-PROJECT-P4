@@ -28,13 +28,14 @@ Button::Button(int pin)
     canBeUsed = true;
 }
 
-Button::Button(int pin, bool isInverted, int debounceDelayMS)
+Button::Button(int pin, bool shouldBeInverted, int debounceDelayMS)
 {
     if(pin == 0)
     {
         canBeUsed = false;
         return;
     }
+    isInverted = shouldBeInverted;
     arduinoPin = pin;
     canBeUsed = true;
 }
@@ -54,12 +55,20 @@ bool Button::Update()
 {
     if(!canBeUsed) return false;
     state = digitalRead(arduinoPin);
+    if(isInverted)
+    {
+        state = !state;
+    }
     return true;
 }
 void Button::SetState()
 {
     if(!canBeUsed) return;
-    int res = digitalRead(arduinoPin);
+    bool res = digitalRead(arduinoPin);
+    if(res)
+    {
+        state = !state;
+    }
 
     if (res == HIGH)
     {
@@ -69,4 +78,10 @@ void Button::SetState()
     {
         state = false;
     }
+}
+
+bool Button::Reset()
+{
+    state = false;
+    return true;
 }
