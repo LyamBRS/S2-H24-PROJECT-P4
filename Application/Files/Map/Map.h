@@ -16,6 +16,7 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../JSON/json.hpp"
+#include "../Colour/Colour.h"
 // - DEFINES - //
 
 
@@ -139,8 +140,7 @@ struct BinaryTileMasks
  * ## BIT VALUES FOR A TILE'S ATTRIBUTES
  * @brief
  * Represents a 4 bit numbers leading up to an ID to tell more
- * precisely, exactly, whats on the tile. Boxes dont have their
- * own ID numbers because players can be on them. Smoke dont hold
+ * precisely, exactly, whats on the tile. Smoke dont hold
  * its own ID number because multiple things can be on it, and it
  * doesnt really need to be saved in the game.
  * Objects hold their own ID number so that they can be stored in
@@ -222,7 +222,7 @@ class Map
         /// @brief How big the map is vertically.
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
-        int map[1][1] = {};
+        int map[13][15] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
@@ -236,7 +236,7 @@ class Map
          * map through @ref LoadSavedMap
          * otherwise the map IS NOT USABLE AS IS.
          */
-        Map();
+        Map(nlohmann::json MapData);
 
         /**
          * @brief 

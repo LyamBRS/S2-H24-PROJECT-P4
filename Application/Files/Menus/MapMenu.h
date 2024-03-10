@@ -42,4 +42,6 @@ class MapMenu : public Menu
         bool Update();
         bool OnEnter();
         bool OnExit();
+        bool OnMapSelect();
+        Map* map;
 };
