@@ -227,6 +227,8 @@ class Map
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
         std::string mapName = "UNTITLED";
+        /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
+        nlohmann::json storedMapData;
 
     public:
 
@@ -329,7 +331,7 @@ class Map
          * @return nlohmann::json
          * JSON object of the map.
          */
-        nlohmann::json* GetCurrentMap();
+        nlohmann::json GetCurrentMap();
 
         /**
          * @brief

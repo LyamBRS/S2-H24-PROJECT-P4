@@ -9,6 +9,7 @@
 
 Map::Map(nlohmann::json MapData)
 {
+	storedMapData = MapData;
 	sizeX = MapData["sizeX"];
 	sizeY = MapData["sizeY"];
 	mapName = MapData["name"];
@@ -88,7 +89,7 @@ bool Map::SetTileDataAtPosition(int x, int y, int wantedTile)
 
 bool Map::LoadMap(nlohmann::json mapAsJSON)
 {
-	
+	storedMapData = mapAsJSON;
 	return true;
 }
 
@@ -108,3 +109,11 @@ bool Map::SetMapName(std::string newName)
 	return true;
 }
 
+
+
+
+
+nlohmann::json Map::GetCurrentMap()
+{
+	return storedMapData;
+}
