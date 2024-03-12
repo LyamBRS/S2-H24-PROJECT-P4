@@ -299,10 +299,10 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     gameStatus = GameStatuses::awaitingPlayers;
 
     // Create as much players as there is for that specific map.
-    for(playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
-    {
-        Player* player = new Player()
-    }
+    //for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
+    //{
+    //    //Player* player = new Player()
+    //}
 }
 
 /**

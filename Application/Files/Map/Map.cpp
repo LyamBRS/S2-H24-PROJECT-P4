@@ -109,9 +109,18 @@ bool Map::SetMapName(std::string newName)
 	return true;
 }
 
-
-
-
+bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY)
+{
+	// Oublie pas de faire un struct aussi pour les tuiles.
+	// Delete/Remplace les structs dans Map.h pour le tiens
+	// Oublie pas de mettre genre 4 joueurs potentiels dedans as well. thx ^^
+	// - faire struct  (je peut me demerder sans, mais ca vas faire dla magouille comme sans getter)
+	// - faire Getters (pas urgent, mais necessaire)
+	// - faire ste fonction la (test en selectionnant une map, enter, enter, enter (att la fin du decompte), check si les joueurs sont au bonne coordonnees.)
+	*resultedX = 0;
+	*resultedY = 0;
+	return false;
+}
 
 nlohmann::json Map::GetCurrentMap()
 {

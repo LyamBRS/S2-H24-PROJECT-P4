@@ -351,4 +351,36 @@ class Map
          * Invalid name.
          */
         bool SetMapName(std::string newName);
+
+        /**
+         * @brief 
+         * # GetASpawnPosition
+         * @brief
+         * Returns the coordinate to a specified potential spawning location
+         * for a @ref Player on the map. You must create 2 int variables which
+         * are passed to this function as pointers. This allows the method
+         * to directly update these values instead of returning a pointer.
+         * 
+         * --> CHANGE THIS TO FIT HOW YOU FIND SPAWNS <--
+         * Spawn numbers are attributed like text is read... left to right,
+         * top to bottom
+         * 
+         * 
+         * @warning
+         * If the spawn number specified is out of bounds, (not enough
+         * spawns on this map for an Xth @ref Player), -1 will be stored
+         * as X and Y coordinates.
+         * 
+         * @param spawnNumber
+         * Which spawn coordinates should be returned? 0 to Xth
+         * @param resultedX
+         * horizontal position on the map
+         * @param resultedY
+         * vertical position on the map
+         * @return true:
+         * Successfully found that player spawn
+         * @return false:
+         * Failed to find that player's spawn. -1 is set as X and Y.
+         */
+        bool GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY);
 };
