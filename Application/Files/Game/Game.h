@@ -38,10 +38,11 @@
 #define EM_GAME_NOT_ENOUGH_PLAYERS "There is not enough players to play"
 
 #define GAME_MIN_WIDTH 30
+#define GAME_HEADER_HEIGHT 5
 
-#define GAME_WINDOW_BORDER_BG colors::grey
-#define GAME_WINDOW_BORDER_FG colors::black
-#define GAME_WINDOW_BORDER_CHAR ' '
+#define GAME_WINDOW_BORDER_BG colors::lightred
+#define GAME_WINDOW_BORDER_FG colors::darkpurple
+#define GAME_WINDOW_BORDER_CHAR CHAR_CONTRAST_HIGH
 #define GAME_BORDER GAME_WINDOW_BORDER_CHAR,GAME_WINDOW_BORDER_FG,GAME_WINDOW_BORDER_BG
 
 #define GAME_WINDOW_BACKGROUND_BG colors::white
@@ -49,8 +50,8 @@
 #define GAME_WINDOW_BACKGROUND_CHAR ' '
 #define GAME_BACKGROUND GAME_WINDOW_BACKGROUND_CHAR,GAME_WINDOW_BACKGROUND_FG,GAME_WINDOW_BACKGROUND_BG
 
-#define GAME_WINDOW_DIVIDER_BG colors::lightgrey
-#define GAME_WINDOW_DIVIDER_FG colors::white
+#define GAME_WINDOW_DIVIDER_BG colors::white
+#define GAME_WINDOW_DIVIDER_FG colors::darkpurple
 #define GAME_DIVIDER_COLORS GAME_WINDOW_DIVIDER_FG, GAME_WINDOW_DIVIDER_BG
 
 #define GAME_DIVIDER_TL_CORNER CHAR_BORDER_TL_CORNER, GAME_DIVIDER_COLORS
@@ -60,10 +61,10 @@
 
 #define GAME_DIVIDER_HORIZONTAL CHAR_BORDER_HORIZONTAL, GAME_DIVIDER_COLORS
 #define GAME_DIVIDER_VERTICAL   CHAR_BORDER_VERTICAL, GAME_DIVIDER_COLORS
-#define GAME_DIVIDER_T_JUNCTION CHAR_BORDER_HORIZONTAL_T_JUNCTION, GAME_DIVIDER_COLORS
-#define GAME_DIVIDER_B_JUNCTION CHAR_BORDER_HORIZONTAL_B_JUNCTION, GAME_DIVIDER_COLORS
-#define GAME_DIVIDER_L_JUNCTION CHAR_BORDER_VERTICAL_B_JUNCTION, GAME_DIVIDER_COLORS
-#define GAME_DIVIDER_R_JUNCTION CHAR_BORDER_VERTICAL_T_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_T_JUNCTION CHAR_BORDER_T_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_B_JUNCTION CHAR_BORDER_B_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_L_JUNCTION CHAR_BORDER_L_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_R_JUNCTION CHAR_BORDER_R_JUNCTION, GAME_DIVIDER_COLORS
 
 
 #define GAME_WINDOW_FIELD_BG colors::grey
@@ -148,9 +149,23 @@ class Game
         SimpleTimer startTimer = SimpleTimer(4000);
 
         int gameStatus = 0;
-
         int gameWidth = 0;
-        int gameHeigth = 0;
+
+
+        int gameTimerOffset = 0;
+        int playerCardOffsetX = 0;
+        int firstPlayerCardY = 0;
+        
+        int cooldownCursorX = 0;
+        int bombStatusCursorX = 0;
+        int healthCursorX = 0;
+        int inventoryCursorX = 0;
+
+        int mapCursorX = 0;
+        int mapCursorY = 0;
+
+        int gameTimerCursorX = 0;
+        int gameTimerCursorY = 0;
 
         /// @brief Is set to true if the Game object is structurally ready to be used.
         bool canBeUsed = false;

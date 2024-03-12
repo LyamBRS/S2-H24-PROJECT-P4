@@ -67,24 +67,6 @@ bool Game::DrawMap()
 
 bool Game::DrawGameHeader()
 {
-    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
-
-    // Math to put the text in the middle of the screen.
-    nlohmann::json mapJSON = map->GetCurrentMap();
-    std::string mapName = mapJSON["name"];
-    int seperationBetweenTextAndBorder = ((gameWidth-2)-mapName.length())/2;
-
-    ConsecutiveChar(TER, GAME_BORDER, 1, false);
-    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
-
-    // Cant really center a name that isnt odd can you
-    if(mapName.length()%2 != 0)
-    {
-        ConsecutiveChar(TER, GAME_BACKGROUND, 1, false);
-    }
-
-    PrintInColour(TER, mapName, GAME_WINDOW_BACKGROUND_FG, GAME_WINDOW_BACKGROUND_BG);
-    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
     return false;
 }
 
@@ -261,12 +243,28 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     }
 
     // here we calculate the height in ascii chars necessary to draw the whole game, and more importantly, the width.
+    // And other cursor related positions on the terminal window, which will be used to draw later
     int mapSizeX = map->GetCurrentMap()["sizeX"];
+    int mapSizeY = map->GetCurrentMap()["sizeY"];
     gameWidth = mapSizeX*3;
-    if(gameWidth < GAME_MIN_WIDTH)
-    {
-        gameWidth = GAME_MIN_WIDTH;
-    }
+
+    if(gameWidth < GAME_MIN_WIDTH)  gameWidth = GAME_MIN_WIDTH;
+    if(gameWidth%2 != 0) gameWidth++;
+
+    // Other position related things
+    mapCursorX = 0;
+    mapCursorY = GAME_HEADER_HEIGHT;
+
+    gameTimerOffset = ((gameWidth-4) - GAME_FIELD_WIDTH_TIMER)/2;
+    gameTimerCursorX = 1 + gameTimerOffset + 1;
+
+    playerCardOffsetX = ((gameWidth-GAME_MIN_WIDTH)/2);
+
+    // static text field + borders around it + offset + game border.
+    cooldownCursorX = GAME_FIELD_WIDTH_PLAYER_NAME + 2 + playerCardOffsetX + 1;
+    bombStatusCursorX = cooldownCursorX + GAME_FIELD_WIDTH_COOLDOWN + 1;
+    healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
+    inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
 
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
@@ -548,6 +546,45 @@ bool Game::FreshDraw()
 {
     if(!canBeUsed) return false;
 
+    auto FreshDrawPlayer = [](int playerNumber, int gameWidth){
+
+        // Centers the players cards within the borders
+        int offset = ((gameWidth-30)/2);
+
+        // Create the player's name
+        std::string playerName = "Player ";
+        if(playerNumber < 10) playerName.append("0");
+        playerName.append(std::to_string(playerNumber));
+
+        // Leading up to the area where player data is displayed.
+        ConsecutiveChar(TER, GAME_BORDER, 1, false);
+        ConsecutiveChar(TER, GAME_BACKGROUND, offset, false);
+
+        // Player name
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        PrintInColour(TER, playerName, GAME_FIELD_COLORS);
+
+        // Bomb cooldown
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_COOLDOWN, false);
+
+        // Lil status
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+
+        // Health display
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_HEALTH, false);
+
+        // Inventory
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_INVENTORY, false);
+
+        // End of the player's card.
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_BORDER, 1, true);  
+    };
+
     //###################################################
     //# MATH DONE FOR VARIOUS PLACEMENTS AND CENTERINGS #
     //###################################################
@@ -563,13 +600,11 @@ bool Game::FreshDraw()
         ConsecutiveChar(TER, GAME_BACKGROUND, 1, false);
     }
 
-    int seperationBetweenGameTimer = ((gameWidth-4) - GAME_FIELD_WIDTH_TIMER)/2;  // Centers the timer. -4 because of dividers next to it.
-
     //###############################################################
-    //# TOP PORTION OF THE GAME, DRAW THE NAME OF THE MAP, CENTERED #
+    //# TOP PORTION OF THE GAME
     //###############################################################
 
-    // Drawing borders, backgrounds, etc
+    // DRAW THE NAME OF THE MAP, CENTERED
     ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
     ConsecutiveChar(TER, GAME_BORDER, 1, false);
     ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
@@ -577,39 +612,78 @@ bool Game::FreshDraw()
     ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
     ConsecutiveChar(TER, GAME_BORDER, 1, true);
 
-    //###############################################################
-    //# TOP PORTION, DRAW THE DIVIDER BETWEEN TITLE AND MISCS       #
-    //###############################################################
+    // DRAW THE DIVIDER BETWEEN TITLE AND MISCS
     ConsecutiveChar(TER, GAME_BORDER, 1, false);
-    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameTimerOffset, false);
     ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
     ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_TIMER, false);
     ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
-    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameTimerOffset, false);
     ConsecutiveChar(TER, GAME_BORDER, 1, true);
 
-    //###############################################################
-    //# TOP PORTION, DRAW THE MISC BELOW THE TITLE                  #
-    //###############################################################
-
+    //DRAW THE MISC BELOW THE TITLE
     ConsecutiveChar(TER, GAME_BORDER, 1, false);
-    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, gameTimerOffset, false);
     ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
     ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_TIMER, false);
     ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
-    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, gameTimerOffset, false);
     ConsecutiveChar(TER, GAME_BORDER, 1, true);
 
+    //# BOTTOM OF THE HEADER, LEAVING 1 BLACK EMPTY SPACE BEFORE MAP#
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+    ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
 
 
+    //###############################################################
+    //# MAP PORTION, leaving 1 black line below it.                 #
+    //###############################################################
+    DrawMap();
+    ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
 
+    //###############################################################
+    //# Player stats portion                                        #
+    //###############################################################
 
+    // Border before the chaos
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
 
+    // TOP DIVIDER
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_TL_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameWidth-4, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_TR_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
 
+    // ALL PLAYER CARDS. AS MANY AS THERE IS PLAYERS FOR THIS GAME
+    for(int playerIndex = 0; playerIndex < map->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
+    {
+        FreshDrawPlayer(playerIndex, gameWidth);
+    }
 
+    // BOTTOM DIVIDER
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_BL_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_PLAYER_NAME, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_COOLDOWN, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_HEALTH, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_INVENTORY, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_BR_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+   // Border after the chaos
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
 
     DrawGameHeader();
-    DrawMap();
     DrawTimers();
     DrawInventories();
     DrawPlayerStatus();
