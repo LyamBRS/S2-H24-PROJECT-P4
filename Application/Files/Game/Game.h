@@ -24,6 +24,7 @@
 #include "../SimpleTimer/SimpleTimer.h"
 #include "../Movements/Movements.h"
 #include "../Application/AppHandler.h"
+#include "../Colour/Colour.h"
 
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
@@ -35,6 +36,49 @@
 #define EM_GAME_MAP_IS_NULLPTR     "The passed map is a nullptr        "
 #define EM_GAME_TOO_MANY_PLAYERS   "There is too many players to play  "
 #define EM_GAME_NOT_ENOUGH_PLAYERS "There is not enough players to play"
+
+#define GAME_MIN_WIDTH 30
+
+#define GAME_WINDOW_BORDER_BG colors::grey
+#define GAME_WINDOW_BORDER_FG colors::black
+#define GAME_WINDOW_BORDER_CHAR ' '
+#define GAME_BORDER GAME_WINDOW_BORDER_CHAR,GAME_WINDOW_BORDER_FG,GAME_WINDOW_BORDER_BG
+
+#define GAME_WINDOW_BACKGROUND_BG colors::white
+#define GAME_WINDOW_BACKGROUND_FG colors::black
+#define GAME_WINDOW_BACKGROUND_CHAR ' '
+#define GAME_BACKGROUND GAME_WINDOW_BACKGROUND_CHAR,GAME_WINDOW_BACKGROUND_FG,GAME_WINDOW_BACKGROUND_BG
+
+#define GAME_WINDOW_DIVIDER_BG colors::lightgrey
+#define GAME_WINDOW_DIVIDER_FG colors::white
+#define GAME_DIVIDER_COLORS GAME_WINDOW_DIVIDER_FG, GAME_WINDOW_DIVIDER_BG
+
+#define GAME_DIVIDER_TL_CORNER CHAR_BORDER_TL_CORNER, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_BL_CORNER CHAR_BORDER_BL_CORNER, GAME_DIVIDER_COLORS 
+#define GAME_DIVIDER_TR_CORNER CHAR_BORDER_TR_CORNER, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_BR_CORNER CHAR_BORDER_BR_CORNER, GAME_DIVIDER_COLORS
+
+#define GAME_DIVIDER_HORIZONTAL CHAR_BORDER_HORIZONTAL, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_VERTICAL   CHAR_BORDER_VERTICAL, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_T_JUNCTION CHAR_BORDER_HORIZONTAL_T_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_B_JUNCTION CHAR_BORDER_HORIZONTAL_B_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_L_JUNCTION CHAR_BORDER_VERTICAL_B_JUNCTION, GAME_DIVIDER_COLORS
+#define GAME_DIVIDER_R_JUNCTION CHAR_BORDER_VERTICAL_T_JUNCTION, GAME_DIVIDER_COLORS
+
+
+#define GAME_WINDOW_FIELD_BG colors::grey
+#define GAME_WINDOW_FIELD_FG colors::lightgrey
+#define GAME_FIELD_COLORS GAME_WINDOW_FIELD_FG, GAME_WINDOW_FIELD_BG
+#define GAME_FIELD ' ', GAME_WINDOW_FIELD_FG, GAME_WINDOW_FIELD_BG
+
+#define GAME_FIELD_WIDTH_TIMER 6
+#define GAME_FIELD_WIDTH_COOLDOWN 3
+#define GAME_FIELD_WIDTH_PLAYER_NAME 9
+#define GAME_FIELD_WIDTH_BOMB_STATUS 1
+#define GAME_FIELD_WIDTH_HEALTH 4
+#define GAME_FIELD_WIDTH_INVENTORY 5
+
+#define TER std::cout
 
 // - STRUCT - //
 /**
@@ -105,15 +149,23 @@ class Game
 
         int gameStatus = 0;
 
+        int gameWidth = 0;
+        int gameHeigth = 0;
+
         /// @brief Is set to true if the Game object is structurally ready to be used.
         bool canBeUsed = false;
 
         /// @brief reference to the attributes of the current application
         AppHandler* appRef;
+
+        bool needToRedrawMap = false;
+        bool needToRedrawInventories = false;
+        bool needToRedrawPlayerStatus = false;
+        bool needToRedrawTimers = false;
         
         /**
          * @brief 
-         * # DisplayMap
+         * # DrawMap
          * @brief
          * Actually prints the current map layout in a
          * command prompt or updates the QT application
@@ -126,7 +178,13 @@ class Game
          * @return false:
          * Whatever hapenned, there was an error.
          */
-        bool DisplayMap();
+        bool DrawMap();
+        bool DrawGameHeader();
+        bool DrawInventories();
+        bool DrawPlayerStatus();
+        bool DrawTimers();
+
+
 
         /**
          * @brief 
@@ -344,6 +402,72 @@ class Game
          * @return Map* 
          */
         Map* GetMap();
+
+        /**
+         * @brief 
+         * # NeedsRedrawing
+         * @brief
+         * Used by menus to verify if the game actually requires
+         * to be re-drawn on the terminal or not. This is done to
+         * avoid having to constantly update the terminal at frame
+         * speeds if nothing needs to be actually drawn and the
+         * old displayed characters are all still relevant.
+         * @attention
+         * The Game needs to be drawn in a @ref Menu, by calling its
+         * @ref Draw() method. You can choose to ignore this method
+         * and redraw the @ref Game anyways, but doing so too fast
+         * will cause terminal artifacts.
+         * @warning
+         * YOU MUST use @ref FreshDraw() if the terminal was previously
+         * used for other purposes than SOLELY drawing the @ref Game.
+         * @return true:
+         * The @ref Game has changed, and drawing needs to occur.
+         * @return false:
+         * The @ref Game has not changed, no drawing is needed.
+         */
+        bool NeedsRedrawing();
+
+        /**
+         * @brief 
+         * # Draw
+         * @brief
+         * The Draw method allows a @ref Menu to print the current
+         * @ref Game in the active terminal window. This method will
+         * print player's statuses, @ref Inventories, as well as the
+         * @ref Map used in this @ref Game object.
+         * @attention
+         * This method WILL NOT print THE ENTIRE @ref Game. It only
+         * prints parts that changed since the last call of the
+         * method and that thus, needs to be updated on the screen.
+         * To draw the ENTIRE @ref Game in your terminal window, you
+         * must use the @ref FreshRedraw method.
+         * @return true:
+         * Successfully drew the game in the std::cout terminal.
+         * @return false:
+         * Failed to draw in std::cout / No drawing were necessary.
+         */
+        bool Draw();
+
+        /**
+         * @brief 
+         * # FreshDraw
+         * @brief
+         * A complete and extensive @ref Draw method. This method will
+         * re-print the complete @ref Game, along with the aesthetics
+         * that only needs to be printed once. This can be very demanding
+         * for large maps and large amount of player counts.
+         * @attention
+         * To optimize your drawing speeds and help reduce terminal
+         * artifacts, please only call this method when absolutely
+         * necessary, like when the terminal was previously used for other
+         * drawing purposes and its the first @ref Game frame. To do this
+         * use methods such as @ref Draw and @ref NeedsRedrawing.
+         * @return true:
+         * Successfully printed the @ref Game to the terminal using std::cout.
+         * @return false:
+         * Failed to print to std::cout / Game is not instanciated properly.
+         */
+        bool FreshDraw();
 
         /**
          * @brief 

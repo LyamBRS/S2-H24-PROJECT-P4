@@ -47,7 +47,7 @@ bool Game::SelfCheck()
 
 /**
  * @brief 
- * # DisplayMap
+ * # DrawMap
  * @brief
  * Actually prints the current map layout in a
  * command prompt or updates the QT application
@@ -60,7 +60,45 @@ bool Game::SelfCheck()
  * @return false:
  * Whatever hapenned, there was an error.
  */
-bool Game::DisplayMap()
+bool Game::DrawMap()
+{
+    return map->Draw();
+}
+
+bool Game::DrawGameHeader()
+{
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+
+    // Math to put the text in the middle of the screen.
+    nlohmann::json mapJSON = map->GetCurrentMap();
+    std::string mapName = mapJSON["name"];
+    int seperationBetweenTextAndBorder = ((gameWidth-2)-mapName.length())/2;
+
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+
+    // Cant really center a name that isnt odd can you
+    if(mapName.length()%2 != 0)
+    {
+        ConsecutiveChar(TER, GAME_BACKGROUND, 1, false);
+    }
+
+    PrintInColour(TER, mapName, GAME_WINDOW_BACKGROUND_FG, GAME_WINDOW_BACKGROUND_BG);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+    return false;
+}
+
+bool Game::DrawInventories()
+{
+    return false;
+}
+
+bool Game::DrawPlayerStatus()
+{
+    return false;
+}
+
+bool Game::DrawTimers()
 {
     return false;
 }
@@ -182,7 +220,7 @@ bool Game::CheckForPlayerDamage()
 
 /**
  * @brief
- * # DO NOT USE THIS CONSTRUCTOR OUTSIDE OF CLASS MEMBER DEFINITIONS
+ * # DO NOT USE THIS CONSTRUCTOR TERSIDE OF CLASS MEMBER DEFINITIONS
  */
 Game::Game()
 {
@@ -221,6 +259,15 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
         gameStatus = GameStatuses::invalid;
         return;
     }
+
+    // here we calculate the height in ascii chars necessary to draw the whole game, and more importantly, the width.
+    int mapSizeX = map->GetCurrentMap()["sizeX"];
+    gameWidth = mapSizeX*3;
+    if(gameWidth < GAME_MIN_WIDTH)
+    {
+        gameWidth = GAME_MIN_WIDTH;
+    }
+
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
 }
@@ -386,4 +433,190 @@ Map* Game::GetMap()
 bool Game::isValidated()
 {
     return canBeUsed;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+/**
+ * @brief 
+ * # NeedsRedrawing
+ * @brief
+ * Used by menus to verify if the game actually requires
+ * to be re-drawn on the terminal or not. This is done to
+ * avoid having to constantly update the terminal at frame
+ * speeds if nothing needs to be actually drawn and the
+ * old displayed characters are all still relevant.
+ * @attention
+ * The Game needs to be drawn in a @ref Menu, by calling its
+ * @ref Draw() method. You can choose to ignore this method
+ * and redraw the @ref Game anyways, but doing so too fast
+ * will cause terminal artifacts.
+ * @warning
+ * YOU MUST use @ref FreshDraw() if the terminal was previously
+ * used for other purposes than SOLELY drawing the @ref Game.
+ * @return true:
+ * The @ref Game has changed, and drawing needs to occur.
+ * @return false:
+ * The @ref Game has not changed, no drawing is needed.
+ */
+bool Game::NeedsRedrawing()
+{
+    if(!canBeUsed) return false;
+    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers;
+}
+
+/**
+ * @brief 
+ * # Draw
+ * @brief
+ * The Draw method allows a @ref Menu to print the current
+ * @ref Game in the active terminal window. This method will
+ * print player's statuses, @ref Inventories, as well as the
+ * @ref Map used in this @ref Game object.
+ * @attention
+ * This method WILL NOT print THE ENTIRE @ref Game. It only
+ * prints parts that changed since the last call of the
+ * method and that thus, needs to be updated on the screen.
+ * To draw the ENTIRE @ref Game in your terminal window, you
+ * must use the @ref FreshRedraw method.
+ * @return true:
+ * Successfully drew the game in the std::cout terminal.
+ * @return false:
+ * Failed to draw in std::cout / No drawing were necessary.
+ */
+bool Game::Draw()
+{
+    if(!canBeUsed) return false;
+
+    if(needToRedrawMap)
+    {
+        needToRedrawMap = false;
+        DrawMap();
+    }
+
+    if(needToRedrawTimers)
+    {
+        needToRedrawTimers = false;
+        DrawTimers();
+    }
+
+    if(needToRedrawInventories)
+    {
+        needToRedrawInventories = false;
+        DrawInventories();
+    }
+
+    if(needToRedrawPlayerStatus)
+    {
+        needToRedrawPlayerStatus = false;
+        DrawPlayerStatus();
+    }
+
+    return true;
+}
+
+/**
+ * @brief 
+ * # FreshDraw
+ * @brief
+ * A complete and extensive @ref Draw method. This method will
+ * re-print the complete @ref Game, along with the aesthetics
+ * that only needs to be printed once. This can be very demanding
+ * for large maps and large amount of player counts.
+ * @attention
+ * To optimize your drawing speeds and help reduce terminal
+ * artifacts, please only call this method when absolutely
+ * necessary, like when the terminal was previously used for other
+ * drawing purposes and its the first @ref Game frame. To do this
+ * use methods such as @ref Draw and @ref NeedsRedrawing.
+ * @return true:
+ * Successfully printed the @ref Game to the terminal using std::cout.
+ * @return false:
+ * Failed to print to std::cout / Game is not instanciated properly.
+ */
+bool Game::FreshDraw()
+{
+    if(!canBeUsed) return false;
+
+    //###################################################
+    //# MATH DONE FOR VARIOUS PLACEMENTS AND CENTERINGS #
+    //###################################################
+
+    // Math to put the text in the middle of the screen.
+    nlohmann::json mapJSON = map->GetCurrentMap();
+    std::string mapName = mapJSON["name"];
+
+    int seperationBetweenTextAndBorder = ((gameWidth-2)-mapName.length())/2;
+    // Cant really center a name that isnt odd can you
+    if(mapName.length()%2 != 0)
+    {
+        ConsecutiveChar(TER, GAME_BACKGROUND, 1, false);
+    }
+
+    int seperationBetweenGameTimer = ((gameWidth-4) - GAME_FIELD_WIDTH_TIMER)/2;  // Centers the timer. -4 because of dividers next to it.
+
+    //###############################################################
+    //# TOP PORTION OF THE GAME, DRAW THE NAME OF THE MAP, CENTERED #
+    //###############################################################
+
+    // Drawing borders, backgrounds, etc
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+    PrintInColour(TER, mapName, GAME_WINDOW_BACKGROUND_FG, GAME_WINDOW_BACKGROUND_BG);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    //###############################################################
+    //# TOP PORTION, DRAW THE DIVIDER BETWEEN TITLE AND MISCS       #
+    //###############################################################
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_TIMER, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    //###############################################################
+    //# TOP PORTION, DRAW THE MISC BELOW THE TITLE                  #
+    //###############################################################
+
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+    ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_TIMER, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenGameTimer, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+
+
+
+
+
+
+
+
+    DrawGameHeader();
+    DrawMap();
+    DrawTimers();
+    DrawInventories();
+    DrawPlayerStatus();
+
+    needToRedrawInventories = false;
+    needToRedrawMap = false;
+    needToRedrawPlayerStatus = false;
+    needToRedrawTimers = false;
+    return true;
 }

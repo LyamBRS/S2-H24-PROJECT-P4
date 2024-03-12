@@ -397,8 +397,9 @@ bool GameMenu::DrawPaused()
 
 bool GameMenu::DrawGame()
 {
-    std::cout << "DrawGame" << std::endl;
-    return false;
+    system("cls");
+    currentGame->FreshDraw();
+    return true;
 }
 
 bool GameMenu::DrawStart()
