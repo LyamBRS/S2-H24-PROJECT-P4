@@ -168,6 +168,7 @@
     <ClCompile Include="Files\PowerUp\PowerUp.cpp" />
     <ClCompile Include="Files\ScreenAttributes\ScreenAttributes.cpp" />
     <ClCompile Include="Files\Serial\SerialPort.cpp" />
+    <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp" />
     <ClCompile Include="Files\SimpleTimer\SimpleTimer.cpp" />
     <ClCompile Include="Files\Menus\TestMenu.cpp" />
     <ClCompile Include="Files\Tests\Tests.cpp" />
@@ -194,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\Menus\GameMenu.h" />
+    <ClInclude Include="Files\SimpleTimer\SimpleChrono.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

@@ -25,6 +25,7 @@
 #include "../Movements/Movements.h"
 #include "../Application/AppHandler.h"
 #include "../Colour/Colour.h"
+#include "../SimpleTimer/SimpleChrono.h"
 
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
@@ -72,12 +73,14 @@
 #define GAME_FIELD_COLORS GAME_WINDOW_FIELD_FG, GAME_WINDOW_FIELD_BG
 #define GAME_FIELD ' ', GAME_WINDOW_FIELD_FG, GAME_WINDOW_FIELD_BG
 
-#define GAME_FIELD_WIDTH_TIMER 6
+#define GAME_FIELD_WIDTH_TIMER 8
 #define GAME_FIELD_WIDTH_COOLDOWN 3
 #define GAME_FIELD_WIDTH_PLAYER_NAME 9
 #define GAME_FIELD_WIDTH_BOMB_STATUS 1
 #define GAME_FIELD_WIDTH_HEALTH 4
 #define GAME_FIELD_WIDTH_INVENTORY 5
+
+#define GAME_CURSOR_GAMETIMER_Y 3
 
 #define TER std::cout
 
@@ -147,6 +150,7 @@ class Game
         int timeSinceStart = 0;
         /// @brief How long until the game starts and players can move
         SimpleTimer startTimer = SimpleTimer(4000);
+        SimpleChrono gameDuration = SimpleChrono();
 
         int gameStatus = 0;
         int gameWidth = 0;
@@ -165,7 +169,6 @@ class Game
         int mapCursorY = 0;
 
         int gameTimerCursorX = 0;
-        int gameTimerCursorY = 0;
 
         /// @brief Is set to true if the Game object is structurally ready to be used.
         bool canBeUsed = false;
@@ -387,6 +390,32 @@ class Game
          * Failed to start the game. Path problem?
          */
         bool Start();
+
+        /**
+         * @brief 
+         * Pauses the game. This changes the status of the
+         * game according to @ref GameStatuses allowing
+         * it to freeze in time until it is @ref Resumed.
+         * @return true:
+         * Game was paused successfully
+         * @return false:
+         * Game is not started / already paused / invalid. 
+         */
+        bool Pause();
+
+        /**
+         * @brief 
+         * Resumes the game. This changes the status of the
+         * game according to @ref GameStatuses allowing
+         * it to resume where it was in the gameplay.
+         * @warning
+         * ### This DOES NOT start a game.
+         * @return true:
+         * Game was paused successfully
+         * @return false:
+         * Game is not paused / already going / invalid. 
+         */
+        bool Resume();
 
         /**
          * @brief

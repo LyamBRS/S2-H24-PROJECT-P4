@@ -82,8 +82,33 @@ bool Game::DrawPlayerStatus()
 
 bool Game::DrawTimers()
 {
-    return false;
+    SetTerminalCursorPosition(gameTimerCursorX, GAME_CURSOR_GAMETIMER_Y);
+
+    unsigned char numSeconds = gameDuration.GetClockSeconds();
+    unsigned char numMinutes = gameDuration.GetClockMinutes();
+    unsigned char numHours = gameDuration.GetClockHours();
+
+    std::string seconds = std::to_string(numSeconds);
+    std::string minutes = std::to_string(numMinutes);
+    std::string hours = std::to_string(numHours);
+
+    if(seconds.length() == 1) seconds.insert(0, "0");
+    if(minutes.length() == 1) minutes.insert(0, "0");
+    if(hours.length() == 1) hours.insert(0, "0");
+
+    std::string result = hours;
+    result += ":";
+    result += minutes;
+    result += ":";
+    result += seconds;
+
+    PrintInColour(TER, result, GAME_FIELD_COLORS);
+    needToRedrawTimers = false;
+    return true;
 }
+
+
+
 
 /**
  * @brief 
@@ -200,6 +225,9 @@ bool Game::CheckForPlayerDamage()
     return false;
 }
 
+
+
+
 /**
  * @brief
  * # DO NOT USE THIS CONSTRUCTOR TERSIDE OF CLASS MEMBER DEFINITIONS
@@ -246,6 +274,7 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     // And other cursor related positions on the terminal window, which will be used to draw later
     int mapSizeX = map->GetCurrentMap()["sizeX"];
     int mapSizeY = map->GetCurrentMap()["sizeY"];
+    int amountOfPlayers = map->GetCurrentMap()["amountOfPlayers"];
     gameWidth = mapSizeX*3;
 
     if(gameWidth < GAME_MIN_WIDTH)  gameWidth = GAME_MIN_WIDTH;
@@ -268,6 +297,12 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
 
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
+
+    // Create as much players as there is for that specific map.
+    for(playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
+    {
+        Player* player = new Player()
+    }
 }
 
 /**
@@ -284,8 +319,37 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
  */
 bool Game::Update()
 {
-    return false;
+    static int oldGameStatus = GameStatuses::invalid;
+    static uint8_t oldSeconds = 0;
+
+    /////////////////////////////////////////
+    // Handling game status changes
+    /////////////////////////////////////////
+    if(gameStatus != oldGameStatus)
+    {
+        // Game actually started! This is the first update frame.
+        if(oldGameStatus==GameStatuses::countdown && gameStatus==GameStatuses::playing)
+        {
+            gameDuration.Start(); // Start the timer at the top.
+        }
+        oldGameStatus = gameStatus;
+    }
+
+    ////////////////////////////////////////////
+    // Handling Game duration drawing intervals
+    ////////////////////////////////////////////
+    if(oldSeconds != gameDuration.GetClockSeconds())
+    {
+        oldSeconds = gameDuration.GetClockSeconds();
+        needToRedrawTimers = true;
+    }
+
+
+    return true;
 }
+
+
+
 
 /**
  * @brief 
@@ -304,6 +368,46 @@ bool Game::Start()
     gameStatus = GameStatuses::countdown;
     return true;
 }
+
+/**
+ * @brief 
+ * Pauses the game. This changes the status of the
+ * game according to @ref GameStatuses allowing
+ * it to freeze in time until it is @ref Resumed.
+ * @return true:
+ * Game was paused successfully
+ * @return false:
+ * Game is not started / already paused / invalid. 
+ */
+bool Game::Pause()
+{
+    if(gameStatus != GameStatuses::playing) return false;
+    gameStatus = GameStatuses::paused;
+    gameDuration.Stop();
+    return true;
+}
+
+/**
+ * @brief 
+ * Resumes the game. This changes the status of the
+ * game according to @ref GameStatuses allowing
+ * it to resume where it was in the gameplay.
+ * @warning
+ * ### This DOES NOT start a game.
+ * @return true:
+ * Game was paused successfully
+ * @return false:
+ * Game is not paused / already going / invalid. 
+ */
+bool Game::Resume()
+{
+    if((gameStatus != GameStatuses::paused) || (gameStatus != GameStatuses::awaitingConnection)) return false;
+    gameStatus = GameStatuses::playing;
+    gameDuration.Resume();
+    return true;
+}
+
+
 
 /**
  * @brief
@@ -652,7 +756,15 @@ bool Game::FreshDraw()
     ConsecutiveChar(TER, GAME_BORDER, 1, false);
     ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
     ConsecutiveChar(TER, GAME_DIVIDER_TL_CORNER, 1, false);
-    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameWidth-4, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_PLAYER_NAME, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_COOLDOWN, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_HEALTH, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_INVENTORY, false);
     ConsecutiveChar(TER, GAME_DIVIDER_TR_CORNER, 1, false);
     ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
     ConsecutiveChar(TER, GAME_BORDER, 1, true);

@@ -112,6 +112,9 @@
     <ClCompile Include="Files\Menus\GameMenu.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -123,6 +126,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\Menus\GameMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\SimpleTimer\SimpleChrono.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>
