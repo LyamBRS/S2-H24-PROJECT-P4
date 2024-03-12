@@ -36,4 +36,19 @@ void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundCol
 
 void SetTerminalCursorPosition(int row, int column);
 
+/**
+ * @brief 
+ * # ConsecutiveChar
+ * @brief
+ * Allows you to spam a character for X amount of times on your terminal.
+ * This allows waaaay easier prints of decors.
+ * @param os 
+ * @param characterToDraw 
+ * @param foregroundColour 
+ * @param backgroundColour 
+ * @param howMuchToRepeat 
+ * @param lineEnd 
+ */
+void ConsecutiveChar(std::ostream & os, char characterToDraw, int foregroundColour, int backgroundColour, int howMuchToRepeat, bool lineEnd);
+
 std::string ExePath();

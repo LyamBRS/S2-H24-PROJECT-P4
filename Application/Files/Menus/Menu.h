@@ -19,10 +19,13 @@
 
 // - DEFINES - //
 #define APP_MAIN_MENU 0
-#define APP_ARDUINO_MENU 2
-#define APP_GAME_MENU 3
 #define APP_TEST_MENU 1
+#define APP_ARDUINO_MENU 2
+#define APP_MAP_MENU 3
 #define APP_EXIT_MENU 4
+#define APP_AMOUNT_OF_MENUS 4
+
+#define APP_GAME_MENU 5
 
 #define KB_UP 72
 #define KB_DOWN 80

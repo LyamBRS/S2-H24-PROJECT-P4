@@ -153,6 +153,7 @@
     <ClCompile Include="Files\Menus\ExitMenu.cpp" />
     <ClCompile Include="Files\Game\Game.cpp" />
     <ClCompile Include="Files\Inventory\Inventory.cpp" />
+    <ClCompile Include="Files\Menus\GameMenu.cpp" />
     <ClCompile Include="Files\Menus\MainMenu.cpp" />
     <ClCompile Include="Files\Map\Map.cpp" />
     <ClCompile Include="Files\Menus\MapMenu.cpp" />
@@ -190,6 +191,9 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Files\Menus\GameMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

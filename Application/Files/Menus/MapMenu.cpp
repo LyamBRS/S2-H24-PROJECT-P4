@@ -37,13 +37,13 @@ bool MapMenu::HandleKeyboard(int keyBoardKey)
                 return true;                  
 
         case KB_ESCAPE:
-                appRef->currentSelectedMenu = 0;
+                appRef->currentSelectedMenu = APP_MAIN_MENU;
                 setSelection(0);
                 return true;
 
         case KB_ENTER:
-                map->SetTileDataAtPosition(1, 5, 5);
-                int a = map->GetTileDataAtPosition(1, 4);
+                appRef->currentSelectedMenu = APP_GAME_MENU;
+                appRef->wantedMapIndex = selection;
                 return true;
     }
     return false;
@@ -93,7 +93,6 @@ bool MapMenu::Draw()
 
     // PRINT CONTROLLER STATS
 
-    std::cout << selection << std::endl;
     PrintInColour(std::cout, "- Controller status: ", colors::grey, colors::black);
     std::cout << "| ";
     if(!appRef->arduinoThread.GetArduino()->GetPortState())
@@ -182,19 +181,27 @@ bool MapMenu::Draw()
 
 bool MapMenu::OnEnter()
 {
+    appRef->wantedMapIndex = 0;
     setSelection(0);
-    return false;
+    return true;
 }
 
 bool MapMenu::OnExit()
 {
     setSelection(0);
-    return false;
+    return true;
 }
 
 bool MapMenu::OnMapSelect() 
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
+
+    // Corruption detection
+    if (GetMapJsonError(allMaps[selection]) != EM_MAP_NO_ERROR)
+    {
+        return false;
+    }
+
     map = new Map(allMaps[selection]);
     return true;
 }

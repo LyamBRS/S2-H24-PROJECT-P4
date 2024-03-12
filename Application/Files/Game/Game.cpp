@@ -35,6 +35,14 @@ bool Game::SelfCheck()
         errorMessage = EM_GAME_MAP_IS_NULLPTR;
         return false;
     }
+
+    errorMessage = GetMapJsonError(map->GetCurrentMap());
+    if(errorMessage != EM_MAP_NO_ERROR)
+    {
+        return false;
+    }
+
+    return true;
 }
 
 /**
@@ -76,15 +84,6 @@ bool Game::DisplayMap()
  */
 bool Game::HandleNextMouvements()
 {
-    //for(int i=0; i<players.size();i++)
-    //{
-    //    if (players.at(i)->joystickX >0)
-    //    {
-    //        
-    //    }
-    //    
-    //}
-    
     return false;
 }
 
@@ -187,7 +186,8 @@ bool Game::CheckForPlayerDamage()
  */
 Game::Game()
 {
-
+    canBeUsed = false;
+    gameStatus = GameStatuses::invalid;
 }
 
 /**
@@ -201,16 +201,28 @@ Game::Game()
  * some players, some bombs, some shenanigans.
  * A game goes on until either a player leaves
  * or or there is only one left.
- * @param connectedPlayerCount
- * How many players should be on the map?
+ * @param newAppRef
+ * Reference to the application. Usually given by menus.
  * @param MapData
  * JSON file as an object which corresponds to the loaded
  * map that will be played on.
  */
-Game::Game(int connectedPlayerCount, Map* MapData)
+Game::Game(AppHandler* newAppRef, Map* MapData)
 {
-    // Saving the map inside of the game.
     map = MapData;
+    appRef = newAppRef;
+
+    if(!SelfCheck())
+    {
+        std::cerr << "GAME: Self check failure" << std::endl;
+        Sleep(1000);
+
+        canBeUsed = false;
+        gameStatus = GameStatuses::invalid;
+        return;
+    }
+    canBeUsed = true;
+    gameStatus = GameStatuses::awaitingPlayers;
 }
 
 /**
@@ -244,8 +256,88 @@ bool Game::Update()
 bool Game::Start()
 {
     startTimer.Reset();
-    gameIsReady = false;
+    gameStatus = GameStatuses::countdown;
     return true;
+}
+
+/**
+ * @brief
+ * # GetStatus
+ * @brief
+ * Returns the current state of the game as a number.
+ * The number represents one of the followings:
+ * @brief
+ * - 0: Invalid game. Corruption detected / constructor error
+ * @brief
+ * - 1: Game is waiting for all players to confirm that they are ready
+ * @brief
+ * - 2: Game is doing a countdown
+ * @brief
+ * - 3: Game is actively being played
+ * @brief
+ * - 4: Game is paused, and the pause menu is shown.
+ * @brief
+ * - 5: Game has ended.
+ * @brief
+ * - 6: Waiting for player to reconnect
+ * @return int 
+ */
+int Game::GetStatus()
+{
+    return gameStatus;
+}
+
+/**
+ * @brief
+ * # GetCountdownValue
+ * @brief
+ * Returns a number associated with the current countdown number value
+ * Values are as followed:
+ * @brief
+ * - 0: No countdown in progress
+ * @brief
+ * - 1: GO
+ * @brief
+ * - 2: 1 second
+ * @brief
+ * - 3: 2 seconds
+ * @brief
+ * - 4: 3 seconds
+ * @return int 
+ */
+int Game::GetCountdownValue()
+{
+    if(!canBeUsed) return 0;
+
+    int timeLeft = startTimer.TimeLeft();
+
+    if(gameStatus != GameStatuses::countdown)
+    {
+        return 0;
+    }
+
+    if(timeLeft > 3000)
+    {
+        return 4;
+    }
+
+    if(timeLeft > 2000)
+    {
+        return 3;
+    }
+
+    if(timeLeft > 1000)
+    {
+        return 2;
+    }
+
+    // The end of the timer was eventually reached as we attempted to read it. The game must then start.
+    if(timeLeft == 0)
+    {
+        gameStatus = GameStatuses::playing;
+    }
+
+    return 1;
 }
 
 /**
@@ -267,19 +359,31 @@ bool Game::Start()
  */
 bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
-    //players.at(associatedPlayer-1)->rightButton = controllerToUpdate->rightButton;
-    //players.at(associatedPlayer-1)->leftButton = controllerToUpdate->leftButton;
-    //players.at(associatedPlayer-1)->topButton = controllerToUpdate->topButton;
-    //players.at(associatedPlayer-1)->bottomButton = controllerToUpdate->bottomButton;
-    //players.at(associatedPlayer-1)->SentBarGraphBits = controllerToUpdate->SentBarGraphBits;
-    //players.at(associatedPlayer-1)->ReceivedBarGraphBits = controllerToUpdate->ReceivedBarGraphBits;
-    //players.at(associatedPlayer-1)->accelerometerX = controllerToUpdate->accelerometerX;
-    //players.at(associatedPlayer-1)->accelerometerY = controllerToUpdate->accelerometerY;
-    //players.at(associatedPlayer-1)->accelerometerZ = controllerToUpdate->accelerometerZ;
-    //players.at(associatedPlayer-1)->isConnected = controllerToUpdate->isConnected;
-    //players.at(associatedPlayer-1)->joystickX = controllerToUpdate->joystickX;
-    //players.at(associatedPlayer-1)->joystickY = controllerToUpdate->joystickY;
-    //players.at(associatedPlayer-1)->joystickButton = controllerToUpdate->joystickButton;
-
     return false;
+}
+
+/**
+ * @brief
+ * # GetMap
+ * @brief
+ * Returns the map used inside of the @ref Game object.
+ * Its that simple.
+ * @return Map* 
+ */
+Map* Game::GetMap()
+{
+    return map;
+}
+
+/**
+ * @brief 
+ * Returns true if the Game is valid and ready to go and be played.
+ * To be valid, the game must have been constructed through the right
+ * constructor (once which specifies a @ref Map and an @ref Application reference).
+ * @return true 
+ * @return false 
+ */
+bool Game::isValidated()
+{
+    return canBeUsed;
 }

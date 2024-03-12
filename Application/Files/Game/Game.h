@@ -16,12 +16,14 @@
 #include <iostream>
 #include <vector>
 #include "../Map/Map.h"
+#include "../Map/Utils.hpp"
 #include "../Player/Player.h"
 #include "../Controller/Controller.h"
 #include "../PlacedBomb/PlacedBomb.h"
 #include "../PlacedPowerUp/PlacedPowerUp.h"
 #include "../SimpleTimer/SimpleTimer.h"
 #include "../Movements/Movements.h"
+#include "../Application/AppHandler.h"
 
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
@@ -33,6 +35,40 @@
 #define EM_GAME_MAP_IS_NULLPTR     "The passed map is a nullptr        "
 #define EM_GAME_TOO_MANY_PLAYERS   "There is too many players to play  "
 #define EM_GAME_NOT_ENOUGH_PLAYERS "There is not enough players to play"
+
+// - STRUCT - //
+/**
+ * @brief 
+ * # GameStatuses
+ * @brief 
+ * This struct holds all the possible statuses and their meanings
+ * that a @ref Game object can hold. The @ref Game status is
+ * obtained through Game.GetStatus().
+ * @brief
+ * - 0: Invalid game. Corruption detected / constructor error
+ * @brief
+ * - 1: Game is waiting for all players to confirm that they are ready
+ * @brief
+ * - 2: Game is doing a countdown
+ * @brief
+ * - 3: Game is actively being played
+ * @brief
+ * - 4: Game is paused, and the pause menu is shown.
+ * @brief
+ * - 5: Game has ended.
+ * @brief
+ * - 6: Waiting for player to reconnect
+ */
+enum GameStatuses
+{
+    invalid = 0,
+    awaitingPlayers = 1,
+    countdown = 2,
+    playing = 3,
+    paused = 4,
+    ended = 5,
+    awaitingConnection = 6
+};
 
 // - CLASS - //
 
@@ -65,16 +101,15 @@ class Game
         /// @brief How long has the game been going for? (in milliseconds)
         int timeSinceStart = 0;
         /// @brief How long until the game starts and players can move
-        SimpleTimer startTimer = SimpleTimer(3000);
+        SimpleTimer startTimer = SimpleTimer(4000);
 
-        /// @brief Tells if the game is ready to be PLAYED
-        bool gameIsReady = false;
+        int gameStatus = 0;
 
         /// @brief Is set to true if the Game object is structurally ready to be used.
         bool canBeUsed = false;
 
-        /// @brief Is set to true if the game should no longer update.
-        bool isPaused = false;
+        /// @brief reference to the attributes of the current application
+        AppHandler* appRef;
         
         /**
          * @brief 
@@ -224,13 +259,34 @@ class Game
          * some players, some bombs, some shenanigans.
          * A game goes on until either a player leaves
          * or or there is only one left.
-         * @param connectedPlayerCount
-         * How many players should be on the map?
+         * @param newAppRef
+         * Reference to the application. Usually given by menus.
          * @param MapData
          * JSON file as an object which corresponds to the loaded
          * map that will be played on.
          */
-        Game(int connectedPlayerCount, Map* MapData);
+        Game(AppHandler* newAppRef, Map* MapData);
+
+        /**
+         * @brief 
+         * Returns true if the Game is valid and ready to go and be played.
+         * To be valid, the game must have been constructed through the right
+         * constructor (once which specifies a @ref Map and an @ref Application reference).
+         * @return true 
+         * @return false 
+         */
+        bool isValidated();
+
+        /**
+         * @brief
+         * # GetStatus
+         * @brief
+         * Returns the current state of the game as a number.
+         * The number represents one of the followings:
+
+         * @return int 
+         */
+        int GetStatus();
 
         /**
          * @brief 
@@ -258,6 +314,36 @@ class Game
          * Failed to start the game. Path problem?
          */
         bool Start();
+
+        /**
+         * @brief
+         * # GetCountdownValue
+         * @brief
+         * Returns a number associated with the current countdown number value
+         * Values are as followed:
+         * @brief
+         * - 0: No countdown in progress
+         * @brief
+         * - 1: GO
+         * @brief
+         * - 2: 1 second
+         * @brief
+         * - 3: 2 seconds
+         * @brief
+         * - 4: 3 seconds
+         * @return int 
+         */
+        int GetCountdownValue();
+
+        /**
+         * @brief
+         * # GetMap
+         * @brief
+         * Returns the map used inside of the @ref Game object.
+         * Its that simple.
+         * @return Map* 
+         */
+        Map* GetMap();
 
         /**
          * @brief 
