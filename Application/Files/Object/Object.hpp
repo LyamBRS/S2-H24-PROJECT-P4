@@ -33,7 +33,7 @@
  */
 class Object
 {
-    private:
+    protected:
         /// @brief The object's position attributes. Allowing it to exist at a certain coordinate on the screen.
         Positions position;
         /// @brief Corresponds to a manuallu specified old coordinate so the player can be removed from where they used to stand
