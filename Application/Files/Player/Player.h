@@ -22,6 +22,8 @@
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
 #define PLAYER_BASE_BOMB_PLACEMENT_TIMER 2000
+#define boutonBombe 1
+
 // - CLASS - //
 
 /**
@@ -51,6 +53,19 @@ class Player : public Object
         bool wantsToUseSelectedItem = false;
         /// @brief Simply says if the player is alive rn or not.
         bool isAlive = true;
+        int joystickX = 0;
+        int joystickY = 0;
+        bool joystickButton = false;
+        bool topButton = false;
+        bool bottomButton = false;
+        bool leftButton = false;
+        bool rightButton = false;
+        int SentBarGraphBits = 0;
+        int ReceivedBarGraphBits = 0;
+        int accelerometerX = 0;
+        int accelerometerY = 0;
+        int accelerometerZ = 0;
+        bool isConnected = false;
 
     public:
 
