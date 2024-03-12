@@ -28,11 +28,7 @@
 #define CHAR_UP_TRIANGLE                    '\x1E'
 #define CHAR_DOWN_TRIANGLE                  '\x1F'
 #define CHAR_BORDER_VERTICAL                '\xBA'
-#define CHAR_BORDER_VERTICAL_L_JUNCTION     '\xDC'
-#define CHAR_BORDER_VERTICAL_R_JUNCTION     '\xB9'
 #define CHAR_BORDER_HORIZONTAL              '\xCD'
-#define CHAR_BORDER_HORIZONTAL_T_JUNCTION   '\xCA'
-#define CHAR_BORDER_HORIZONTAL_B_JUNCTION   '\xDB'
 #define CHAR_BORDER_CROSS                   '\xEE'
 #define CHAR_BORDER_TR_CORNER               '\xBB'
 #define CHAR_BORDER_TL_CORNER               '\xC9'
@@ -41,7 +37,15 @@
 #define CHAR_CONTRAST_LOW                   '\xB0'
 #define CHAR_CONTRAST_MED                   '\xB1'
 #define CHAR_CONTRAST_HIGH                  '\xB2'
+#define CHAR_BORDER_R_JUNCTION              '\xCC'
+#define CHAR_BORDER_L_JUNCTION              '\xB9'
+#define CHAR_BORDER_T_JUNCTION              '\xCA'
+#define CHAR_BORDER_B_JUNCTION              '\xCB'
 
+#define STRING_BORDER_R_JUNCTION              "\xCC"
+#define STRING_BORDER_L_JUNCTION              "\xB9"
+#define STRING_BORDER_T_JUNCTION              "\xCA"
+#define STRING_BORDER_B_JUNCTION              "\xCB"
 #define STRING_HEARTH                         "\x03"
 #define STRING_DIAMONDS                       "\x04"
 #define STRING_CLUB                           "\x05"
@@ -55,11 +59,7 @@
 #define STRING_UP_TRIANGLE                    "\x1E"
 #define STRING_DOWN_TRIANGLE                  "\x1F"
 #define STRING_BORDER_VERTICAL                "\xBA"
-#define STRING_BORDER_VERTICAL_T_JUNCTION     "\xDC"
-#define STRING_BORDER_VERTICAL_B_JUNCTION     "\xB9"
 #define STRING_BORDER_HORIZONTAL              "\xCD"
-#define STRING_BORDER_HORIZONTAL_T_JUNCTION   "\xCA"
-#define STRING_BORDER_HORIZONTAL_B_JUNCTION   "\xDB"
 #define STRING_BORDER_CROSS                   "\xEE"
 #define STRING_BORDER_TR_CORNER               "\xBB"
 #define STRING_BORDER_TL_CORNER               "\xC9"
