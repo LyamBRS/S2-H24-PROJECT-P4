@@ -33,7 +33,7 @@
 #define CHAR_BORDER_TR_CORNER               '\xBB'
 #define CHAR_BORDER_TL_CORNER               '\xC9'
 #define CHAR_BORDER_BR_CORNER               '\xBC'
-#define CHAR_BORDER_BL_CORNER               '\xE8'
+#define CHAR_BORDER_BL_CORNER               '\xC8'
 #define CHAR_CONTRAST_LOW                   '\xB0'
 #define CHAR_CONTRAST_MED                   '\xB1'
 #define CHAR_CONTRAST_HIGH                  '\xB2'
@@ -64,7 +64,7 @@
 #define STRING_BORDER_TR_CORNER               "\xBB"
 #define STRING_BORDER_TL_CORNER               "\xC9"
 #define STRING_BORDER_BR_CORNER               "\xBC"
-#define STRING_BORDER_BL_CORNER               "\xE8"
+#define STRING_BORDER_BL_CORNER               "\xC8"
 #define STRING_CONTRAST_LOW                   "\xB0"
 #define STRING_CONTRAST_MED                   "\xB1"
 #define STRING_CONTRAST_HIGH                  "\xB2"
