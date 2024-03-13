@@ -174,3 +174,21 @@ bool Player::IsConnected()
 {
     return controllerRef->isConnected;
 }
+
+bool Player::LinkController(Controller* newControllerReference)
+{
+    controllerRef = newControllerReference;
+    return true;
+}
+
+bool Player::UnlinkController()
+{
+    Controller* fuckThisShit = new Controller();
+    controllerRef = fuckThisShit;
+    return true;
+}
+
+Controller* Player::GetController()
+{
+    return controllerRef;
+}

@@ -3,7 +3,7 @@
  * @author COUS1912, GRAF2102
  * @brief
  * Permet de print un résultat en couleur sur
- * Linux et sur Windows
+ * Windows
  * @version 0.1
  * @date 2024-01-10
  * @copyright Copyright (c) 2024

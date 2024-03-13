@@ -58,8 +58,9 @@ bool Application::HandleKeyboardActions()
 {
     if (kbhit())
     {
-        appHandler.requiresNewDrawing = true;
-        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(getch());
+        int character = getch();
+        appHandler.requiresNewDrawing = appHandler.redrawOnKeyboardHits;
+        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(character);
     }
     return true;
 }
@@ -132,8 +133,7 @@ bool Application::Update()
 
     if(appHandler.frameTimer.TimeLeft() == 0)
     {
-        //appHandler.arduinoThread.GetArduino()->Update();
-        //appHandler.currentGame.Update();
+        appHandler.UpdateKeyboardControllers();
     }
 
     //if(!appHandler.arduinoThread.GetThreadStatus())

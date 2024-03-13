@@ -311,8 +311,12 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
             gameStatus = GameStatuses::invalid;
             //return;
         }
-        Player* player = new Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
+        Player player = Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
+        players.push_back(player);
     }
+
+    std::cout << "GAME CAN NOW BE USED" << std::endl;
+    Sleep(1000);
 
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
@@ -554,7 +558,36 @@ bool Game::isValidated()
 
 
 
+Controller* Game::GetPlayerController(int playerIndex)
+{
+    if(!canBeUsed)
+    {
+        std::cout << "GAME CONSTRUCTOR ERROR: GetPlayerController: NO PLAYERS IN VECTOR" << std::endl;
+        Sleep(1000);
+        return nullptr;
+    }
 
+    if(players.size() == 0)
+    {
+        std::cout << "GAME CONSTRUCTOR ERROR: GetPlayerController: NO PLAYERS IN VECTOR... AGAIN?!?" << std::endl;
+        Sleep(1000);
+        return nullptr;
+    }
+
+    return players[playerIndex].GetController();
+}
+
+bool Game::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
+{
+    if(!canBeUsed) {std::cout << "GAME CONSTRUCTOR ERROR: AssignControllerToPlayer: NO PLAYERS IN VECTOR" << std::endl; return false;}
+    return players[playerIndex].LinkController(controllerRef);
+}
+
+bool Game::UnAssignPlayerController(int playerIndex)
+{
+    players[playerIndex].UnlinkController();
+    return true;
+}
 
 
 

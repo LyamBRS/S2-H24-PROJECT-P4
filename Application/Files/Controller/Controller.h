@@ -18,11 +18,6 @@
 // - INCLUDES - //
 
 // - DEFINES - //
-#define CONTROLLER_TYPE_ARDUINO_A 1
-#define CONTROLLER_TYPE_ARDUINO_B 2
-#define CONTROLLER_TYPE_KEYBOARD_A 3
-#define CONTROLLER_TYPE_KEYBOARD_B 4
-#define CONTROLLER_TYPE_BRS_GAMEPAD 5
 
 // - CLASS - //
 
@@ -157,4 +152,8 @@ class Controller
          * COMMUNICATION WITH THE ARDUINO IS LOST.
          */
         bool Reset();
+
+        int controllerID = 0;
 };
+
+// - FUNCTIONS - //

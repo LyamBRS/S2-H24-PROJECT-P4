@@ -19,6 +19,7 @@
 #include "../Map/Utils.hpp"
 #include "../JSON/json.hpp"
 #include "../SimpleTimer/SimpleTimer.h"
+#include "../Player/Player.h"
 #include <vector>
 #include <iostream>
 #include <iostream>
@@ -41,13 +42,15 @@ class GameMenu : public Menu
     private:
         bool needsToBeRedrawn = false;
         bool gameIsValid = false;
-        Game* currentGame = new Game();
+        Game* currentGame;
         Map* currentMap;
 
         SimpleTimer frameDelay = SimpleTimer(30);
         SimpleTimer animationFrame = SimpleTimer(100);
 
         int animationSpriteIndex = 0;
+
+        bool HandleWaitingForPlayers();
 
     public:
         GameMenu(AppHandler* currentAppHandler);

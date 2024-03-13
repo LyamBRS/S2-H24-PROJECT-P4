@@ -138,7 +138,7 @@ class Game
         /// @brief Holds the map loaded in the game.
         Map* map;
         /// @brief All the players currently playing.
-        std::vector<Player*> players;
+        std::vector<Player> players;
         /// @brief All the bombs that are currently on the map.
         std::vector<PlacedBomb*> bombsOnMap;
         /// @brief All the potential power ups on the map that a player can pick up.
@@ -515,6 +515,21 @@ class Game
 
         /**
          * @brief 
+         * # AssignControllerToPlayer
+         * @brief
+         * Allows the program to assign a specific @ref Controller to a specific
+         * @ref Player. This is done when the game's status 
+         * is @ref GameStatuses::awaitingPlayers. Once a @ref Controller is assigned, 
+         * it cannot be assigned to another @ref Player. 
+         * @param controllerToUse 
+         * @param playerIndex 
+         * @return true 
+         * @return false 
+         */
+        bool AssignControllerToPlayer(Controller* controllerToUse, int playerIndex);
+
+        /**
+         * @brief 
          * Updates a player's movements and actions based
          * on what their associated controller says.
          * If the controller is suddently offline, the
@@ -531,4 +546,8 @@ class Game
          * Failed to put the controller into the player.
          */
         bool UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer);
+
+        Controller* GetPlayerController(int playerIndex);
+        bool AssignControllerToPlayer(int playerIndex, Controller* controllerRef);
+        bool UnAssignPlayerController(int playerIndex);
 };

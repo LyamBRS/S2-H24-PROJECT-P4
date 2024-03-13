@@ -20,6 +20,7 @@
 #include "../PowerUp/PowerUp.h"
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleTimer.h"
+#include <windows.h>
 
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
@@ -31,13 +32,21 @@
 #define PLAYER_C_COLOR colors::leaf
 #define PLAYER_D_COLOR colors::aqua
 
-#define PLAYER_KEY_SELECT       controllerRef->joystickButton
-#define PLAYER_KEY_Y_AXIS       controllerRef->joystickX
-#define PLAYER_KEY_X_AXIS       controllerRef->joystickY
-#define PLAYER_KEY_INV_LEFT     controllerRef->leftButton
-#define PLAYER_KEY_INV_RIGHT    controllerRef->rightButton
-#define PLAYER_KEY_USE_PWR      controllerRef->topButton
-#define PLAYER_KEY_DISCARD_PWR  controllerRef->bottomButton
+#define PLAYER_KEY_SELECT       joystickButton
+#define PLAYER_KEY_Y_AXIS       joystickX
+#define PLAYER_KEY_X_AXIS       joystickY
+#define PLAYER_KEY_INV_LEFT     leftButton
+#define PLAYER_KEY_INV_RIGHT    rightButton
+#define PLAYER_KEY_USE_PWR      topButton
+#define PLAYER_KEY_DISCARD_PWR  bottomButton
+
+#define PLAYER_LOCAL_SELECT       controllerRef->PLAYER_CONTROLLER_SELECT
+#define PLAYER_LOCAL_Y_AXIS       controllerRef->PLAYER_CONTROLLER_Y_AXIS
+#define PLAYER_LOCAL_X_AXIS       controllerRef->PLAYER_CONTROLLER_X_AXIS
+#define PLAYER_LOCAL_INV_LEFT     controllerRef->PLAYER_CONTROLLER_INV_LEFT
+#define PLAYER_LOCAL_INV_RIGHT    controllerRef->PLAYER_CONTROLLER_INV_RIGHT
+#define PLAYER_LOCAL_USE_PWR      controllerRef->PLAYER_CONTROLLER_USE_PWR
+#define PLAYER_LOCAL_DISCARD_PWR  controllerRef->PLAYER_CONTROLLER_DISCARD_PWR
 
 #define PLAYER_CONTROLLER_THRESHOLD 30
 
@@ -170,11 +179,9 @@ class Player : BaseObject
          */
         bool GiveDamage(int damagePoints);
 
-        bool LinkController(Controller* newControllerReference)
-        {
-            controllerRef = newControllerReference;
-            return true;
-        }
+        bool LinkController(Controller* newControllerReference);
+        bool UnlinkController();
+        Controller* GetController();
 
         /**
          * @brief

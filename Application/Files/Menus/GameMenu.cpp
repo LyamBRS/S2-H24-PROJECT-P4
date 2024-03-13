@@ -34,8 +34,9 @@ bool GameMenu::Update()
 
     switch(currentGame->GetStatus())
     {
-        case(GameStatuses::awaitingConnection):
         case(GameStatuses::awaitingPlayers):
+            HandleWaitingForPlayers(); // No I dont need a break/return here. Yes its cursed. yes, I dont care :P (just keep this case as the first one)
+        case(GameStatuses::awaitingConnection):
         case(GameStatuses::ended):
         case(GameStatuses::playing):
             if(animationFrame.TimeLeft()==0)
@@ -47,6 +48,80 @@ bool GameMenu::Update()
 
     return currentGame->Update();
 }
+
+bool GameMenu::HandleWaitingForPlayers()
+{
+    // system("cls");
+    for(int playerIndex = 0; playerIndex < currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
+    {
+        // std::cout << "p: " << playerIndex;
+        Controller* currentController = currentGame->GetPlayerController(playerIndex);
+
+        // std::cout << " b: " << currentController->topButton;
+
+        // This is to remove the potential flaw which would allow you to connect a controller, select a player, disconnect, reconnect, select, and control 2 players.
+        if(!currentController->isConnected)
+        {
+            if(currentController->controllerID != 0) currentController->controllerID = 0;
+        }
+
+        if(currentController->bottomButton) // Remove that controller from the list.
+        {
+            // std::cout << " LE ";
+            currentGame->UnAssignPlayerController(playerIndex);
+            currentController->controllerID = 0;
+        }
+
+        if(currentController->controllerID == 0)
+        {
+            // Check if any real hardware controller is available.
+            for(int selectedID=1; selectedID<=CONTROLLER_TYPE_AMOUNT; selectedID++)
+            {
+                Controller* realWorldController = appRef->GetHardwareController(selectedID);
+                if(!realWorldController->isConnected) realWorldController->controllerID = 0;
+
+                // std::cout << "\t" << selectedID << " IF(" << realWorldController->isConnected << "," << (realWorldController->controllerID==0) << "," << realWorldController->PLAYER_KEY_SELECT;
+
+                // unused controller, currently selecting to be a player, found.
+                if(realWorldController->isConnected && realWorldController->controllerID==0 && realWorldController->PLAYER_KEY_SELECT)
+                {
+                    // std::cout << std::endl;
+                    // Sleep(1000);
+                    currentGame->AssignControllerToPlayer(playerIndex, realWorldController);
+                    realWorldController->controllerID = selectedID;
+
+                    // std::cout << "placed ID: " << currentGame->GetPlayerController(playerIndex)->controllerID << " in player " << playerIndex << std::endl;
+
+                    // Verify that no other players have that controllerID
+                    for(int playerIndexV = 0; playerIndexV < currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndexV++)
+                    {
+                        Controller* playerController = currentGame->GetPlayerController(playerIndexV);
+                        // std::cout << playerIndexV << " " << playerIndex << std::endl;
+                        if(playerIndexV != playerIndex)
+                        {
+                            if(playerController->controllerID == selectedID)
+                            {
+                                // std::cout << "removed ID: " << selectedID << " from player " << playerIndexV << std::endl;
+                                // Sleep(1000);
+                                playerController->controllerID = 0;
+                            }
+                        }
+                    }
+
+                    return true;
+                }
+            }
+            // std::cout << std::endl;
+        }
+        // else
+        // {
+            // std::cout << " USED " << std::endl;;
+        // }
+        // Sleep(100);
+    }
+    return false;
+}
+
 
 bool GameMenu::HandleKeyboard(int keyBoardKey)
 {
@@ -117,6 +192,13 @@ bool GameMenu::OnEnter()
         gameIsValid = false;
         return false;
     }
+    
+    // Reset all hardware controllers's IDs so that they are valid again to be assigned to players.
+    for(int i=1; i<=CONTROLLER_TYPE_AMOUNT; i++)
+    {
+        appRef->GetHardwareController(i)->controllerID = 0;
+    }
+
     gameIsValid = true;
     return true;
 }
@@ -126,6 +208,10 @@ bool GameMenu::OnExit()
     needsToBeRedrawn = true;
     return true;
 }
+
+
+
+
 
 bool GameMenu::Draw()
 {
@@ -169,8 +255,6 @@ bool GameMenu::Draw()
             break;
     }
 }
-
-
 
 bool GameMenu::DrawInvalid()
 {
@@ -376,7 +460,10 @@ bool GameMenu::DrawWaitingForStart()
 
     for(int i=0; i<currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; i++)
     {
-        drawPlayerSlot(!(i%2), i, i+1, animationSpriteIndex);
+        int hardwareControllerType = currentGame->GetPlayerController(i)->controllerID;
+        bool playerSlotTaken = hardwareControllerType != 0;
+
+        drawPlayerSlot(playerSlotTaken, i, hardwareControllerType, animationSpriteIndex);
     }
     rectangles(1, colors::black, false); rectangles(42, colors::white, false); rectangles(1, colors::grey, true);
     rectangles(2, colors::black, false); rectangles(42, colors::grey, true);
