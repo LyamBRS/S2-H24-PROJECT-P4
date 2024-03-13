@@ -12,7 +12,7 @@
 #pragma once
 
 // - INCLUDES - //
-#include "../Object/Object.hpp"
+#include "../BaseObject/BaseObject.hpp"
 
 // - DEFINES - //
 
@@ -29,7 +29,7 @@
  * length of the fuse (how many updates until
  * it starts exploding)
  */
-class PlacedBomb : public Object
+class PlacedBomb : public BaseObject
 {
     private:
 

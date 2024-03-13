@@ -14,13 +14,16 @@
 #pragma once
 
 // - INCLUDES - //
+#include <Arduino.h>
 #include "Button.h"
 #include "LED.h"
 #include "Joystick.h"
 #include "BarGraph.h"
 #include "Accelerometer.h"
+#include "SimpleTimer.h"
 
 // - DEFINES - //
+#define HEARTHBEAT_TIME_MS 500
 
 // - CLASS - //
 
@@ -33,17 +36,23 @@
 class Controller 
 {
     private:
-        Button topButton;
-        Button bottomButton;
-        Button leftButton;
-        Button rightButton;
-        Accelerometer accelerometer;
-        Joystick joystick;
-        BarGraph barGraph;
+        Button* topButton;
+        Button* bottomButton;
+        Button* leftButton;
+        Button* rightButton;
+        Button* detection;
+        Accelerometer* accelerometer;
+        Joystick* joystick;
+        BarGraph* barGraph;
+        LED* hearthbeat;
+        SimpleTimer hearthbeatTimer = SimpleTimer(500);
 
         bool isConnected = false;
+        bool canBeUsed = false;
 
     public:
+
+        Controller();
 
         /**
          * @brief
@@ -100,12 +109,12 @@ class Controller
                     int rightButtonPin,
                     int leftButtonPin, 
                     int bottomButtonPin, 
-                    int joystickButtonPin, 
-                    int joystickXAxisPin, 
-                    int joystickYAxisPin, 
-                    int accelerometerXAxisPin, 
-                    int accelerometerYAxisPin, 
-                    int accelerometerZAxisPin, 
+                    uint8_t joystickButtonPin, 
+                    uint8_t joystickXAxisPin, 
+                    uint8_t joystickYAxisPin, 
+                    uint8_t accelerometerXAxisPin, 
+                    uint8_t accelerometerYAxisPin, 
+                    uint8_t accelerometerZAxisPin, 
                     int hearthBeatPin, 
                     int barGraphAPin, 
                     int barGraphBPin,
@@ -116,8 +125,8 @@ class Controller
                     int barGraphGPin, 
                     int barGraphHPin,
                     int barGraphIPin,
-                    int ID
-                    );
+                    int barGraphJPin,
+                    int ID);
 
         /**
          * @brief 

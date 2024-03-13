@@ -57,4 +57,7 @@ class LCD
          * the text that you want to display
          */
         void print(int cursorRow, int cursorLine, char* display);
+
+        bool SetNewLocalMessage(char* display);
+        bool SetNewPCMessage(char* display);
 };

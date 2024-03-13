@@ -33,11 +33,16 @@ class Button
         /// @brief The last state that was read when Update was called.
         bool state = false;
         /// @brief Specifies if the button is on with a LOW value. Defaults to false (ON with a HIGH value)
-        bool isInverted = false;
+        bool isInverted = true;
         /// @brief How long until the button is no longer seen as HIGH.
         int debounceTimer = 0;
 
+        bool canBeUsed = false;
+
     public:
+
+        Button();
+
         /**
          * @brief Construct a new Button object.
          * Default constructor only sets the pin
@@ -68,7 +73,7 @@ class Button
          * @param debounceDelayMS
          * How long in milliseconds should the debounce be for.
          */
-        Button(int pin, bool isInverted, int debounceDelayMS);
+        Button(int pin, bool shouldBeInverted, int debounceDelayMS);
 
         /**
          * @brief Destroy the Button object
@@ -103,4 +108,6 @@ class Button
          * 
          */
         void SetState();
+
+        bool Reset();
 };

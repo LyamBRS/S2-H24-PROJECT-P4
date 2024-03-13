@@ -23,7 +23,7 @@
 class ExitMenu : public Menu
 {
     private:
-
+        bool needsToBeRedrawn = false;
     public:
         ExitMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);

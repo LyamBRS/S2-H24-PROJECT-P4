@@ -13,10 +13,41 @@
 #include "Game.h"
 
 // - PROGRAM - //
-        
+
 /**
  * @brief 
- * # DisplayMap
+ * # SelfCheck
+ * @brief
+ * This function verifies the entirety of the Game
+ * object, including its map and players. If false
+ * is returned, it failed the test and the first
+ * encountered error is written in @ref errorMessage
+ * @return true:
+ * Passed the test
+ * @return false:
+ * Failed the test 
+ */
+bool Game::SelfCheck()
+{
+    // Check if there is any maps in the Game object
+    if(map == nullptr)
+    {
+        errorMessage = EM_GAME_MAP_IS_NULLPTR;
+        return false;
+    }
+
+    errorMessage = GetMapJsonError(map->GetCurrentMap());
+    if(errorMessage != EM_MAP_NO_ERROR)
+    {
+        return false;
+    }
+
+    return true;
+}
+
+/**
+ * @brief 
+ * # DrawMap
  * @brief
  * Actually prints the current map layout in a
  * command prompt or updates the QT application
@@ -29,10 +60,55 @@
  * @return false:
  * Whatever hapenned, there was an error.
  */
-bool Game::DisplayMap()
+bool Game::DrawMap()
+{
+    return map->Draw();
+}
+
+bool Game::DrawGameHeader()
 {
     return false;
 }
+
+bool Game::DrawInventories()
+{
+    return false;
+}
+
+bool Game::DrawPlayerStatus()
+{
+    return false;
+}
+
+bool Game::DrawTimers()
+{
+    SetTerminalCursorPosition(gameTimerCursorX, GAME_CURSOR_GAMETIMER_Y);
+
+    unsigned char numSeconds = gameDuration.GetClockSeconds();
+    unsigned char numMinutes = gameDuration.GetClockMinutes();
+    unsigned char numHours = gameDuration.GetClockHours();
+
+    std::string seconds = std::to_string(numSeconds);
+    std::string minutes = std::to_string(numMinutes);
+    std::string hours = std::to_string(numHours);
+
+    if(seconds.length() == 1) seconds.insert(0, "0");
+    if(minutes.length() == 1) minutes.insert(0, "0");
+    if(hours.length() == 1) hours.insert(0, "0");
+
+    std::string result = hours;
+    result += ":";
+    result += minutes;
+    result += ":";
+    result += seconds;
+
+    PrintInColour(TER, result, GAME_FIELD_COLORS);
+    needToRedrawTimers = false;
+    return true;
+}
+
+
+
 
 /**
  * @brief 
@@ -149,13 +225,17 @@ bool Game::CheckForPlayerDamage()
     return false;
 }
 
+
+
+
 /**
  * @brief
- * # DO NOT USE THIS CONSTRUCTOR OUTSIDE OF CLASS MEMBER DEFINITIONS
+ * # DO NOT USE THIS CONSTRUCTOR TERSIDE OF CLASS MEMBER DEFINITIONS
  */
 Game::Game()
 {
-
+    canBeUsed = false;
+    gameStatus = GameStatuses::invalid;
 }
 
 /**
@@ -169,15 +249,77 @@ Game::Game()
  * some players, some bombs, some shenanigans.
  * A game goes on until either a player leaves
  * or or there is only one left.
- * @param connectedPlayerCount
- * How many players should be on the map?
- * @param pathToMap
- * path to a JSON file that contains the layout
- * of the map to use.
+ * @param newAppRef
+ * Reference to the application. Usually given by menus.
+ * @param MapData
+ * JSON file as an object which corresponds to the loaded
+ * map that will be played on.
  */
-Game::Game(int connectedPlayerCount, std::wstring pathToMap)
+Game::Game(AppHandler* newAppRef, Map* MapData)
 {
+    map = MapData;
+    appRef = newAppRef;
 
+    if(!SelfCheck())
+    {
+        std::cerr << "GAME: Self check failure" << std::endl;
+        Sleep(1000);
+
+        canBeUsed = false;
+        gameStatus = GameStatuses::invalid;
+        return;
+    }
+
+    // here we calculate the height in ascii chars necessary to draw the whole game, and more importantly, the width.
+    // And other cursor related positions on the terminal window, which will be used to draw later
+    int mapSizeX = map->GetCurrentMap()["sizeX"];
+    int mapSizeY = map->GetCurrentMap()["sizeY"];
+    int amountOfPlayers = map->GetCurrentMap()["amountOfPlayers"];
+    gameWidth = mapSizeX*3;
+
+    if(gameWidth < GAME_MIN_WIDTH)  gameWidth = GAME_MIN_WIDTH;
+    if(gameWidth%2 != 0) gameWidth++;
+
+    // Other position related things
+    mapCursorX = 0;
+    mapCursorY = GAME_HEADER_HEIGHT;
+
+    gameTimerOffset = ((gameWidth-4) - GAME_FIELD_WIDTH_TIMER)/2;
+    gameTimerCursorX = 1 + gameTimerOffset + 1;
+
+    playerCardOffsetX = ((gameWidth-GAME_MIN_WIDTH)/2);
+
+    // static text field + borders around it + offset + game border.
+    cooldownCursorX = GAME_FIELD_WIDTH_PLAYER_NAME + 2 + playerCardOffsetX + 1;
+    bombStatusCursorX = cooldownCursorX + GAME_FIELD_WIDTH_COOLDOWN + 1;
+    healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
+    inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
+
+    // Create as much players as there is for that specific map.
+    for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
+    {
+        unsigned int initialPosX = 0;
+        unsigned int initialPosY = 0;
+
+        if(!map->GetASpawnPosition(playerIndex, &initialPosX, &initialPosY))
+        {
+            // Map does not have as much spawnpoints as it advertises
+            std::cout << "FATAL PLAYER SPAWN ERROR. False was returned. ERROR BYPASSED" << std::endl;
+            Sleep(500);
+            errorMessage = "FATAL PLAYER SPAWN ERROR";
+            canBeUsed = false;
+            gameStatus = GameStatuses::invalid;
+            //return;
+        }
+        Player player = Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
+        players.push_back(player);
+    }
+
+    std::cout << "GAME CAN NOW BE USED" << std::endl;
+    Sleep(1000);
+
+    canBeUsed = true;
+    gameStatus = GameStatuses::awaitingPlayers;
 }
 
 /**
@@ -194,8 +336,37 @@ Game::Game(int connectedPlayerCount, std::wstring pathToMap)
  */
 bool Game::Update()
 {
-    return false;
+    static int oldGameStatus = GameStatuses::invalid;
+    static uint8_t oldSeconds = 0;
+
+    /////////////////////////////////////////
+    // Handling game status changes
+    /////////////////////////////////////////
+    if(gameStatus != oldGameStatus)
+    {
+        // Game actually started! This is the first update frame.
+        if(oldGameStatus==GameStatuses::countdown && gameStatus==GameStatuses::playing)
+        {
+            gameDuration.Start(); // Start the timer at the top.
+        }
+        oldGameStatus = gameStatus;
+    }
+
+    ////////////////////////////////////////////
+    // Handling Game duration drawing intervals
+    ////////////////////////////////////////////
+    if(oldSeconds != gameDuration.GetClockSeconds())
+    {
+        oldSeconds = gameDuration.GetClockSeconds();
+        needToRedrawTimers = true;
+    }
+
+
+    return true;
 }
+
+
+
 
 /**
  * @brief 
@@ -210,7 +381,129 @@ bool Game::Update()
  */
 bool Game::Start()
 {
-    return false;
+    startTimer.Reset();
+    gameStatus = GameStatuses::countdown;
+    return true;
+}
+
+/**
+ * @brief 
+ * Pauses the game. This changes the status of the
+ * game according to @ref GameStatuses allowing
+ * it to freeze in time until it is @ref Resumed.
+ * @return true:
+ * Game was paused successfully
+ * @return false:
+ * Game is not started / already paused / invalid. 
+ */
+bool Game::Pause()
+{
+    if(gameStatus != GameStatuses::playing) return false;
+    gameStatus = GameStatuses::paused;
+    gameDuration.Stop();
+    return true;
+}
+
+/**
+ * @brief 
+ * Resumes the game. This changes the status of the
+ * game according to @ref GameStatuses allowing
+ * it to resume where it was in the gameplay.
+ * @warning
+ * ### This DOES NOT start a game.
+ * @return true:
+ * Game was paused successfully
+ * @return false:
+ * Game is not paused / already going / invalid. 
+ */
+bool Game::Resume()
+{
+    if((gameStatus != GameStatuses::paused) || (gameStatus != GameStatuses::awaitingConnection)) return false;
+    gameStatus = GameStatuses::playing;
+    gameDuration.Resume();
+    return true;
+}
+
+
+
+/**
+ * @brief
+ * # GetStatus
+ * @brief
+ * Returns the current state of the game as a number.
+ * The number represents one of the followings:
+ * @brief
+ * - 0: Invalid game. Corruption detected / constructor error
+ * @brief
+ * - 1: Game is waiting for all players to confirm that they are ready
+ * @brief
+ * - 2: Game is doing a countdown
+ * @brief
+ * - 3: Game is actively being played
+ * @brief
+ * - 4: Game is paused, and the pause menu is shown.
+ * @brief
+ * - 5: Game has ended.
+ * @brief
+ * - 6: Waiting for player to reconnect
+ * @return int 
+ */
+int Game::GetStatus()
+{
+    return gameStatus;
+}
+
+/**
+ * @brief
+ * # GetCountdownValue
+ * @brief
+ * Returns a number associated with the current countdown number value
+ * Values are as followed:
+ * @brief
+ * - 0: No countdown in progress
+ * @brief
+ * - 1: GO
+ * @brief
+ * - 2: 1 second
+ * @brief
+ * - 3: 2 seconds
+ * @brief
+ * - 4: 3 seconds
+ * @return int 
+ */
+int Game::GetCountdownValue()
+{
+    if(!canBeUsed) return 0;
+
+    int timeLeft = startTimer.TimeLeft();
+
+    if(gameStatus != GameStatuses::countdown)
+    {
+        return 0;
+    }
+
+    if(timeLeft > 3000)
+    {
+        return 4;
+    }
+
+    if(timeLeft > 2000)
+    {
+        return 3;
+    }
+
+    if(timeLeft > 1000)
+    {
+        return 2;
+    }
+
+    // The end of the timer was eventually reached as we attempted to read it. The game must then start.
+    if(timeLeft == 0)
+    {
+        gameStatus = GameStatuses::playing;
+    }
+
+    return 1;
 }
 
 /**
@@ -233,4 +526,329 @@ bool Game::Start()
 bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
     return false;
+}
+
+/**
+ * @brief
+ * # GetMap
+ * @brief
+ * Returns the map used inside of the @ref Game object.
+ * Its that simple.
+ * @return Map* 
+ */
+Map* Game::GetMap()
+{
+    return map;
+}
+
+/**
+ * @brief 
+ * Returns true if the Game is valid and ready to go and be played.
+ * To be valid, the game must have been constructed through the right
+ * constructor (once which specifies a @ref Map and an @ref Application reference).
+ * @return true 
+ * @return false 
+ */
+bool Game::isValidated()
+{
+    return canBeUsed;
+}
+
+
+
+
+
+Controller* Game::GetPlayerController(int playerIndex)
+{
+    if(!canBeUsed)
+    {
+        std::cout << "GAME CONSTRUCTOR ERROR: GetPlayerController: NO PLAYERS IN VECTOR" << std::endl;
+        Sleep(1000);
+        return nullptr;
+    }
+
+    if(players.size() == 0)
+    {
+        std::cout << "GAME CONSTRUCTOR ERROR: GetPlayerController: NO PLAYERS IN VECTOR... AGAIN?!?" << std::endl;
+        Sleep(1000);
+        return nullptr;
+    }
+
+    return players[playerIndex].GetController();
+}
+
+bool Game::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
+{
+    if(!canBeUsed) {std::cout << "GAME CONSTRUCTOR ERROR: AssignControllerToPlayer: NO PLAYERS IN VECTOR" << std::endl; return false;}
+    return players[playerIndex].LinkController(controllerRef);
+}
+
+bool Game::UnAssignPlayerController(int playerIndex)
+{
+    players[playerIndex].UnlinkController();
+    return true;
+}
+
+
+
+
+
+
+
+/**
+ * @brief 
+ * # NeedsRedrawing
+ * @brief
+ * Used by menus to verify if the game actually requires
+ * to be re-drawn on the terminal or not. This is done to
+ * avoid having to constantly update the terminal at frame
+ * speeds if nothing needs to be actually drawn and the
+ * old displayed characters are all still relevant.
+ * @attention
+ * The Game needs to be drawn in a @ref Menu, by calling its
+ * @ref Draw() method. You can choose to ignore this method
+ * and redraw the @ref Game anyways, but doing so too fast
+ * will cause terminal artifacts.
+ * @warning
+ * YOU MUST use @ref FreshDraw() if the terminal was previously
+ * used for other purposes than SOLELY drawing the @ref Game.
+ * @return true:
+ * The @ref Game has changed, and drawing needs to occur.
+ * @return false:
+ * The @ref Game has not changed, no drawing is needed.
+ */
+bool Game::NeedsRedrawing()
+{
+    if(!canBeUsed) return false;
+    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers;
+}
+
+/**
+ * @brief 
+ * # Draw
+ * @brief
+ * The Draw method allows a @ref Menu to print the current
+ * @ref Game in the active terminal window. This method will
+ * print player's statuses, @ref Inventories, as well as the
+ * @ref Map used in this @ref Game object.
+ * @attention
+ * This method WILL NOT print THE ENTIRE @ref Game. It only
+ * prints parts that changed since the last call of the
+ * method and that thus, needs to be updated on the screen.
+ * To draw the ENTIRE @ref Game in your terminal window, you
+ * must use the @ref FreshRedraw method.
+ * @return true:
+ * Successfully drew the game in the std::cout terminal.
+ * @return false:
+ * Failed to draw in std::cout / No drawing were necessary.
+ */
+bool Game::Draw()
+{
+    if(!canBeUsed) return false;
+
+    if(needToRedrawMap)
+    {
+        needToRedrawMap = false;
+        DrawMap();
+    }
+
+    if(needToRedrawTimers)
+    {
+        needToRedrawTimers = false;
+        DrawTimers();
+    }
+
+    if(needToRedrawInventories)
+    {
+        needToRedrawInventories = false;
+        DrawInventories();
+    }
+
+    if(needToRedrawPlayerStatus)
+    {
+        needToRedrawPlayerStatus = false;
+        DrawPlayerStatus();
+    }
+
+    return true;
+}
+
+/**
+ * @brief 
+ * # FreshDraw
+ * @brief
+ * A complete and extensive @ref Draw method. This method will
+ * re-print the complete @ref Game, along with the aesthetics
+ * that only needs to be printed once. This can be very demanding
+ * for large maps and large amount of player counts.
+ * @attention
+ * To optimize your drawing speeds and help reduce terminal
+ * artifacts, please only call this method when absolutely
+ * necessary, like when the terminal was previously used for other
+ * drawing purposes and its the first @ref Game frame. To do this
+ * use methods such as @ref Draw and @ref NeedsRedrawing.
+ * @return true:
+ * Successfully printed the @ref Game to the terminal using std::cout.
+ * @return false:
+ * Failed to print to std::cout / Game is not instanciated properly.
+ */
+bool Game::FreshDraw()
+{
+    if(!canBeUsed) return false;
+
+    auto FreshDrawPlayer = [](int playerNumber, int gameWidth){
+
+        // Centers the players cards within the borders
+        int offset = ((gameWidth-30)/2);
+
+        // Create the player's name
+        std::string playerName = "Player ";
+        if(playerNumber < 10) playerName.append("0");
+        playerName.append(std::to_string(playerNumber));
+
+        // Leading up to the area where player data is displayed.
+        ConsecutiveChar(TER, GAME_BORDER, 1, false);
+        ConsecutiveChar(TER, GAME_BACKGROUND, offset, false);
+
+        // Player name
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        PrintInColour(TER, playerName, GAME_FIELD_COLORS);
+
+        // Bomb cooldown
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_COOLDOWN, false);
+
+        // Lil status
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+
+        // Health display
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_HEALTH, false);
+
+        // Inventory
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_INVENTORY, false);
+
+        // End of the player's card.
+        ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_BORDER, 1, true);  
+    };
+
+    //###################################################
+    //# MATH DONE FOR VARIOUS PLACEMENTS AND CENTERINGS #
+    //###################################################
+
+    // Math to put the text in the middle of the screen.
+    nlohmann::json mapJSON = map->GetCurrentMap();
+    std::string mapName = mapJSON["name"];
+
+    int seperationBetweenTextAndBorder = ((gameWidth-2)-mapName.length())/2;
+    // Cant really center a name that isnt odd can you
+    if(mapName.length()%2 != 0)
+    {
+        ConsecutiveChar(TER, GAME_BACKGROUND, 1, false);
+    }
+
+    //###############################################################
+    //# TOP PORTION OF THE GAME
+    //###############################################################
+
+    // DRAW THE NAME OF THE MAP, CENTERED
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+    PrintInColour(TER, mapName, GAME_WINDOW_BACKGROUND_FG, GAME_WINDOW_BACKGROUND_BG);
+    ConsecutiveChar(TER, GAME_BACKGROUND, seperationBetweenTextAndBorder, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    // DRAW THE DIVIDER BETWEEN TITLE AND MISCS
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameTimerOffset, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_TIMER, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, gameTimerOffset, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    //DRAW THE MISC BELOW THE TITLE
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, gameTimerOffset, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+    ConsecutiveChar(TER, GAME_FIELD, GAME_FIELD_WIDTH_TIMER, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, gameTimerOffset, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    //# BOTTOM OF THE HEADER, LEAVING 1 BLACK EMPTY SPACE BEFORE MAP#
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+    ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
+
+
+    //###############################################################
+    //# MAP PORTION, leaving 1 black line below it.                 #
+    //###############################################################
+    DrawMap();
+    ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
+
+    //###############################################################
+    //# Player stats portion                                        #
+    //###############################################################
+
+    // Border before the chaos
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+
+    // TOP DIVIDER
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_TL_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_PLAYER_NAME, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_COOLDOWN, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_HEALTH, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_B_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_INVENTORY, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_TR_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+    // ALL PLAYER CARDS. AS MANY AS THERE IS PLAYERS FOR THIS GAME
+    for(int playerIndex = 0; playerIndex < map->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
+    {
+        FreshDrawPlayer(playerIndex, gameWidth);
+    }
+
+    // BOTTOM DIVIDER
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_BL_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_PLAYER_NAME, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_COOLDOWN, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_BOMB_STATUS, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_HEALTH, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_T_JUNCTION, 1, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_HORIZONTAL, GAME_FIELD_WIDTH_INVENTORY, false);
+    ConsecutiveChar(TER, GAME_DIVIDER_BR_CORNER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, playerCardOffsetX, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+
+   // Border after the chaos
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+
+    DrawGameHeader();
+    DrawTimers();
+    DrawInventories();
+    DrawPlayerStatus();
+
+    needToRedrawInventories = false;
+    needToRedrawMap = false;
+    needToRedrawPlayerStatus = false;
+    needToRedrawTimers = false;
+    return true;
 }
