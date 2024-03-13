@@ -33,14 +33,19 @@ class BarGraph
          * Array which contains all the LED object
          * that makes up this bar graph
          */
-        LED Leds[10];
+        LED *Leds[10];
         /**
          * @brief 
          * Value that represents all the LEDs of that bar graph.
          */
-        int bits;
+        int bits = 0;
+
+        bool canBeUsed = false;
 
     public:
+
+        BarGraph();
+
         /**
          * @brief Construct a new Bar Graph object
          * Builds a new bar graph while specifying

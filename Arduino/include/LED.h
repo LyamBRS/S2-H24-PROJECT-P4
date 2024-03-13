@@ -36,7 +36,12 @@ class LED
         /// @brief Specifies if the LED is on with a LOW value. Defaults to false (ON with a HIGH value)
         bool isInverted = false;
 
+        bool canBeUsed = false;
+
     public:
+
+        LED();
+
         /**
          * @brief Construct a new LED object.
          * Only sets the arduino pin associated with

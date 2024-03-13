@@ -15,13 +15,44 @@
 
 // - INCLUDES - //
 #include <iostream>
-#include "../Object/Object.hpp"
+#include "../BaseObject/BaseObject.hpp"
 #include "../Controller/Controller.h"
 #include "../PowerUp/PowerUp.h"
+#include "../Colour/Colour.h"
+#include "../SimpleTimer/SimpleTimer.h"
+#include <windows.h>
 
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
 #define PLAYER_BASE_BOMB_PLACEMENT_TIMER 2000
+#define boutonBombe 1
+
+#define PLAYER_A_COLOR colors::electric
+#define PLAYER_B_COLOR colors::yellow
+#define PLAYER_C_COLOR colors::leaf
+#define PLAYER_D_COLOR colors::aqua
+
+#define PLAYER_KEY_SELECT       joystickButton
+#define PLAYER_KEY_Y_AXIS       joystickX
+#define PLAYER_KEY_X_AXIS       joystickY
+#define PLAYER_KEY_INV_LEFT     leftButton
+#define PLAYER_KEY_INV_RIGHT    rightButton
+#define PLAYER_KEY_USE_PWR      topButton
+#define PLAYER_KEY_DISCARD_PWR  bottomButton
+
+#define PLAYER_LOCAL_SELECT       controllerRef->PLAYER_CONTROLLER_SELECT
+#define PLAYER_LOCAL_Y_AXIS       controllerRef->PLAYER_CONTROLLER_Y_AXIS
+#define PLAYER_LOCAL_X_AXIS       controllerRef->PLAYER_CONTROLLER_X_AXIS
+#define PLAYER_LOCAL_INV_LEFT     controllerRef->PLAYER_CONTROLLER_INV_LEFT
+#define PLAYER_LOCAL_INV_RIGHT    controllerRef->PLAYER_CONTROLLER_INV_RIGHT
+#define PLAYER_LOCAL_USE_PWR      controllerRef->PLAYER_CONTROLLER_USE_PWR
+#define PLAYER_LOCAL_DISCARD_PWR  controllerRef->PLAYER_CONTROLLER_DISCARD_PWR
+
+#define PLAYER_CONTROLLER_THRESHOLD 30
+
+// - FUNCTION - //
+int GetPlayerColor(unsigned int playerNumber);
+
 // - CLASS - //
 
 /**
@@ -36,7 +67,7 @@
  * have their own colours and ascii representation
  * on the screen.
  */
-class Player : public Object
+class Player : BaseObject
 {
     private:
         /// @brief How much more until this bastards die? 0-100
@@ -51,6 +82,11 @@ class Player : public Object
         bool wantsToUseSelectedItem = false;
         /// @brief Simply says if the player is alive rn or not.
         bool isAlive = true;
+
+        /// @brief Linked to a real controller.
+        Controller* controllerRef = new Controller();
+
+        SimpleTimer bombPlacement = SimpleTimer(3000);
 
     public:
 
@@ -74,7 +110,7 @@ class Player : public Object
          * @param wantdColour
          * What colour should the player be?
          */
-        Player(int initialX, int initialY, std::string wantedAscii, char wantdColour);
+        Player(int initialX, int initialY, std::string wantedAscii, int wantedColour);
 
         /**
          * @brief
@@ -143,6 +179,10 @@ class Player : public Object
          */
         bool GiveDamage(int damagePoints);
 
+        bool LinkController(Controller* newControllerReference);
+        bool UnlinkController();
+        Controller* GetController();
+
         /**
          * @brief
          * # UpdateFromController
@@ -154,16 +194,13 @@ class Player : public Object
          * selected item etc.
          * @attention
          * ## THIS DON'T CHANGE PLAYER'S POSITIONS. aight?
-         * @param controller
-         * Reference to the controller associated with the
-         * plyer.
          * @return true:
          * Successfully updated the player's attributes
          * based on the referenced controller. 
          * @return false:
          * Failed to update the player's attributes.
          */
-        bool UpdateFromController(Controller* controller);
+        bool UpdateFromController();
 
         /**
          * @brief
@@ -194,4 +231,15 @@ class Player : public Object
          * Failed to remove the power up.
          */
         bool RemoveSelectedPowerUp();
+
+        /**
+         * @brief 
+         * Tells if that specific player's controller is currently
+         * connected or not.
+         * @return true:
+         * Is connected
+         * @return false:
+         * Is not connected 
+         */
+        bool IsConnected();
 };
