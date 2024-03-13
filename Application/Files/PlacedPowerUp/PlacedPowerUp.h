@@ -16,6 +16,8 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../BaseObject/BaseObject.hpp"
+#include "../PowerUp/PowerUp.hpp"
+
 // - DEFINES - //
 #define POWERUP_DESPAWN_TIMER_VALUE 10000
 
@@ -91,4 +93,6 @@ class PlacedPowerUp : public BaseObject
          * Nah, it should stay
          */
         bool ShouldBeDeleted();
+
+        int GetType();
 };

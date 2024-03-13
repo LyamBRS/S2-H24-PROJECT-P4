@@ -32,11 +32,11 @@
  */
 struct PowerUpID
 {
-    unsigned int powerUpAName = 0b0000'0000'0000'0000;
-    unsigned int powerUpBName = 0b0001'0000'0000'0000;
-    unsigned int powerUpCName = 0b0010'0000'0000'0000;
-    unsigned int powerUpDName = 0b0011'0000'0000'0000;
-    unsigned int powerUpEName = 0b0100'0000'0000'0000;
+    unsigned int vitesse = 0b0000'0000'0000'0000;
+    unsigned int soin = 0b0001'0000'0000'0000;
+    unsigned int grosseBombe = 0b0010'0000'0000'0000;
+    unsigned int tresGrosseBombe = 0b0011'0000'0000'0000;
+    unsigned int augmentationDegat = 0b0100'0000'0000'0000;
     unsigned int powerUpFName = 0b0101'0000'0000'0000;
     unsigned int powerUpGName = 0b0111'0000'0000'0000;
     unsigned int powerUpHName = 0b1000'0000'0000'0000;
@@ -76,4 +76,18 @@ class PowerUp
          * from?
          */
         PowerUp(PlacedPowerUp* powerUpToPickUp);
+        
+        /**
+         * @brief 
+         * return the binary number from PowerUpID
+         * Uses the type from PlacedPowerUP
+         */
+        unsigned int getPowerUpValue(int type);
+
+        
+        std::string getDescription();
+        void setDescription(std::string nom);
+
+        int getType();
+
 };
