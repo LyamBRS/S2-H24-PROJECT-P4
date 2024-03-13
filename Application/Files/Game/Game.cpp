@@ -295,14 +295,27 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
     inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
 
+    // Create as much players as there is for that specific map.
+    for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
+    {
+        unsigned int initialPosX = 0;
+        unsigned int initialPosY = 0;
+
+        if(!map->GetASpawnPosition(playerIndex, &initialPosX, &initialPosY))
+        {
+            // Map does not have as much spawnpoints as it advertises
+            std::cout << "FATAL PLAYER SPAWN ERROR. False was returned. ERROR BYPASSED" << std::endl;
+            Sleep(500);
+            errorMessage = "FATAL PLAYER SPAWN ERROR";
+            canBeUsed = false;
+            gameStatus = GameStatuses::invalid;
+            //return;
+        }
+        Player* player = new Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
+    }
+
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
-
-    // Create as much players as there is for that specific map.
-    //for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
-    //{
-    //    //Player* player = new Player()
-    //}
 }
 
 /**

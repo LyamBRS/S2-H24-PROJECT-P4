@@ -28,7 +28,7 @@
 
 #define PLAYER_A_COLOR colors::electric
 #define PLAYER_B_COLOR colors::yellow
-#define PLAYER_C_COLOR colors::lime
+#define PLAYER_C_COLOR colors::leaf
 #define PLAYER_D_COLOR colors::aqua
 
 #define PLAYER_KEY_SELECT       controllerRef->joystickButton
@@ -40,6 +40,9 @@
 #define PLAYER_KEY_DISCARD_PWR  controllerRef->bottomButton
 
 #define PLAYER_CONTROLLER_THRESHOLD 30
+
+// - FUNCTION - //
+int GetPlayerColor(unsigned int playerNumber);
 
 // - CLASS - //
 
@@ -98,7 +101,7 @@ class Player : BaseObject
          * @param wantdColour
          * What colour should the player be?
          */
-        Player(int initialX, int initialY, std::string wantedAscii, char wantdColour);
+        Player(int initialX, int initialY, std::string wantedAscii, int wantedColour);
 
         /**
          * @brief
@@ -166,6 +169,12 @@ class Player : BaseObject
          * The player cant take damages at the moment.
          */
         bool GiveDamage(int damagePoints);
+
+        bool LinkController(Controller* newControllerReference)
+        {
+            controllerRef = newControllerReference;
+            return true;
+        }
 
         /**
          * @brief

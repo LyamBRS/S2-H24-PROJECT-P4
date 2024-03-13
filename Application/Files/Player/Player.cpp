@@ -25,13 +25,25 @@
 // - INCLUDES - //
 #include "Player.h"
 
-// - PRORGAM - //
-Player::Player(int initialX, int initialY, std::string wantedAscii, char wantdColour) : BaseObject()
+int GetPlayerColor(unsigned int playerNumber)
 {
-    //position.SetNewCoordinates(initialX, initialY);
-    //movement.SetDeltas(0, 0);
-    //displayAttributes.Ascii(wantedAscii);
-    //displayAttributes.Colour(wantedColour);
+    switch(playerNumber)
+    {
+        case(1): return PLAYER_A_COLOR;
+        case(2): return PLAYER_B_COLOR;
+        case(3): return PLAYER_C_COLOR;
+        case(4): return PLAYER_D_COLOR;
+    }
+    return colors::red;
+}
+
+// - PRORGAM - //
+Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedColour) : BaseObject()
+{
+    position.SetNewCoordinates(initialX, initialY);
+    movement.SetDeltas(0, 0);
+    displayAttributes.Ascii(wantedAscii);
+    displayAttributes.Colour(wantedColour);
 }
 
 bool Player::PlacedABomb()
