@@ -145,6 +145,7 @@
     <ClCompile Include="Files\Application\AppHandler.cpp" />
     <ClCompile Include="Files\Application\Application.cpp" />
     <ClCompile Include="Files\Arduino\Arduino.cpp" />
+    <ClCompile Include="Files\BaseObject\BaseObject.cpp" />
     <ClCompile Include="Files\Menus\ArduinoMenu.cpp" />
     <ClCompile Include="BomberMan.cpp" />
     <ClCompile Include="Files\Colour\Colour.cpp" />
@@ -159,7 +160,6 @@
     <ClCompile Include="Files\Menus\MapMenu.cpp" />
     <ClCompile Include="Files\Menus\Menu.cpp" />
     <ClCompile Include="Files\Movements\Movements.cpp" />
-    <ClCompile Include="Files\Object\Object.cpp" />
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
     <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
     <ClCompile Include="Files\Player\Player.cpp" />
@@ -194,6 +194,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
     <ClInclude Include="Files\Menus\GameMenu.h" />
     <ClInclude Include="Files\SimpleTimer\SimpleChrono.h" />
   </ItemGroup>

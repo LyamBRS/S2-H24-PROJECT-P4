@@ -15,14 +15,31 @@
 
 // - INCLUDES - //
 #include <iostream>
-#include "../Object/Object.hpp"
+#include "../BaseObject/BaseObject.hpp"
 #include "../Controller/Controller.h"
 #include "../PowerUp/PowerUp.h"
+#include "../Colour/Colour.h"
+#include "../SimpleTimer/SimpleTimer.h"
 
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
 #define PLAYER_BASE_BOMB_PLACEMENT_TIMER 2000
 #define boutonBombe 1
+
+#define PLAYER_A_COLOR colors::electric
+#define PLAYER_B_COLOR colors::yellow
+#define PLAYER_C_COLOR colors::lime
+#define PLAYER_D_COLOR colors::aqua
+
+#define PLAYER_KEY_SELECT       controllerRef->joystickButton
+#define PLAYER_KEY_Y_AXIS       controllerRef->joystickX
+#define PLAYER_KEY_X_AXIS       controllerRef->joystickY
+#define PLAYER_KEY_INV_LEFT     controllerRef->leftButton
+#define PLAYER_KEY_INV_RIGHT    controllerRef->rightButton
+#define PLAYER_KEY_USE_PWR      controllerRef->topButton
+#define PLAYER_KEY_DISCARD_PWR  controllerRef->bottomButton
+
+#define PLAYER_CONTROLLER_THRESHOLD 30
 
 // - CLASS - //
 
@@ -38,7 +55,7 @@
  * have their own colours and ascii representation
  * on the screen.
  */
-class Player : public Object
+class Player : BaseObject
 {
     private:
         /// @brief How much more until this bastards die? 0-100
@@ -53,19 +70,11 @@ class Player : public Object
         bool wantsToUseSelectedItem = false;
         /// @brief Simply says if the player is alive rn or not.
         bool isAlive = true;
-        int joystickX = 0;
-        int joystickY = 0;
-        bool joystickButton = false;
-        bool topButton = false;
-        bool bottomButton = false;
-        bool leftButton = false;
-        bool rightButton = false;
-        int SentBarGraphBits = 0;
-        int ReceivedBarGraphBits = 0;
-        int accelerometerX = 0;
-        int accelerometerY = 0;
-        int accelerometerZ = 0;
-        bool isConnected = false;
+
+        /// @brief Linked to a real controller.
+        Controller* controllerRef = new Controller();
+
+        SimpleTimer bombPlacement = SimpleTimer(3000);
 
     public:
 
@@ -169,16 +178,13 @@ class Player : public Object
          * selected item etc.
          * @attention
          * ## THIS DON'T CHANGE PLAYER'S POSITIONS. aight?
-         * @param controller
-         * Reference to the controller associated with the
-         * plyer.
          * @return true:
          * Successfully updated the player's attributes
          * based on the referenced controller. 
          * @return false:
          * Failed to update the player's attributes.
          */
-        bool UpdateFromController(Controller* controller);
+        bool UpdateFromController();
 
         /**
          * @brief
@@ -209,4 +215,15 @@ class Player : public Object
          * Failed to remove the power up.
          */
         bool RemoveSelectedPowerUp();
+
+        /**
+         * @brief 
+         * Tells if that specific player's controller is currently
+         * connected or not.
+         * @return true:
+         * Is connected
+         * @return false:
+         * Is not connected 
+         */
+        bool IsConnected();
 };

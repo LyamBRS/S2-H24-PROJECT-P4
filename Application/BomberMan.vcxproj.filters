@@ -67,9 +67,6 @@
     <ClCompile Include="Files\Movements\Movements.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Files\Object\Object.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -115,6 +112,9 @@
     <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\BaseObject\BaseObject.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -131,5 +131,6 @@
     <ClInclude Include="Files\SimpleTimer\SimpleChrono.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
+    <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
   </ItemGroup>
 </Project>
