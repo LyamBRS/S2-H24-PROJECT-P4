@@ -129,8 +129,8 @@ bool Map::SetMapName(std::string newName)
 
 bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY)
 {
-	*resultedX = 0;
-	*resultedY = 0;
+	*resultedX = -1;
+	*resultedY = -1;
 	int nbfound = 0;
 	TileTypes looking = TileTypes::PLAYERSPAWN;
 
