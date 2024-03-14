@@ -62,6 +62,7 @@ bool Game::SelfCheck()
  */
 bool Game::DrawMap()
 {
+    SetTerminalCursorPosition(0, GAME_CURSOR_MAP_Y);
     return map->Draw();
 }
 
@@ -77,7 +78,28 @@ bool Game::DrawInventories()
 
 bool Game::DrawPlayerStatus()
 {
-    return false;
+    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    {
+        SetTerminalCursorPosition(bombStatusCursorX, playerCardStartY + playerIndex);
+
+        // That player is no longer connected.
+        if(!players[playerIndex].GetController()->isConnected)
+        {
+            PrintInColour(TER, "!", colors::white, colors::red);
+        }
+        // That player is out of health. He dead as hell.
+        else if(players[playerIndex].Health() == 0)
+        {
+            PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
+        }
+        // That player is on cooldown
+        else
+        {
+            PrintInColour(TER, "C", colors::lightred, colors::red);
+        }
+    }
+
+    return true;
 }
 
 bool Game::DrawTimers()
@@ -129,6 +151,25 @@ bool Game::DrawTimers()
  */
 bool Game::HandleNextMouvements()
 {
+    int mapX = map->GetCurrentMap()["sizeX"];
+    int mapY = map->GetCurrentMap()["sizeY"];
+
+    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    {
+        int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
+        int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
+
+        int playerX = players[playerIndex].GetCurrentCoordinates()->X();
+        int playerY = players[playerIndex].GetCurrentCoordinates()->Y();
+
+        // Test for wall in front of player
+        int testX = playerX + xVelocity;
+        int testY = playerY + yVelocity;
+
+        if(testX < 0) testX=0;
+        if(testY < 0) testY=0;
+
+    }
     return false;
 }
 
@@ -295,6 +336,8 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
     inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
 
+    playerCardStartY = 6 + mapSizeY + 4;
+
     // Create as much players as there is for that specific map.
     for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
     {
@@ -314,6 +357,8 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
         Player player = Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
         players.push_back(player);
     }
+
+    gameHeight = 6 + mapSizeY + 2 + amountOfPlayers;
 
     std::cout << "GAME CAN NOW BE USED" << std::endl;
     Sleep(1000);
@@ -694,7 +739,16 @@ bool Game::Draw()
  */
 bool Game::FreshDraw()
 {
+    ResizeTerminal(gameWidth-1, gameHeight-1);
     if(!canBeUsed) return false;
+
+    // Terminal needs to be resized to proper dimensions
+    static bool doOnce = false;
+    if(!doOnce)
+    {
+        ResizeTerminal(gameWidth, gameHeight);
+        doOnce = false;
+    }
 
     auto FreshDrawPlayer = [](int playerNumber, int gameWidth){
 
@@ -732,6 +786,7 @@ bool Game::FreshDraw()
 
         // End of the player's card.
         ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
+        ConsecutiveChar(TER, GAME_BACKGROUND, offset, false);
         ConsecutiveChar(TER, GAME_BORDER, 1, true);  
     };
 

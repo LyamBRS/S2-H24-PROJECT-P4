@@ -192,3 +192,17 @@ Controller* Player::GetController()
 {
     return controllerRef;
 }
+
+// Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+Movements* Player::GetVelocity()
+{
+    return &movement;
+}
+
+// Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+Positions* Player::GetCurrentCoordinates()
+{
+    return &position;
+}
+
+

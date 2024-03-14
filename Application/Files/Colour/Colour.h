@@ -92,6 +92,8 @@ void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundCol
 
 void SetTerminalCursorPosition(int row, int column);
 
+void ResizeTerminal(int row, int column);
+
 /**
  * @brief 
  * # ConsecutiveChar

@@ -18,6 +18,7 @@
 
 bool TestMenu::DrawNoArduinoMenu()
 {
+    ResizeTerminal(36, 6);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -37,6 +38,7 @@ bool TestMenu::DrawNoArduinoMenu()
 
 bool TestMenu::DrawMainTestMenu()
 {
+    ResizeTerminal(36, 9);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -83,6 +85,7 @@ bool TestMenu::DrawMainTestMenu()
 
 bool TestMenu::DrawLCDTestMenu()
 {
+    ResizeTerminal(36, 10);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -138,6 +141,7 @@ bool TestMenu::DrawLCDTestMenu()
 
 bool TestMenu::DrawBarGraphTestMenu()
 {
+    ResizeTerminal(36, 13);
     auto drawABarGraph = [](int bargraphBits)
     {
         for(int i=0; i<10; ++i)
@@ -265,6 +269,7 @@ bool TestMenu::DrawBarGraphTestMenu()
 
 bool TestMenu::DrawReceivedMessageMenuKeyboard()
 {
+    ResizeTerminal(80, 40);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -282,6 +287,7 @@ bool TestMenu::DrawReceivedMessageMenuKeyboard()
 
 bool TestMenu::DrawControllerMenu()
 {
+    ResizeTerminal(36, 200);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;

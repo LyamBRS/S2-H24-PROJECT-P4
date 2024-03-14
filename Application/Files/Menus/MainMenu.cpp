@@ -70,8 +70,10 @@ bool MainMenu::Draw()
     if(oldSelection != appRef->currentSelectedMenu)
     {
         oldSelection = appRef->currentSelectedMenu;
+        ResizeTerminal(36, 12);
         system("cls");
     }
+    ResizeTerminal(36, 12);
     SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;

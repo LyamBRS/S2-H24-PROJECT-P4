@@ -121,54 +121,62 @@ std::string GetMapError(Map* mapObject)
 
 std::string GetMapJsonError(nlohmann::json mapJSON)
 {
-    // Check if any JSON was returned.
-    if(mapJSON == nullptr)  {return EM_MAP_NO_JSON_GIVEN;}
+    try
+    {
+        // Check if any JSON was returned.
+        if(mapJSON == nullptr)  {return EM_MAP_NO_JSON_GIVEN;}
+    
+        // Check if the overall JSON is corrupted or not.
+        if(mapJSON.is_discarded())  {return EM_MAP_CORRUPTED_MAP;}
 
-    // Check if the overall JSON is corrupted or not.
-    if(mapJSON.is_discarded())  {return EM_MAP_CORRUPTED_MAP;}
+        // Check if all the needed attributes exists in that JSON file.
+        if(mapJSON.find("name")             == mapJSON.end())    {return EM_MAP_MISSING_MAP_NAME;}
+        if(mapJSON.find("sizeX")            == mapJSON.end())    {return EM_MAP_MISSING_MAP_SIZEX;}
+        if(mapJSON.find("sizeY")            == mapJSON.end())    {return EM_MAP_MISSING_MAP_SIZEY;}
+        if(mapJSON.find("amountOfPlayers")  == mapJSON.end())    {return EM_MAP_MISSING_MAP_AOP;}
+        if(mapJSON.find("map")              == mapJSON.end())    {return EM_MAP_MISSING_MAP_MAP;}
 
-    // Check if all the needed attributes exists in that JSON file.
-    if(mapJSON.find("name")             == mapJSON.end())    {return EM_MAP_MISSING_MAP_NAME;}
-    if(mapJSON.find("sizeX")            == mapJSON.end())    {return EM_MAP_MISSING_MAP_SIZEX;}
-    if(mapJSON.find("sizeY")            == mapJSON.end())    {return EM_MAP_MISSING_MAP_SIZEY;}
-    if(mapJSON.find("amountOfPlayers")  == mapJSON.end())    {return EM_MAP_MISSING_MAP_AOP;}
-    if(mapJSON.find("map")              == mapJSON.end())    {return EM_MAP_MISSING_MAP_MAP;}
+        if(mapJSON["name"].is_null())               {return EM_MAP_MISSING_MAP_NAME;}
+        if(mapJSON["sizeX"].is_null())              {return EM_MAP_MISSING_MAP_SIZEX;}
+        if(mapJSON["sizeY"].is_null())              {return EM_MAP_MISSING_MAP_SIZEY;}
+        if(mapJSON["amountOfPlayers"].is_null())    {return EM_MAP_MISSING_MAP_AOP;}
+        if(mapJSON["map"].is_null())                {return EM_MAP_MISSING_MAP_MAP;}
 
-    if(mapJSON["name"].is_null())               {return EM_MAP_MISSING_MAP_NAME;}
-    if(mapJSON["sizeX"].is_null())              {return EM_MAP_MISSING_MAP_SIZEX;}
-    if(mapJSON["sizeY"].is_null())              {return EM_MAP_MISSING_MAP_SIZEY;}
-    if(mapJSON["amountOfPlayers"].is_null())    {return EM_MAP_MISSING_MAP_AOP;}
-    if(mapJSON["map"].is_null())                {return EM_MAP_MISSING_MAP_MAP;}
+        // - Check if the attributes presented are of the right type.
+        auto& amountOfPlayers = mapJSON["amountOfPlayers"];
+        auto& name = mapJSON["name"];
+        auto& sizeX = mapJSON["sizeX"];
+        auto& sizeY = mapJSON["sizeY"];
+        auto& mapArray = mapJSON["map"];
 
-    // - Check if the attributes presented are of the right type.
-    auto& amountOfPlayers = mapJSON["amountOfPlayers"];
-    auto& name = mapJSON["name"];
-    auto& sizeX = mapJSON["sizeX"];
-    auto& sizeY = mapJSON["sizeY"];
-    auto& mapArray = mapJSON["map"];
-
-    if(!amountOfPlayers.is_number_integer())    {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
-    if(!name.is_string())                       {return EM_MAP_MAP_VALUE_WRONG_TYPE; }
-    if(!sizeX.is_number_integer())              {return EM_MAP_MAP_VALUE_WRONG_TYPE; }
-    if(!sizeY.is_number_integer())              {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
-    if(!mapArray.is_array())                    {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
+        if(!amountOfPlayers.is_number_integer())    {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
+        if(!name.is_string())                       {return EM_MAP_MAP_VALUE_WRONG_TYPE; }
+        if(!sizeX.is_number_integer())              {return EM_MAP_MAP_VALUE_WRONG_TYPE; }
+        if(!sizeY.is_number_integer())              {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
+        if(!mapArray.is_array())                    {return EM_MAP_MAP_VALUE_WRONG_TYPE;}
 
 
-    // - Check if the values are valid.
-    if(mapJSON["amountOfPlayers"] < 2)   {return EM_MAP_WRONG_AMOUNT_OF_PLAYERS;}
-    if(mapJSON["sizeX"] < 5)             {return EM_MAP_INVALID_MAP_SIZE;}
-    if(mapJSON["sizeY"] < 5)             {return EM_MAP_INVALID_MAP_SIZE;}
-    if(mapJSON["sizeX"] > 99)            {return EM_MAP_INVALID_MAP_SIZE;}
-    if(mapJSON["sizeY"] > 99)            {return EM_MAP_INVALID_MAP_SIZE;}
+        // - Check if the values are valid.
+        if(mapJSON["amountOfPlayers"] < 2)   {return EM_MAP_WRONG_AMOUNT_OF_PLAYERS;}
+        if(mapJSON["sizeX"] < 5)             {return EM_MAP_INVALID_MAP_SIZE;}
+        if(mapJSON["sizeY"] < 5)             {return EM_MAP_INVALID_MAP_SIZE;}
+        if(mapJSON["sizeX"] > 99)            {return EM_MAP_INVALID_MAP_SIZE;}
+        if(mapJSON["sizeY"] > 99)            {return EM_MAP_INVALID_MAP_SIZE;}
 
-    // Checking if MAP sizes actually corresponds to specified sizes.
-    if(mapArray.size() != mapJSON["sizeY"])  {return EM_MAP_INCORRECT_Y_SIZE;}
+        // Checking if MAP sizes actually corresponds to specified sizes.
+        if(mapArray.size() != mapJSON["sizeY"])  {return EM_MAP_INCORRECT_Y_SIZE;}
 
-    // Checks, but for X axis ong ong
-    for (const auto& row : mapArray) {
-        if (!row.is_array() || row.size() != mapJSON["sizeX"]) {
-            return EM_MAP_INCORRECT_Y_SIZE;
+        // Checks, but for X axis ong ong
+        for (const auto& row : mapArray) {
+            if (!row.is_array() || row.size() != mapJSON["sizeX"]) {
+                return EM_MAP_INCORRECT_Y_SIZE;
+            }
         }
+    }
+    catch(const nlohmann::json::exception& e)
+    {
+        //std::cerr << e.what() << '\n';
+        return EM_MAP_CORRUPTED_MAP;
     }
     return EM_MAP_NO_ERROR;
 }

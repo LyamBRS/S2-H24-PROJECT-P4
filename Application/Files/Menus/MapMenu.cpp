@@ -53,7 +53,8 @@ bool MapMenu::Draw()
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
     amountOfMaps = allMaps.size();
-
+    
+    ResizeTerminal(100, 100);
     system("cls");
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Map selection -             " << std::endl;

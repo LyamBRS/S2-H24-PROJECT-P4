@@ -81,6 +81,7 @@
 #define GAME_FIELD_WIDTH_INVENTORY 5
 
 #define GAME_CURSOR_GAMETIMER_Y 3
+#define GAME_CURSOR_MAP_Y 6
 
 #define TER std::cout
 
@@ -154,8 +155,9 @@ class Game
 
         int gameStatus = 0;
         int gameWidth = 0;
+        int gameHeight = 0;
 
-
+        int playerCardStartY = 0;
         int gameTimerOffset = 0;
         int playerCardOffsetX = 0;
         int firstPlayerCardY = 0;

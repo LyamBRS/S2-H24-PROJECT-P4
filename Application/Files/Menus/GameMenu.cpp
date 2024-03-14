@@ -273,6 +273,8 @@ bool GameMenu::DrawInvalid()
 
 bool GameMenu::DrawWaitingForStart()
 {
+    ResizeTerminal(36, 7 + currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]);
+
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
         ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);
@@ -491,6 +493,7 @@ bool GameMenu::DrawGame()
 
 bool GameMenu::DrawStart()
 {
+    ResizeTerminal(36, 14);
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
         ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);

@@ -242,4 +242,9 @@ class Player : BaseObject
          * Is not connected 
          */
         bool IsConnected();
+
+        // Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+        Movements* GetVelocity();
+
+        Positions* GetCurrentCoordinates();
 };
