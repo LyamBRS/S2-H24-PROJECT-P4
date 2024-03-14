@@ -90,17 +90,7 @@ bool VerifyMap(std::string path);
 bool TileIsWalkable(TileTypes tile);
 
 
- /**
-  * @brief
-  * # Check return the tile position of the player in param
-  * @brief
-  * return x and y of where
-  * Return false if the tile is not walkable
-  * full list is available as defines in @ref Utils.hpp
-  * @return std::string
-  */
-
-get player tile;
+bool checkIfTileIsPlayer(TileTypes tile);
 
 std::vector<nlohmann::json> GetAllMaps();
 nlohmann::json GetMapJson(std::string path);

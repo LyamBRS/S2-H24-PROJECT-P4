@@ -17,6 +17,8 @@
 #include <iostream>
 #include "../JSON/json.hpp"
 #include "../Colour/Colour.h"
+#include <map>
+
 // - DEFINES - //
 
 
@@ -222,10 +224,15 @@ enum class TileTypes
     PERMAWALL,
     WALL,
     PLAYERSPAWN,
-    PLAYER,
     SMOKE,
     POWER,
+    PLAYER1,
+    PLAYER2,
+    PLAYER3,
+    PLAYER4,
+    BOMB,
 };
+
 
 class Map
 {
@@ -244,8 +251,23 @@ class Map
         int amountOfPlayer = 0;
         /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
         nlohmann::json storedMapData;
+        
+        std::map<TileTypes, std::string> tileChar = 
+        {
+            { TileTypes::EMPTY, " . "},
+            { TileTypes::PERMAWALL, "   "},
+            { TileTypes::WALL, "###"},
+            { TileTypes::PLAYERSPAWN, " \x0f "},
+            { TileTypes::SMOKE, "&%&"},
+            { TileTypes::POWER, " + "},
+            { TileTypes::PLAYER1, " @ "},
+            { TileTypes::PLAYER2, " @ "},
+            { TileTypes::PLAYER3, " @ "},
+            { TileTypes::PLAYER4, " @ "},
+            { TileTypes::BOMB, " \x0f "},
+        };   
 
-    public:
+    public:              
         int GetSizeX();
         int GetSizeY();
         int GetAmountOfPlayer();

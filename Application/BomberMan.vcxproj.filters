@@ -132,5 +132,6 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
+    <ClInclude Include="Files\Map\Utils.hpp" />
   </ItemGroup>
 </Project>

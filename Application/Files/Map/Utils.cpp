@@ -17,6 +17,15 @@
 // - PROGRAM - //
 
 
+bool checkIfTileIsPlayer(TileTypes tile)
+{
+    if (tile == TileTypes::PLAYER1 || tile == TileTypes::PLAYER2 ||
+        tile == TileTypes::PLAYER3 || tile == TileTypes::PLAYER4) {
+        return true;
+    }
+    return false;
+}
+
 std::vector<nlohmann::json> GetAllMaps()
 {
     std::vector<nlohmann::json> allFoundMaps;
@@ -88,7 +97,19 @@ bool TileIsWalkable(TileTypes tile)
     case TileTypes::PLAYERSPAWN:
         return true;
         break;
-    case TileTypes::PLAYER:
+    case TileTypes::PLAYER1:
+        return true;
+        break;
+    case TileTypes::PLAYER2:
+        return true;
+        break;
+    case TileTypes::PLAYER3:
+        return true;
+        break;
+    case TileTypes::PLAYER4:
+        return true;
+        break;
+    case TileTypes::BOMB:
         return true;
         break;
     case TileTypes::SMOKE:
@@ -98,6 +119,7 @@ bool TileIsWalkable(TileTypes tile)
         return true;
         break;
     default:
+        return false;
         break;
     }
 }

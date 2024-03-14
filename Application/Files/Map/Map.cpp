@@ -61,22 +61,22 @@ bool Map::Draw()
 			switch (map[i][j])
 			{
 				case TileTypes::EMPTY:
-					PrintInColour(std::cout, Empty, colors::grey, colors::black);
+					PrintInColour(std::cout, tileChar[TileTypes::EMPTY], colors::grey, colors::black);
 					break;
 				case TileTypes::PERMAWALL:
-					PrintInColour(std::cout, PermaWall, colors::grey, colors::grey);
+					PrintInColour(std::cout, tileChar[TileTypes::PERMAWALL], colors::grey, colors::grey);
 					break;
 				case TileTypes::WALL:
-					PrintInColour(std::cout, Wall, colors::grey, colors::black);
+					PrintInColour(std::cout, tileChar[TileTypes::WALL], colors::grey, colors::black);
 					break;
 				case TileTypes::PLAYERSPAWN:
-					PrintInColour(std::cout, PlayerSpawn, colors::red, colors::black);
+					PrintInColour(std::cout, tileChar[TileTypes::PLAYERSPAWN], colors::red, colors::black);
 					break;
 				case TileTypes::SMOKE:
-					PrintInColour(std::cout, Smoke, colors::grey, colors::black);
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE], colors::grey, colors::black);
 					break;
 				case TileTypes::POWER:
-					PrintInColour(std::cout, Power, colors::yellow, colors::black);
+					PrintInColour(std::cout, tileChar[TileTypes::POWER], colors::yellow, colors::black);
 					break;
 			}
 		}
