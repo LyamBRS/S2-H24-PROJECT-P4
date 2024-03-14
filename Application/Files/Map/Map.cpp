@@ -7,11 +7,32 @@
 
  // - CLASS - //
 
+int Map::GetSizeX()
+{
+	return sizeX;
+}
+
+int Map::GetSizeY()
+{
+	return sizeY;
+}
+
+int Map::GetAmountOfPlayer()
+{
+	return amountOfPlayer;
+}
+
+std::string Map::GetName()
+{
+	return mapName;
+}
+
 Map::Map(nlohmann::json MapData)
 {
 	storedMapData = MapData;
 	sizeX = MapData["sizeX"];
 	sizeY = MapData["sizeY"];
+	amountOfPlayer = MapData["amountOfPlayers"];
 	mapName = MapData["name"];
 	mapAsString = "NOT IMPLEMENTED";
 	for (int i = 0; i < sizeY; ++i) {
@@ -44,7 +65,6 @@ bool Map::Draw()
 					break;
 				case TileTypes::PERMAWALL:
 					PrintInColour(std::cout, PermaWall, colors::grey, colors::grey);
-					
 					break;
 				case TileTypes::WALL:
 					PrintInColour(std::cout, Wall, colors::grey, colors::black);
@@ -59,8 +79,6 @@ bool Map::Draw()
 					PrintInColour(std::cout, Power, colors::yellow, colors::black);
 					break;
 			}
-
-
 		}
 		std::cout << std::endl;
 	}
@@ -72,8 +90,6 @@ TileTypes Map::GetTileDataAtPosition(int x, int y)
 {
 	return map[x][y];
 }
-
-
 
 bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 {
@@ -113,12 +129,6 @@ bool Map::SetMapName(std::string newName)
 
 bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY)
 {
-	// Oublie pas de faire un struct aussi pour les tuiles.
-	// Delete/Remplace les structs dans Map.h pour le tiens
-	// Oublie pas de mettre genre 4 joueurs potentiels dedans as well. thx ^^
-	// - faire struct  (je peut me demerder sans, mais ca vas faire dla magouille comme sans getter)
-	// - faire Getters (pas urgent, mais necessaire)
-	// - faire ste fonction la (test en selectionnant une map, enter, enter, enter (att la fin du decompte), check si les joueurs sont au bonne coordonnees.)
 	*resultedX = 0;
 	*resultedY = 0;
 	int nbfound = 0;
@@ -137,7 +147,6 @@ bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, u
 			}
 		}
 	}
-
 	return false;
 }
 
