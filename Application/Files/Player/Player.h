@@ -40,13 +40,13 @@
 #define PLAYER_KEY_USE_PWR      topButton
 #define PLAYER_KEY_DISCARD_PWR  bottomButton
 
-#define PLAYER_LOCAL_SELECT       controllerRef->PLAYER_CONTROLLER_SELECT
-#define PLAYER_LOCAL_Y_AXIS       controllerRef->PLAYER_CONTROLLER_Y_AXIS
-#define PLAYER_LOCAL_X_AXIS       controllerRef->PLAYER_CONTROLLER_X_AXIS
-#define PLAYER_LOCAL_INV_LEFT     controllerRef->PLAYER_CONTROLLER_INV_LEFT
-#define PLAYER_LOCAL_INV_RIGHT    controllerRef->PLAYER_CONTROLLER_INV_RIGHT
-#define PLAYER_LOCAL_USE_PWR      controllerRef->PLAYER_CONTROLLER_USE_PWR
-#define PLAYER_LOCAL_DISCARD_PWR  controllerRef->PLAYER_CONTROLLER_DISCARD_PWR
+#define PLAYER_LOCAL_SELECT       controllerRef->joystickButton
+#define PLAYER_LOCAL_Y_AXIS       controllerRef->joystickY
+#define PLAYER_LOCAL_X_AXIS       controllerRef->joystickX
+#define PLAYER_LOCAL_INV_LEFT     controllerRef->leftButton
+#define PLAYER_LOCAL_INV_RIGHT    controllerRef->rightButton
+#define PLAYER_LOCAL_USE_PWR      controllerRef->topButton
+#define PLAYER_LOCAL_DISCARD_PWR  controllerRef->bottomButton
 
 #define PLAYER_CONTROLLER_THRESHOLD 30
 

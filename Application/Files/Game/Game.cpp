@@ -152,6 +152,8 @@ bool Game::HandleNextMouvements()
     int mapX = map->GetCurrentMap()["sizeX"];
     int mapY = map->GetCurrentMap()["sizeY"];
 
+    static int amogus = 0;
+
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
         // HandleMovements is done in each frame update. This governs 
@@ -172,17 +174,45 @@ bool Game::HandleNextMouvements()
             if(testX > mapX) testX=mapX;
             if(testY > mapY) testY=mapY;
 
-            // Check if the wanted coordinate is a wall or not.
-            int tileAtCoordinate = map->GetTileDataAtPosition(testX, testY);
-            if(tileAtCoordinate = TileTypes::WALL || tileAtCoordinate==TilesTypes::PERMAWALL)
+            if ((xVelocity == 0) && (yVelocity == 0))
             {
-                players[playerIndex].GetVelocity()->ResetDeltas();
+
             }
             else
             {
-                players[playerIndex].GetOldCoordinates()->SetNewCoordinates(playerX, playerY); // So we can erase the player from those coordinates.
-                players[playerIndex].GetCurrentCoordinates()->SetNewCoordinates(testX, testY);
+                //SetTerminalCursorPosition(0, 0);
+                //std::cout << "Player velocity is " << xVelocity << ", " << yVelocity << std::endl;
+                // Check if the wanted coordinate is a wall or not.
+                TileTypes tileAtCoordinate = map->GetTileDataAtPosition(testX, testY);
+
+                //switch (tileAtCoordinate)
+                //{
+                //case(TileTypes::EMPTY):       std::cout << "EMPTY      " << std::endl; break;
+                //case(TileTypes::PERMAWALL):   std::cout << "PERMAWALL  " << std::endl; break;
+                //case(TileTypes::PLAYER):      std::cout << "PLAYER     " << std::endl; break;
+                //case(TileTypes::PLAYERSPAWN): std::cout << "PLAYERSPAWN" << std::endl; break;
+                //case(TileTypes::WALL):        std::cout << "WALL       " << std::endl; break;
+                //case(TileTypes::POWER):       std::cout << "POWER      " << std::endl; break;
+                //case(TileTypes::SMOKE):       std::cout << "SMOKE      " << std::endl; break;
+                //}
+
+                if(!TileIsWalkable(tileAtCoordinate))
+                {
+                    players[playerIndex].GetVelocity()->ResetDeltas();
+                    //std::cout << "Tile at " << testX << ", " << testY << " is not walkable: " << std::endl;
+                }
+                else
+                {
+                    players[playerIndex].GetCurrentCoordinates()->SetNewCoordinates(testX, testY);
+                    //std::cout << "Player is now at " << testX << ", " << testY << std::endl;
+                }
+                //Sleep(1000);
             }
+        }
+        else
+        {
+            //SetTerminalCursorPosition(0, playerIndex);
+            //std::cout << "Player " << playerIndex << ": dX: " << "-" << " dY: " << "-" << std::endl;
         }
 
     }
@@ -224,10 +254,17 @@ bool Game::PutObjectsInMap()
         {
             if((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
             {
+                SetTerminalCursorPosition(0, 0);
+                std::cout << "Player needs to be at: " << currentPos->X() << " " << currentPos->Y() << std::endl;
+                std::cout << "Player was before at:  " << previousPos->X() << " " << previousPos->Y() << std::endl;
+                Sleep(1000);
+
                 needToRedrawMap = true;
                 map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::PLAYER);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+
                 previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+                std::cout << previousPos->X() << " " << previousPos->Y() << std::endl;
             }
         }
     }
@@ -269,6 +306,11 @@ bool Game::HandleBombs()
  */
 bool Game::HandlePlayers()
 {
+    // Update all controllers of the players.
+    for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
+    {
+        players[playerIndex].UpdateFromController();
+    }
     HandleNextMouvements();
     CheckForPlayerDamage();
     return true;
@@ -398,7 +440,7 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
             gameStatus = GameStatuses::invalid;
             //return;
         }
-        Player player = Player(initialPosX, initialPosY, "@@@", GetPlayerColor(playerIndex));
+        Player player = Player(initialPosX, initialPosY, " @ ", GetPlayerColor(playerIndex));
         players.push_back(player);
     }
 
@@ -756,7 +798,7 @@ bool Game::Draw()
 
     if(needToRedrawMap)
     {
-        needToRedrawMap = false;
+        //needToRedrawMap = false;
         DrawMap();
     }
 

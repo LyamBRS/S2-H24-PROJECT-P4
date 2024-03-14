@@ -100,7 +100,7 @@ bool TileIsWalkable(TileTypes tile);
   * @return std::string
   */
 
-get player tile;
+//get player tile;
 
 std::vector<nlohmann::json> GetAllMaps();
 nlohmann::json GetMapJson(std::string path);

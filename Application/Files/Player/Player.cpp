@@ -41,6 +41,7 @@ int GetPlayerColor(unsigned int playerNumber)
 Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedColour) : BaseObject()
 {
     position.SetNewCoordinates(initialX, initialY);
+    OldPosition.SetNewCoordinates(initialX, initialY);
     movement.SetDeltas(0, 0);
     displayAttributes.Ascii(wantedAscii);
     displayAttributes.Colour(wantedColour);
@@ -121,9 +122,18 @@ bool Player::UpdateFromController()
         return false;
     }
 
-    // Check if he wants to place a bomb
+    // Check movements
+    movement.SetDeltas(0, 0);
+    int wantedDeltaX = 0;
+    int wantedDeltaY = 0;
 
-    return false;
+    if (PLAYER_LOCAL_X_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
+    if (PLAYER_LOCAL_X_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
+
+    if (PLAYER_LOCAL_Y_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
+    if (PLAYER_LOCAL_Y_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
+
+    return true;
 }
 
 /**
