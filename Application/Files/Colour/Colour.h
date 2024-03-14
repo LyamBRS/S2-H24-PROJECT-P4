@@ -41,7 +41,9 @@
 #define CHAR_BORDER_L_JUNCTION              '\xB9'
 #define CHAR_BORDER_T_JUNCTION              '\xCA'
 #define CHAR_BORDER_B_JUNCTION              '\xCB'
+#define CHAR_TARGER                         '\234'
 
+#define STRING_TARGER                         "\234"
 #define STRING_BORDER_R_JUNCTION              "\xCC"
 #define STRING_BORDER_L_JUNCTION              "\xB9"
 #define STRING_BORDER_T_JUNCTION              "\xCA"
