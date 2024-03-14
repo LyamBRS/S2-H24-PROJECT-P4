@@ -72,11 +72,35 @@ bool Map::Draw()
 				case TileTypes::PLAYERSPAWN:
 					PrintInColour(std::cout, tileChar[TileTypes::PLAYERSPAWN], colors::red, colors::black);
 					break;
+				case TileTypes::PLAYER1:
+					PrintInColour(std::cout, tileChar[TileTypes::PLAYER1], PLAYER_A_COLOR, colors::black);
+					break;
+				case TileTypes::PLAYER2:
+					PrintInColour(std::cout, tileChar[TileTypes::PLAYER2], PLAYER_B_COLOR, colors::black);
+					break;
+				case TileTypes::PLAYER3:
+					PrintInColour(std::cout, tileChar[TileTypes::PLAYER3], PLAYER_C_COLOR, colors::black);
+					break;
+				case TileTypes::PLAYER4:
+					PrintInColour(std::cout, tileChar[TileTypes::PLAYER4], PLAYER_D_COLOR, colors::black);
+					break;
 				case TileTypes::SMOKE:
 					PrintInColour(std::cout, tileChar[TileTypes::SMOKE], colors::grey, colors::black);
 					break;
-				case TileTypes::POWER:
-					PrintInColour(std::cout, tileChar[TileTypes::POWER], colors::yellow, colors::black);
+				case TileTypes::POWER_DMG:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_DMG], colors::green, colors::black);
+					break;
+				case TileTypes::POWER_HEART:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_HEART], colors::green, colors::black);
+					break;
+				case TileTypes::POWER_MOREBOMB:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_MOREBOMB], colors::green, colors::black);
+					break;
+				case TileTypes::POWER_REACH:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_REACH], colors::green, colors::black);
+					break;
+				case TileTypes::POWER_SPEED:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_SPEED], colors::green, colors::black);
 					break;
 			}
 		}
@@ -148,6 +172,23 @@ bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, u
 		}
 	}
 	return false;
+}
+
+TileTypes Map::GetPlayerTypeFromId(int playerId)
+{
+	switch (playerId)
+	{
+		case 1:
+			return TileTypes::PLAYER1;
+		case 2:
+			return TileTypes::PLAYER2;
+		case 3:
+			return TileTypes::PLAYER3;
+		case 4:
+			return TileTypes::PLAYER4;
+	default:
+		break;
+	}
 }
 
 nlohmann::json Map::GetCurrentMap()

@@ -18,7 +18,7 @@
 #include "../JSON/json.hpp"
 #include "../Colour/Colour.h"
 #include <map>
-
+#include "../Player/Player.h"
 // - DEFINES - //
 
 
@@ -225,7 +225,11 @@ enum class TileTypes
     WALL,
     PLAYERSPAWN,
     SMOKE,
-    POWER,
+    POWER_HEART,
+    POWER_REACH,
+    POWER_SPEED,
+    POWER_MOREBOMB,
+    POWER_DMG,
     PLAYER1,
     PLAYER2,
     PLAYER3,
@@ -251,20 +255,24 @@ class Map
         int amountOfPlayer = 0;
         /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
         nlohmann::json storedMapData;
-        
+        std::string special = " ";
         std::map<TileTypes, std::string> tileChar = 
         {
             { TileTypes::EMPTY, " . "},
             { TileTypes::PERMAWALL, "   "},
             { TileTypes::WALL, "###"},
-            { TileTypes::PLAYERSPAWN, " \x0f "},
+            { TileTypes::PLAYERSPAWN, " @ "},
             { TileTypes::SMOKE, "&%&"},
-            { TileTypes::POWER, " + "},
+            { TileTypes::POWER_HEART, special + STRING_HEARTH + " "},
+            { TileTypes::POWER_DMG, special + STRING_SPADE + " "},
+            { TileTypes::POWER_MOREBOMB, " + "},
+            { TileTypes::POWER_REACH, "<->"},
+            { TileTypes::POWER_SPEED, ">>>"},
             { TileTypes::PLAYER1, " @ "},
             { TileTypes::PLAYER2, " @ "},
             { TileTypes::PLAYER3, " @ "},
-            { TileTypes::PLAYER4, " @ "},
-            { TileTypes::BOMB, " \x0f "},
+            { TileTypes::PLAYER4, "GOD"},
+            { TileTypes::BOMB, special + STRING_CLUB + " "},
         };   
 
     public:              
@@ -424,4 +432,6 @@ class Map
          * Failed to find that player's spawn. -1 is set as X and Y.
          */
         bool GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY);
+
+        TileTypes GetPlayerTypeFromId(int playerId);
 };

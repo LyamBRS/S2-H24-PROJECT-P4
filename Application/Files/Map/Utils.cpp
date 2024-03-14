@@ -115,7 +115,15 @@ bool TileIsWalkable(TileTypes tile)
     case TileTypes::SMOKE:
         return true;
         break;
-    case TileTypes::POWER:
+    case TileTypes::POWER_DMG:
+        return true;
+    case TileTypes::POWER_HEART:
+        return true;
+    case TileTypes::POWER_MOREBOMB:
+        return true;
+    case TileTypes::POWER_REACH:
+        return true;
+    case TileTypes::POWER_SPEED:
         return true;
         break;
     default:
