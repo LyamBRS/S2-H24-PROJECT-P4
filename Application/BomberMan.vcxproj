@@ -195,6 +195,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
+    <ClInclude Include="Files\Map\Utils.hpp" />
     <ClInclude Include="Files\Menus\GameMenu.h" />
     <ClInclude Include="Files\SimpleTimer\SimpleChrono.h" />
   </ItemGroup>
