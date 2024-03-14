@@ -34,12 +34,14 @@ Application::Application()
     Menu* mainMenu      = new MainMenu(appHandlerPtr);
     Menu* mapMenu       = new MapMenu(appHandlerPtr);
     Menu* testMenu      = new TestMenu(appHandlerPtr);
+    Menu* gameMenu      = new GameMenu(appHandlerPtr);
 
     menus.push_back(mainMenu);
     menus.push_back(testMenu);
     menus.push_back(arduinoMenu);
     menus.push_back(mapMenu);
     menus.push_back(exitMenu);
+    menus.push_back(gameMenu);
 }
 
 /**
@@ -56,8 +58,9 @@ bool Application::HandleKeyboardActions()
 {
     if (kbhit())
     {
-        appHandler.requiresNewDrawing = true;
-        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(getch());
+        int character = getch();
+        appHandler.requiresNewDrawing = appHandler.redrawOnKeyboardHits;
+        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(character);
     }
     return true;
 }
@@ -130,8 +133,7 @@ bool Application::Update()
 
     if(appHandler.frameTimer.TimeLeft() == 0)
     {
-        //appHandler.arduinoThread.GetArduino()->Update();
-        appHandler.currentGame.Update();
+        appHandler.UpdateKeyboardControllers();
     }
 
     //if(!appHandler.arduinoThread.GetThreadStatus())

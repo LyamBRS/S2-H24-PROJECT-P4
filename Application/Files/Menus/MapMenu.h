@@ -13,6 +13,7 @@
 // - INCLUDES - //
 #include "../Application/AppHandler.h"
 #include "../Colour/Colour.h"
+#include "../Map/Utils.hpp"
 #include "../Map/Map.h"
 #include "../JSON/json.hpp"
 #include "Menu.h"
@@ -25,9 +26,6 @@
 // - DEFINES - //
 
 // - FUNCTIONS - //
-std::vector<nlohmann::json> GetAllMaps();
-bool VerifyMap(std::string path);
-nlohmann::json GetMapJson(std::string path);
 
 // - CLASS - //
 
@@ -40,6 +38,11 @@ class MapMenu : public Menu
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
         bool Update();
+        void setSelection(int selected);
+        void SelectionNext();
+        void SelectionPrevious();
         bool OnEnter();
         bool OnExit();
+        bool OnMapSelect();
+        Map* map;
 };

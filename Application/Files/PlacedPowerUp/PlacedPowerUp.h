@@ -15,7 +15,7 @@
 
 // - INCLUDES - //
 #include <iostream>
-#include "../Object/Object.hpp"
+#include "../BaseObject/BaseObject.hpp"
 // - DEFINES - //
 #define POWERUP_DESPAWN_TIMER_VALUE 10000
 
@@ -33,7 +33,7 @@
  * can select it by using their associated @ref
  * Controller as they play the @ref Game.
  */
-class PlacedPowerUp : public Object
+class PlacedPowerUp : public BaseObject
 {
     private:
         /// @brief Which type of PowerUp is it?

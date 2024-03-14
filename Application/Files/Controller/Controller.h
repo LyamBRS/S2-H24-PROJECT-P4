@@ -152,4 +152,8 @@ class Controller
          * COMMUNICATION WITH THE ARDUINO IS LOST.
          */
         bool Reset();
+
+        int controllerID = 0;
 };
+
+// - FUNCTIONS - //

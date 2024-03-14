@@ -1,5 +1,5 @@
 /**
- * @file Object.hpp
+ * @file BaseObject.hpp
  * @author LyamBRS
  * @brief 
  * HEader file containing the definition
@@ -31,24 +31,25 @@
  * rather than having to battle with bunch
  * of different types of classes.
  */
-class Object
+class BaseObject
 {
-    private:
+    protected:
         /// @brief The object's position attributes. Allowing it to exist at a certain coordinate on the screen.
-        Positions position;
+        Positions position = Positions(0,0);
         /// @brief Corresponds to a manuallu specified old coordinate so the player can be removed from where they used to stand
-        Positions OldPosition;
+        Positions OldPosition = Positions(0,0);
         /// @brief The object's movement attributes, allowing it to move some position distance through time.
         Movements movement;
         /// @brief the object's display attributes. Allowing it to have an associated colour and command prompt representation.
         ScreenAttributes displayAttributes;
+
     public:
         /**
          * @brief Construct a new Object object.
          * Default object constructor. Sets
          * everything to 0.
          */
-        Object();
+        BaseObject();
 
         /**
          * @brief Get the Screen Attributes object.
