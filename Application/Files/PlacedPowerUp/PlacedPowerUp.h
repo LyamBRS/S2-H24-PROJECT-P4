@@ -17,6 +17,7 @@
 #include <iostream>
 #include "../BaseObject/BaseObject.hpp"
 #include "../SimpleTimer/SimpleTimer.h"
+#include "../PowerUp/PowerUp.h"
 // - DEFINES - //
 #define POWERUP_DESPAWN_TIMER_VALUE 10000
 
