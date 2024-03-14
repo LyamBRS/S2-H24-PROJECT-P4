@@ -15,16 +15,20 @@ PlacedPowerUp::~PlacedPowerUp()
 
 bool PlacedPowerUp::Update()
 {
-    if (ShouldBeDeleted())
-    {return true;}
-    else if (!ShouldBeDeleted())
-    {return false;}
+   if (Timetilldespawn->TimeLeft()==0)
+    {    
+        shoulbedeleted=1;
+        return shoulbedeleted;
+    }
+
+   if (Timetilldespawn->TimeLeft()!=0)
+    {
+        shoulbedeleted=0;
+        return shoulbedeleted;
+    }
 }
 
 bool PlacedPowerUp::ShouldBeDeleted()
 {
-   if (Timetilldespawn->TimeLeft()==0)
-   {return true;}
-   if (Timetilldespawn->TimeLeft()!=0)
-   {return false;}
+   return shoulbedeleted
 }
