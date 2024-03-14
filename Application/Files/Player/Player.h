@@ -20,6 +20,7 @@
 #include "../PowerUp/PowerUp.h"
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleTimer.h"
+#include "../Map/Map.h"
 #include <windows.h>
 
 // - DEFINES - //
@@ -93,6 +94,9 @@ class Player : BaseObject
 
     public:
         SimpleTimer movementFrameDelay = SimpleTimer(PLAYER_DEFAULT_SPEED_INTERVAL_MS);
+
+        TileTypes oldTileBelowPlayer = TileTypes::EMPTY;
+        TileTypes currentTileBelowPlayer = TileTypes::EMPTY;
 
         /**
          * @brief

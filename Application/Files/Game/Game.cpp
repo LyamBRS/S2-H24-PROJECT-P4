@@ -254,17 +254,14 @@ bool Game::PutObjectsInMap()
         {
             if((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
             {
-                SetTerminalCursorPosition(0, 0);
-                std::cout << "Player needs to be at: " << currentPos->X() << " " << currentPos->Y() << std::endl;
-                std::cout << "Player was before at:  " << previousPos->X() << " " << previousPos->Y() << std::endl;
-                Sleep(1000);
-
                 needToRedrawMap = true;
-                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::PLAYER1);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::POWER);
 
+                SetTerminalCursorPosition(0, 0);
+                std::cout << "old: " << previousPos->X() << "," << previousPos->Y() << " new:" << currentPos->X() << "," << currentPos->Y() << std::endl;
                 previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
-                std::cout << previousPos->X() << " " << previousPos->Y() << std::endl;
+                std::cout << "new old: " << previousPos->X() << "," << previousPos->Y() << std::endl;
             }
         }
     }
@@ -496,13 +493,10 @@ bool Game::Update()
     ////////////////////////////////////////////
     // Handle game attributes
     ////////////////////////////////////////////
-    if(handlerTimer.TimeLeft() == 0)
-    {
-        HandlePlayers();
-        HandleBombs();
-        HandlePowerUp();
-        PutObjectsInMap();
-    }
+    HandlePlayers();
+    HandleBombs();
+    HandlePowerUp();
+    PutObjectsInMap();
     return true;
 }
 
@@ -666,6 +660,7 @@ int Game::GetCountdownValue()
  */
 bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
+    HandleNextMouvements();
     return false;
 }
 
@@ -798,7 +793,7 @@ bool Game::Draw()
 
     if(needToRedrawMap)
     {
-        //needToRedrawMap = false;
+        needToRedrawMap = false;
         DrawMap();
     }
 
