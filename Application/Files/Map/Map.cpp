@@ -31,7 +31,7 @@ bool Map::Draw()
 	std::string PermaWall = "   ";
 	std::string Wall = "###";
 	std::string Empty = " . ";
-	std::string Player = " @ ";
+	std::string PlayerSpawn = " 0 ";
 	std::string Smoke = "%&%";
 	std::string Power = " + ";
 
@@ -39,23 +39,23 @@ bool Map::Draw()
 		for (int i = 0; i < sizeX; ++i) {
 			switch (map[i][j])
 			{
-				case 0:
+				case TileTypes::EMPTY:
 					PrintInColour(std::cout, Empty, colors::grey, colors::black);
 					break;
-				case 1:
+				case TileTypes::PERMAWALL:
 					PrintInColour(std::cout, PermaWall, colors::grey, colors::grey);
 					
 					break;
-				case 2:
+				case TileTypes::WALL:
 					PrintInColour(std::cout, Wall, colors::grey, colors::black);
 					break;
-				case 3:
-					PrintInColour(std::cout, Player, colors::red, colors::black);
+				case TileTypes::PLAYERSPAWN:
+					PrintInColour(std::cout, PlayerSpawn, colors::red, colors::black);
 					break;
-				case 4:
+				case TileTypes::SMOKE:
 					PrintInColour(std::cout, Smoke, colors::grey, colors::black);
 					break;
-				case 5:
+				case TileTypes::POWER:
 					PrintInColour(std::cout, Power, colors::yellow, colors::black);
 					break;
 			}
@@ -68,12 +68,14 @@ bool Map::Draw()
 	return true;
 }
 
-int Map::GetTileDataAtPosition(int x, int y)
+TileTypes Map::GetTileDataAtPosition(int x, int y)
 {
 	return map[x][y];
 }
 
-bool Map::SetTileDataAtPosition(int x, int y, int wantedTile)
+
+
+bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 {
 	for (int i = 0; i < sizeY; ++i) {
 		for (int j = 0; j < sizeX; ++j) {
@@ -119,6 +121,23 @@ bool Map::GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, u
 	// - faire ste fonction la (test en selectionnant une map, enter, enter, enter (att la fin du decompte), check si les joueurs sont au bonne coordonnees.)
 	*resultedX = 0;
 	*resultedY = 0;
+	int nbfound = 0;
+	TileTypes looking = TileTypes::PLAYERSPAWN;
+
+	for (int i = 0; i < sizeY; ++i) {
+		for (int j = 0; j < sizeX; ++j) {
+			if (map[j][i] == looking) {
+				if (nbfound == spawnNumber) 
+				{
+					*resultedX = j;
+					*resultedY = i;
+					return true;
+				}
+				nbfound++;
+			}
+		}
+	}
+
 	return false;
 }
 

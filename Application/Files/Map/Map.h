@@ -214,15 +214,29 @@ struct BinaryDefaultTiles
  * The goal of this class is to draw a map in the terminal
  * or the QT application.
  */
+
+enum class TileTypes
+{
+    EMPTY,
+    PERMAWALL,
+    WALL,
+    PLAYERSPAWN,
+    PLAYER,
+    SMOKE,
+    POWER,
+};
+
 class Map
 {
+    
+
     private:
         /// @brief How big the map is horizontally.
         int sizeX = 0;
         /// @brief How big the map is vertically.
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
-        int map[30][30] = {};
+        TileTypes map[30][30] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
@@ -231,7 +245,6 @@ class Map
         nlohmann::json storedMapData;
 
     public:
-
         /**
          * @brief Construct a new Map object.
          * Builds a new map. You MUST load a
@@ -278,9 +291,9 @@ class Map
          * The X coordinate where the wanted tile is located.
          * @param y
          * The Y coordinate where the wanted tile is located.
-         * @return int 
+         * @return TileType 
          */
-        int GetTileDataAtPosition(int x, int y);
+        TileTypes GetTileDataAtPosition(int x, int y);
 
         /**
          * @brief
@@ -297,7 +310,7 @@ class Map
          * @return false:
          * Invalid tile type / invalid coordinates
          */
-        bool SetTileDataAtPosition(int x, int y, int wantedTile);
+        bool SetTileDataAtPosition(int x, int y, TileTypes wantedTile);
 
         /**
          * @brief 
