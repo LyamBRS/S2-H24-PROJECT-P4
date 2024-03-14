@@ -205,4 +205,10 @@ Positions* Player::GetCurrentCoordinates()
     return &position;
 }
 
+// Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+Positions* Player::GetOldCoordinates()
+{
+    return &OldPosition;
+}
+
 
