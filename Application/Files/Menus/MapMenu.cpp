@@ -178,13 +178,13 @@ bool MapMenu::Draw()
     std::cout << selection << std::endl;
     PrintInColour(std::cout, "- Controller status: ", colors::grey, colors::black);
     std::cout << "| ";
-    if(!appRef->arduino.GetPortState())
+    if(!appRef->arduinoThread.GetArduino()->GetPortState())
     {
         PrintInColour(std::cout, "DISCONNECTED\n", colors::red, colors::black);
     }
     else
     {
-        if(appRef->arduino.Verify())
+        if(appRef->arduinoThread.GetArduino()->Verify())
         {
             PrintInColour(std::cout, "CONNECTED\n", colors::leaf, colors::black);
         }
@@ -196,15 +196,15 @@ bool MapMenu::Draw()
 
     PrintInColour(std::cout, "- Connected players: ", colors::grey, colors::black);
     std::cout << "| ";
-    if(!appRef->arduino.GetPortState())
+    if(!appRef->arduinoThread.GetArduino()->GetPortState())
     {
         PrintInColour(std::cout, "0", colors::red, colors::black);
     }
     else
     {
-        if(appRef->arduino.Verify())
+        if(appRef->arduinoThread.GetArduino()->Verify())
         {
-            PrintInColour(std::cout, std::to_string(appRef->arduino.AmountOfConnectedPlayers()), colors::leaf, colors::black);
+            PrintInColour(std::cout, std::to_string(appRef->arduinoThread.GetArduino()->AmountOfConnectedPlayers()), colors::leaf, colors::black);
         }
         else
         {

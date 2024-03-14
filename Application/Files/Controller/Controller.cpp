@@ -32,7 +32,19 @@
  */
 Controller::Controller()
 {
-
+    joystickX = 0;
+    joystickY = 0;
+    joystickButton = false;
+    topButton = false;
+    bottomButton = false;
+    leftButton = false;
+    rightButton = false;
+    SentBarGraphBits = 0;
+    ReceivedBarGraphBits = 0;
+    accelerometerX = 0;
+    accelerometerY = 0;
+    accelerometerZ = 0;
+    isConnected = false;
 }
 
 /**
@@ -46,5 +58,18 @@ Controller::Controller()
  */
 bool Controller::Reset()
 {
+    joystickX = 0;
+    joystickY = 0;
+    joystickButton = false;
+    topButton = false;
+    bottomButton = false;
+    leftButton = false;
+    rightButton = false;
+    SentBarGraphBits = 0;
+    ReceivedBarGraphBits = 0;
+    accelerometerX = 0;
+    accelerometerY = 0;
+    accelerometerZ = 0;
+    isConnected = false;
 	return false;
 }

@@ -100,7 +100,8 @@ class Controller
          * to individual LED states on the controller's
          * bar graph. If 0, they are all off.
          */  
-        int barGraphBits = 0;
+        int SentBarGraphBits = 0;
+        int ReceivedBarGraphBits = 0;
 
         /**
          * @brief 

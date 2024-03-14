@@ -103,6 +103,9 @@
     <ClCompile Include="Files\Application\AppHandler.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\Arduino\ThreadManager.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -188,6 +191,9 @@
       <Filter>Generated Files</Filter>
     </ClInclude>
     <ClInclude Include="Files\Application\AppHandler.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\Arduino\ThreadManager.hpp">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

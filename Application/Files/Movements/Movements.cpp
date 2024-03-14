@@ -49,7 +49,9 @@ Movements::Movements()
 */
 bool Movements::SetDeltas(int newDeltaX, int newDeltaY)
 {
-    return false;
+    deltaX = newDeltaX;
+    deltaY = newDeltaY;
+    return true;
 }
 
 /**
@@ -62,7 +64,7 @@ bool Movements::SetDeltas(int newDeltaX, int newDeltaY)
 */
 int Movements::DeltaX()
 {
-    return -1;
+    return deltaX;
 }
 
 /**
@@ -76,6 +78,7 @@ int Movements::DeltaX()
 */
 int Movements::DeltaX(int newDeltaX)
 {
+    deltaX = newDeltaX;
     return -1;
 }
 
@@ -89,7 +92,7 @@ int Movements::DeltaX(int newDeltaX)
 */
 int Movements::DeltaY()
 {
-    return -1;
+    return deltaY;
 }
 
 /**
@@ -103,6 +106,7 @@ int Movements::DeltaY()
 */
 int Movements::DeltaY(int newDeltaY)
 {
+    deltaY = newDeltaY;
     return -1;
 }
 
@@ -118,5 +122,11 @@ int Movements::DeltaY(int newDeltaY)
 */
 bool Movements::ResetDeltas()
 {
+    if (deltaX !=0 && deltaY !=0)
+    {
+        deltaX = 0;
+        deltaY = 0;
+        return true;
+    }
     return false;
 }

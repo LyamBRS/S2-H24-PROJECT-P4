@@ -31,6 +31,8 @@
 #define KB_ESCAPE 27
 #define KB_ENTER 13
 #define KB_ESCAPE 27
+#define KB_DEL 127
+#define KB_BACK 8
 
 // - CLASS - //
 // class Application;
@@ -98,7 +100,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnEnter();
+        virtual bool OnEnter() = 0;
 
         /**
          * @brief 
@@ -107,5 +109,5 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnExit();
+        virtual bool OnExit() = 0;
 };
