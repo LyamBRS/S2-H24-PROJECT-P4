@@ -141,7 +141,11 @@ bool Player::UpdateFromController()
  * @return PowerUp* 
  */
 PowerUp* Player::GetActivatedPowerUp(){
-    return nullptr;
+    return inventaire.getInventory();
+}
+
+void Player::addPowerUp(PowerUp* powerUp) {
+    inventaire.addPowerUp(powerUp);
 }
 
 /**

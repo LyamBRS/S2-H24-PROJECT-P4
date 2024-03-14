@@ -20,6 +20,7 @@
 #include "../PowerUp/PowerUp.h"
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleTimer.h"
+#include "../Inventory/Inventory.h"
 #include <windows.h>
 
 // - DEFINES - //
@@ -87,6 +88,7 @@ class Player : BaseObject
         Controller* controllerRef = new Controller();
 
         SimpleTimer bombPlacement = SimpleTimer(3000);
+        Inventory inventaire;
 
     public:
 
@@ -217,6 +219,8 @@ class Player : BaseObject
          * @return PowerUp* 
          */
         PowerUp* GetActivatedPowerUp();
+
+        void addPowerUp(PowerUp* powerUp);
 
         /**
          * @brief
