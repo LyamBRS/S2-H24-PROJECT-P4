@@ -44,12 +44,12 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
     {    
         case KB_UP:
                 selection--;
-                if(selection<1) selection=4;
+                if(selection<1) selection=APP_AMOUNT_OF_MENUS;
                 return true;            
     
         case KB_DOWN:
                 selection++;
-                if(selection>4) selection=1;
+                if(selection>APP_AMOUNT_OF_MENUS) selection=1;
                 return true;                  
 
         case KB_ENTER:
@@ -58,7 +58,7 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
                 return true;
         
         case KB_ESCAPE:
-                appRef->currentSelectedMenu = 4;
+                appRef->currentSelectedMenu = APP_EXIT_MENU;
                 selection = 0;
                 return true; 
     }        
@@ -96,7 +96,7 @@ bool MainMenu::Draw()
 
     switch(selection)
     {
-        case(APP_GAME_MENU):
+        case(APP_MAP_MENU):
             PrintInColour(std::cout, "   1: Test Menu\n",       colors::grey, colors::black);
             PrintInColour(std::cout, "   2: Arduino setup\n",   colors::grey, colors::black);
             PrintInColour(std::cout, "-> 3: Game Menu\n",       colors::aqua, colors::black);

@@ -22,3 +22,9 @@
             colour = newColour;
             return colour;
         }
+
+        ScreenAttributes::ScreenAttributes()
+        {
+            colour = 0;
+            ascii = "";
+        }

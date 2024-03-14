@@ -10,6 +10,7 @@
  */
 
 #include <QApplication>
+#include <Windows.h>
 #include "Files/Application/Application.h"
 
 
@@ -70,7 +71,7 @@ int main( int argc, char ** argv )
 {
 	//QApplication app(argc, argv);
 	Application application = Application();
-
+//
 	application.TemporaryLoop();
 
 	//return app.exec();
