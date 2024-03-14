@@ -13,6 +13,7 @@
 
 // - INCLUDES - //
 #include "../BaseObject/BaseObject.hpp"
+#include "../SimpleTimer/SimpleTimer.h"
 
 // - DEFINES - //
 
