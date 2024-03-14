@@ -12,35 +12,63 @@
 #include "Button.h"
 #include <Arduino.h>
 
-Button::Button(int pin)
+Button::Button()
 {
-    arduinoPin = pin;
-    pinMode(arduinoPin, INPUT);
 }
 
-Button::Button(int pin, bool isInverted, int debounceDelayMS)
+Button::Button(int pin)
 {
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
     arduinoPin = pin;
+    pinMode(arduinoPin, INPUT);
+    canBeUsed = true;
+}
+
+Button::Button(int pin, bool shouldBeInverted, int debounceDelayMS)
+{
+    if(pin == 0)
+    {
+        canBeUsed = false;
+        return;
+    }
+    isInverted = shouldBeInverted;
+    arduinoPin = pin;
+    canBeUsed = true;
 }
 
 Button::~Button()
 {
-
+    canBeUsed = false;
 }
 
 bool Button::GetState()
 {
+    if(!canBeUsed) return false;
     return state;
 }
 
 bool Button::Update()
 {
+    if(!canBeUsed) return false;
     state = digitalRead(arduinoPin);
+    if(isInverted)
+    {
+        state = !state;
+    }
     return true;
 }
 void Button::SetState()
 {
-    int res = digitalRead(arduinoPin);
+    if(!canBeUsed) return;
+    bool res = digitalRead(arduinoPin);
+    if(res)
+    {
+        state = !state;
+    }
 
     if (res == HIGH)
     {
@@ -50,4 +78,10 @@ void Button::SetState()
     {
         state = false;
     }
+}
+
+bool Button::Reset()
+{
+    state = false;
+    return true;
 }

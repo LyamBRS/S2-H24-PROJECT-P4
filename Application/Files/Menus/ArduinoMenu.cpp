@@ -12,6 +12,7 @@
 
 // - INCLUDES - //
 #include "ArduinoMenu.h"
+#include <conio.h>
 
 // - DEFINES - //
 
@@ -32,14 +33,20 @@ ArduinoMenu::ArduinoMenu(AppHandler* currentAppHandler)
  */
 bool ArduinoMenu::DrawArduinoMainMenu()
 {
-    system("cls");
+    ResizeTerminal(40, 8);
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
     std::cout << "- Navigate to configure your arduino setup -" << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
 
-    if(selection < 3 && appRef->arduino.GetPortState())
+    if(selection < 3 && appRef->arduinoThread.GetArduino()->GetPortState())
     {
         selection = 3;
     }
@@ -101,88 +108,88 @@ bool ArduinoMenu::DrawArduinoMainMenu()
     {
         case(0):
             PrintInColour(std::cout, "-> Change Baudrate", colors::aqua, colors::black);
-            printBaudRate(appRef->arduino.GetBaudRate());
+            printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
             PrintInColour(std::cout, "   Select Com Port", colors::grey, colors::black);
-            printComPort(appRef->arduino.GetComPort());
+            printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
             PrintInColour(std::cout, "   Connect", colors::grey, colors::black);
-            printConnectionStatus(appRef->arduino.GetPortState());
+            printConnectionStatus(appRef->arduinoThread.GetArduino()->GetPortState());
             PrintInColour(std::cout, "   Disconnect", colors::red, colors::black);
-            printCommunicationStatus(appRef->arduino.Verify());
+            printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
             break;
 
         case(1):
             PrintInColour(std::cout, "   Change Baudrate", colors::grey, colors::black);
-            printBaudRate(appRef->arduino.GetBaudRate());
+            printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
             PrintInColour(std::cout, "-> Select Com Port", colors::aqua, colors::black);
-            printComPort(appRef->arduino.GetComPort());
+            printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
             PrintInColour(std::cout, "   Connect", colors::grey, colors::black);
-            printConnectionStatus(appRef->arduino.GetPortState());
+            printConnectionStatus(appRef->arduinoThread.GetArduino()->GetPortState());
             PrintInColour(std::cout, "   Disconnect", colors::red, colors::black);
-            printCommunicationStatus(appRef->arduino.Verify());
+            printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
             break;
 
         case(2):
             PrintInColour(std::cout, "   Change Baudrate", colors::grey, colors::black);
-            printBaudRate(appRef->arduino.GetBaudRate());
+            printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
             PrintInColour(std::cout, "   Select Com Port", colors::grey, colors::black);
-            printComPort(appRef->arduino.GetComPort());
+            printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
             PrintInColour(std::cout, "-> Connect", colors::aqua, colors::black);
-            printConnectionStatus(appRef->arduino.GetPortState());
+            printConnectionStatus(appRef->arduinoThread.GetArduino()->GetPortState());
             PrintInColour(std::cout, "   Disconnect", colors::red, colors::black);
-            printCommunicationStatus(appRef->arduino.Verify());
+            printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
             break;
 
         case(3):
 
-            if(appRef->arduino.GetPortState())
+            if(appRef->arduinoThread.GetArduino()->GetPortState())
             {
                 PrintInColour(std::cout, "   Change Baudrate", colors::red, colors::black);
-                printBaudRate(appRef->arduino.GetBaudRate());
+                printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
                 PrintInColour(std::cout, "   Select Com Port", colors::red, colors::black);
-                printComPort(appRef->arduino.GetComPort());
+                printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
                 PrintInColour(std::cout, "   Connect", colors::red, colors::black);
             }
             else
             {
                 PrintInColour(std::cout, "   Change Baudrate", colors::grey, colors::black);
-                printBaudRate(appRef->arduino.GetBaudRate());
+                printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
                 PrintInColour(std::cout, "   Select Com Port", colors::grey, colors::black);
-                printComPort(appRef->arduino.GetComPort());
+                printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
                 PrintInColour(std::cout, "   Connect", colors::grey, colors::black);
             }
-            printConnectionStatus(appRef->arduino.GetPortState());
+            printConnectionStatus(appRef->arduinoThread.GetArduino()->GetPortState());
             PrintInColour(std::cout, "-> Disconnect", colors::aqua, colors::black);
-            printCommunicationStatus(appRef->arduino.Verify());
+            printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
             break;
 
         case(4):
-            if(appRef->arduino.GetPortState())
+            if(appRef->arduinoThread.GetArduino()->GetPortState())
             {
                 PrintInColour(std::cout, "   Change Baudrate", colors::red, colors::black);
-                printBaudRate(appRef->arduino.GetBaudRate());
+                printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
                 PrintInColour(std::cout, "   Select Com Port", colors::red, colors::black);
-                printComPort(appRef->arduino.GetComPort());
+                printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
                 PrintInColour(std::cout, "   Connect", colors::red, colors::black);
             }
             else
             {
                 PrintInColour(std::cout, "   Change Baudrate", colors::grey, colors::black);
-                printBaudRate(appRef->arduino.GetBaudRate());
+                printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
                 PrintInColour(std::cout, "   Select Com Port", colors::grey, colors::black);
-                printComPort(appRef->arduino.GetComPort());
+                printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
                 PrintInColour(std::cout, "   Connect", colors::grey, colors::black);
             }
-            printConnectionStatus(appRef->arduino.GetPortState());
+            printConnectionStatus(appRef->arduinoThread.GetArduino()->GetPortState());
 
-            if(!appRef->arduino.GetPortState())
+            if(!appRef->arduinoThread.GetArduino()->GetPortState())
             {
                 PrintInColour(std::cout, "   Disconnect", colors::red, colors::black);
             }
@@ -190,7 +197,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             {
                 PrintInColour(std::cout, "   Disconnect", colors::grey, colors::black);
             }
-            printCommunicationStatus(appRef->arduino.Verify());
+            printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "-> Back to main menu", colors::aqua, colors::black);
             std::cout << "  ----------------------" << std::endl;
             break;
@@ -201,7 +208,13 @@ bool ArduinoMenu::DrawArduinoMainMenu()
 
 bool ArduinoMenu::DrawBaudrateSelectionMenu()
 {
-    system("cls");
+    ResizeTerminal(40, 17);
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -257,7 +270,7 @@ bool ArduinoMenu::DrawBaudrateSelectionMenu()
         if(VerifyBaudRate(baudRate))
         {
             int baudRateNumber = static_cast<ArduinoBaudRates>(baudRate);
-            drawABaudRate(baudRateNumber, selection==baudRateIndex, appRef->arduino.GetBaudRate()==baudRate);
+            drawABaudRate(baudRateNumber, selection==baudRateIndex, appRef->arduinoThread.GetArduino()->GetBaudRate()==baudRate);
             baudRateIndex++;
         }
     }
@@ -279,7 +292,11 @@ bool ArduinoMenu::DrawBaudrateSelectionMenu()
 
 bool ArduinoMenu::DrawComPortSelectionMenu()
 {
-   system("cls");
+    std::vector<std::wstring> ports = GetAvailableComPorts();
+    int amountOfSelections = ports.size();
+
+    ResizeTerminal(36, 6+amountOfSelections);
+    system("cls");
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -330,9 +347,6 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
         std::cout << std::endl;
     };
 
-    std::vector<std::wstring> ports = GetAvailableComPorts();
-    int amountOfSelections = ports.size();
-
     if(amountOfSelections == 0)
     {
         PrintInColour(std::cout, "-          NO VALID COM PORTS FOUND        -\n", colors::red, colors::white);
@@ -342,7 +356,7 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
     {
         // Cuz yk, there's no easy way to put a Wstring to a string
         std::string portAsString(ports[portIndex].begin(), ports[portIndex].end());
-        drawAComPort(portAsString, selection==portIndex, portAsString==appRef->arduino.GetComPort());
+        drawAComPort(portAsString, selection==portIndex, portAsString==appRef->arduinoThread.GetArduino()->GetComPort());
     }
 	
     std::cout << "--------------------------------------------" << std::endl;
@@ -362,6 +376,8 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
 
 bool ArduinoMenu::DrawConnectMenu()
 {
+    ResizeTerminal(36, 7);
+
     auto drawConnectionResult = [](int selection)
     {
         switch(selection)
@@ -424,7 +440,12 @@ bool ArduinoMenu::DrawConnectMenu()
         std::cout << std::endl;
     };
 
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
     std::cout << "############################################" << std::endl;
     std::cout << "               - Connection -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -432,16 +453,111 @@ bool ArduinoMenu::DrawConnectMenu()
     if(selection>1) selection = 0;
 	std::cout << "--------------------------------------------" << std::endl;
 
-    printBaudRate(appRef->arduino.GetBaudRate());
-    printComPort(appRef->arduino.GetComPort());
+    printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
+    printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
 	std::cout << "--------------------------------------------" << std::endl;
     drawButtons(selection);
     std::cout << "############################################" << std::endl;
     return true;
 }
 
+bool ArduinoMenu::DrawIsConnectingMenu()
+{
+    system("cls");
+    std::cout << "############################################" << std::endl;
+    std::cout << "CONNECTING PLEASE WAIT " << std::endl;
+    std::cout << "--------------------------------------------" << std::endl;
+
+    auto drawConnectionResult = [](int selection)
+    {
+        switch(selection)
+        {
+            case(0): std::cout << "-           Nothing  happenned...          -" << std::endl; break;
+            case(-1):
+                    PrintInColour(std::cout, "- FATAL ERRORS WHILE ATTEMPTING CONNECTION -\n", colors::white, colors::red);
+                    break;
+            case(1):
+                    PrintInColour(std::cout, "-  Com port has been successfully openned  -\n", colors::black, colors::green);
+                    break;
+        }
+    };
+
+    const std::string spinner[] = { 
+        "[                                          ]",
+        "[#                                         ]",
+        "[##                                        ]",
+        "[###                                       ]",
+        "[ ####                                     ]",
+        "[  ####                                    ]",
+        "[   ####                                   ]",
+        "[    ####                                  ]",
+        "[     ####                                 ]",
+        "[      ####                                ]",
+        "[       ####                               ]",
+        "[        ####                              ]",
+        "[         ####                             ]",
+        "[          ####                            ]",
+        "[           ####                           ]",
+        "[            ####                          ]",
+        "[             ####                         ]",
+        "[              ####                        ]",
+        "[               ####                       ]",
+        "[                ####                      ]",
+        "[                 ####                     ]",
+        "[                  ####                    ]",
+        "[                   ####                   ]",
+        "[                    ####                  ]",
+        "[                     ####                 ]",
+        "[                      ####                ]",
+        "[                       ####               ]",
+        "[                        ####              ]",
+        "[                         ####             ]",
+        "[                          ####            ]",
+        "[                           ####           ]",
+        "[                            ####          ]",
+        "[                             ####         ]",
+        "[                              ####        ]",
+        "[                               ####       ]",
+        "[                                ####      ]",
+        "[                                 ####     ]",
+        "[                                  ####    ]",
+        "[                                   ####   ]",
+        "[                                    ####  ]",
+        "[                                     #### ]",
+        "[                                      ####]",
+        "[                                       ###]",
+        "[                                        ##]",
+        "[                                         #]",
+                                    };
+    int i = 0;
+    while(!appRef->arduinoThread.FunctionShouldBeExecuted())
+    {
+        i++;
+        PrintInColour(std::cout, spinner[i % 45], colors::aqua, colors::black);
+        std::cout << "\r" << std::flush;
+        Sleep(5);
+    }
+
+    int result = appRef->arduinoThread.GetFunctionExecutionResult();
+    drawConnectionResult(result);
+	std::cout << "\r--------------------------------------------" << std::endl;
+    std::cout << "PRESS ANYTHING TO GO BACK TO MENUS" << std::endl;
+    std::cout << "############################################" << std::endl;
+
+    _getch();
+    if(result == 1)
+    {
+        selectedSubMenu = 0;
+        return true;
+    }
+    selectedSubMenu = APP_CONNECTING_MENU;
+    return false;
+}
+
 bool ArduinoMenu::DrawDisconnectMenu()
 {
+    ResizeTerminal(36, 7);
+
     auto drawConnectionResult = [](int selection)
     {
         switch(selection)
@@ -504,7 +620,12 @@ bool ArduinoMenu::DrawDisconnectMenu()
         std::cout << std::endl;
     };
 
-    system("cls");
+    if(oldSelectedSubMenu != selectedSubMenu)
+    {
+        oldSelectedSubMenu = selectedSubMenu;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
     std::cout << "############################################" << std::endl;
     std::cout << "               - Connection -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -512,8 +633,8 @@ bool ArduinoMenu::DrawDisconnectMenu()
     if(selection>1) selection = 0;
 	std::cout << "--------------------------------------------" << std::endl;
 
-    printBaudRate(appRef->arduino.GetBaudRate());
-    printComPort(appRef->arduino.GetComPort());
+    printBaudRate(appRef->arduinoThread.GetArduino()->GetBaudRate());
+    printComPort(appRef->arduinoThread.GetArduino()->GetComPort());
 	std::cout << "--------------------------------------------" << std::endl;
     drawButtons(selection);
     std::cout << "############################################" << std::endl;
@@ -525,7 +646,7 @@ bool ArduinoMenu::DrawDisconnectMenu()
 bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
 {
     // Avoid being able to change baudrate and port when its currently connected.
-    if(selection < 3 && appRef->arduino.GetPortState())
+    if(selection < 3 && appRef->arduinoThread.GetArduino()->GetPortState())
     {
         selection = 3;
     }
@@ -537,13 +658,13 @@ bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
                 if(selection<0) selection=4;
 
                 // Dont hover over Disconnect if it cant be disconnected
-                if(selection == 3 && !appRef->arduino.GetPortState())
+                if(selection == 3 && !appRef->arduinoThread.GetArduino()->GetPortState())
                 {
                     selection = 2;
                 }
 
                 // Avoid being able to change baudrate and port when its currently connected.
-                if(selection < 3 && appRef->arduino.GetPortState())
+                if(selection < 3 && appRef->arduinoThread.GetArduino()->GetPortState())
                 {
                     selection = 3;
                 }
@@ -554,7 +675,7 @@ bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
                 selection++;
 
                 // Dont hover over Disconnect if it cant be disconnected
-                if(selection == 3 && !appRef->arduino.GetPortState())
+                if(selection == 3 && !appRef->arduinoThread.GetArduino()->GetPortState())
                 {
                     selection = 4;
                 }
@@ -614,7 +735,7 @@ bool ArduinoMenu::HandleKeyboardBaudrateMenu(int keyBoardKey)
                         int baudRateNumber = static_cast<ArduinoBaudRates>(baudRate);
                         if(selection == baudRateIndex)
                         {
-                            appRef->arduino.SetBaudRate(baudRateNumber);
+                            appRef->arduinoThread.GetArduino()->SetBaudRate(baudRateNumber);
                             return true;
                         }
                         baudRateIndex++;
@@ -658,7 +779,7 @@ bool ArduinoMenu::HandleKeyboardComPortMenu(int keyBoardKey)
 
                 // Cuz yk, there's no easy way to put a Wstring to a string
                 std::string portAsString(ports[selection].begin(), ports[selection].end());
-                appRef->arduino.SetComPort(portAsString);
+                appRef->arduinoThread.GetArduino()->SetComPort(portAsString);
                 return true;
     }
     return false;
@@ -702,15 +823,23 @@ bool ArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
 
                 if(selection==1)
                 {
-                    if(!IsComPortListed(appRef->arduino.GetComPort()))
+                    if(!IsComPortListed(appRef->arduinoThread.GetArduino()->GetComPort()))
                     {
                         selection = 2;
                         return true;
                     }
 
-                    if(appRef->arduino.Connect())
+                   //if(appRef->arduinoThread.SetExecutionFunction(Functions::startComPort))
+                   //{
+                   //    selection = 4;
+                   //    selectedSubMenu = APP_IS_CONNECTING_MENU;
+                   //    return true;
+                   //}
+                    if(appRef->arduinoThread.GetArduino()->Connect())
                     {
-                        selection = 4;
+                        selection = 1;
+                        selectedSubMenu = APP_MAIN_MENU;
+                        return true;
                     }
                     else
                     {
@@ -760,13 +889,13 @@ bool ArduinoMenu::HandleKeyboardDisconnectMenu(int keyBoardKey)
 
                 if(selection==1)
                 {
-                    if(!IsComPortListed(appRef->arduino.GetComPort()))
+                    if(!IsComPortListed(appRef->arduinoThread.GetArduino()->GetComPort()))
                     {
                         selection = 2;
                         return true;
                     }
 
-                    if(appRef->arduino.Disconnect())
+                    if(appRef->arduinoThread.GetArduino()->Disconnect())
                     {
                         selection = 4;
                     }
@@ -806,6 +935,7 @@ bool ArduinoMenu::Draw()
         case(2): DrawComPortSelectionMenu(); return true;
         case(3): DrawConnectMenu(); return true;
         case(4): DrawDisconnectMenu(); return true;
+        case(APP_IS_CONNECTING_MENU): DrawIsConnectingMenu(); return true;
     }
     return false;
 }
@@ -813,6 +943,7 @@ bool ArduinoMenu::Draw()
 bool ArduinoMenu::OnEnter()
 {
     selectedSubMenu = 0;
+    oldSelectedSubMenu = -1;
     selection = 0;
     return true;
 }
@@ -820,6 +951,7 @@ bool ArduinoMenu::OnEnter()
 bool ArduinoMenu::OnExit()
 {
     selectedSubMenu = 0;
+    oldSelectedSubMenu = -1;
     selection = 0;
     return true;
 }

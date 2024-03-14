@@ -19,10 +19,13 @@
 
 // - DEFINES - //
 #define APP_MAIN_MENU 0
-#define APP_ARDUINO_MENU 2
-#define APP_GAME_MENU 3
 #define APP_TEST_MENU 1
+#define APP_ARDUINO_MENU 2
+#define APP_MAP_MENU 3
 #define APP_EXIT_MENU 4
+#define APP_AMOUNT_OF_MENUS 4
+
+#define APP_GAME_MENU 5
 
 #define KB_UP 72
 #define KB_DOWN 80
@@ -31,6 +34,8 @@
 #define KB_ESCAPE 27
 #define KB_ENTER 13
 #define KB_ESCAPE 27
+#define KB_DEL 127
+#define KB_BACK 8
 
 // - CLASS - //
 // class Application;
@@ -98,7 +103,7 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnEnter();
+        virtual bool OnEnter() = 0;
 
         /**
          * @brief 
@@ -107,5 +112,5 @@ class Menu
          * @return true 
          * @return false 
          */
-        bool OnExit();
+        virtual bool OnExit() = 0;
 };

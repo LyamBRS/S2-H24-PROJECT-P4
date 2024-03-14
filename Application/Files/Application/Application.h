@@ -25,6 +25,7 @@
 #include "../Menus/MainMenu.h"
 #include "../Menus/MapMenu.h"
 #include "../Menus/TestMenu.h"
+#include "../Menus/GameMenu.h"
 #include <conio.h>
 #include <vector>
 
@@ -64,6 +65,17 @@ class Application
          * Invalid key.
          */
         bool HandleKeyboardActions();
+
+        /**
+         * @brief 
+         * Simple function which handles the generic update
+         * functions of the currently selected menu.
+         * @return true:
+         * Successfully updated the current menu
+         * @return false:
+         * Failed to update the current menu
+         */
+        bool HandleMenuUpdates();
 
         std::vector<Menu*> menus;
     public:

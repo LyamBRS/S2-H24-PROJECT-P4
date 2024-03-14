@@ -26,18 +26,30 @@ bool MainMenu::Update()
     return false;
 }
 
+bool MainMenu::OnEnter()
+{
+    oldSelection = -1;
+    return true;
+}
+
+bool MainMenu::OnExit()
+{
+    oldSelection = -1;
+    return true;
+}
+
 bool MainMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
         case KB_UP:
                 selection--;
-                if(selection<1) selection=4;
+                if(selection<1) selection=APP_AMOUNT_OF_MENUS;
                 return true;            
     
         case KB_DOWN:
                 selection++;
-                if(selection>4) selection=1;
+                if(selection>APP_AMOUNT_OF_MENUS) selection=1;
                 return true;                  
 
         case KB_ENTER:
@@ -46,7 +58,7 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
                 return true;
         
         case KB_ESCAPE:
-                appRef->currentSelectedMenu = 4;
+                appRef->currentSelectedMenu = APP_EXIT_MENU;
                 selection = 0;
                 return true; 
     }        
@@ -55,7 +67,14 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
 
 bool MainMenu::Draw()
 {
-    system("cls");
+    if(oldSelection != appRef->currentSelectedMenu)
+    {
+        oldSelection = appRef->currentSelectedMenu;
+        ResizeTerminal(36, 12);
+        system("cls");
+    }
+    ResizeTerminal(36, 12);
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
@@ -70,16 +89,16 @@ bool MainMenu::Draw()
         selection = 1;
     }
 
-    if(!appRef->arduino.GetPortState())                              PrintInColour(std::cout, "-      No arduino connected to the PC      -", colors::red, colors::black);
-    if(appRef->arduino.GetPortState() && !appRef->arduino.Verify())  PrintInColour(std::cout, "- Connected devices not answering requests -", colors::black, colors::gold);
-    if(appRef->arduino.GetPortState() && appRef->arduino.Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
+    if(!appRef->arduinoThread.GetArduino()->GetPortState())                              PrintInColour(std::cout, "-      No arduino connected to the PC      -", colors::red, colors::black);
+    if(appRef->arduinoThread.GetArduino()->GetPortState() && !appRef->arduinoThread.GetArduino()->Verify())  PrintInColour(std::cout, "- Connected devices not answering requests -", colors::black, colors::gold);
+    if(appRef->arduinoThread.GetArduino()->GetPortState() && appRef->arduinoThread.GetArduino()->Verify())  PrintInColour(std::cout, "-     Connected arduino is operational     -", colors::black, colors::green);
     std::cout << std::endl;
 
 	std::cout << "--------------------------------------------" << std::endl;
 
     switch(selection)
     {
-        case(APP_GAME_MENU):
+        case(APP_MAP_MENU):
             PrintInColour(std::cout, "   1: Test Menu\n",       colors::grey, colors::black);
             PrintInColour(std::cout, "   2: Arduino setup\n",   colors::grey, colors::black);
             PrintInColour(std::cout, "-> 3: Game Menu\n",       colors::aqua, colors::black);

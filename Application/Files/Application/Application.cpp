@@ -34,12 +34,14 @@ Application::Application()
     Menu* mainMenu      = new MainMenu(appHandlerPtr);
     Menu* mapMenu       = new MapMenu(appHandlerPtr);
     Menu* testMenu      = new TestMenu(appHandlerPtr);
+    Menu* gameMenu      = new GameMenu(appHandlerPtr);
 
     menus.push_back(mainMenu);
     menus.push_back(testMenu);
     menus.push_back(arduinoMenu);
     menus.push_back(mapMenu);
     menus.push_back(exitMenu);
+    menus.push_back(gameMenu);
 }
 
 /**
@@ -56,8 +58,9 @@ bool Application::HandleKeyboardActions()
 {
     if (kbhit())
     {
-        appHandler.requiresNewDrawing = true;
-        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(getch());
+        int character = getch();
+        appHandler.requiresNewDrawing = appHandler.redrawOnKeyboardHits;
+        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(character);
     }
     return true;
 }
@@ -81,6 +84,20 @@ bool Application::HandleMenuDrawings()
 
 /**
  * @brief 
+ * Simple function which handles the generic update
+ * functions of the currently selected menu.
+ * @return true:
+ * Successfully updated the current menu
+ * @return false:
+ * Failed to update the current menu
+ */
+bool Application::HandleMenuUpdates()
+{
+    return menus[appHandler.currentSelectedMenu]->Update();
+}
+
+/**
+ * @brief 
  * Updates the application each QT frames.
  * Calls all the Update functions of all the
  * things in the application.
@@ -91,6 +108,8 @@ bool Application::HandleMenuDrawings()
  */
 bool Application::Update()
 {
+    static int oldSelectedMenu = 0;
+
     // Allows you to immediately see if a COM port change occurs
     if(appHandler.oldAmountOfComPorts != GetAvailableComPorts().size())
     {
@@ -100,12 +119,29 @@ bool Application::Update()
 
     HandleMenuDrawings();
     HandleKeyboardActions();
+    HandleMenuUpdates();
+
+    if(oldSelectedMenu != appHandler.currentSelectedMenu)
+    {
+        menus[oldSelectedMenu]->OnExit();
+        menus[appHandler.currentSelectedMenu]->OnEnter();
+        oldSelectedMenu = appHandler.currentSelectedMenu;
+    }
+
+    //appHandler.arduinoThread.threadFunction(0);
+    appHandler.arduinoThread.GetArduino()->Update();
 
     if(appHandler.frameTimer.TimeLeft() == 0)
     {
-        appHandler.arduino.Update();
-        appHandler.currentGame.Update();
+        appHandler.UpdateKeyboardControllers();
     }
+
+    //if(!appHandler.arduinoThread.GetThreadStatus())
+    //{
+    //   //std::cout << std::endl;
+    //   //std::cout << "THREAD IS NO LONGER LIVING" << std::endl;
+    //}
+
     return true;
 }
 
@@ -118,6 +154,9 @@ void Application::TemporaryLoop()
 {
     while(appHandler.wantedSelectedMenu != -1)
     {
-        Update();
+        if(!Update())
+        {
+            return;
+        }
     }
 }

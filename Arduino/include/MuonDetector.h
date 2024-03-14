@@ -32,7 +32,11 @@ class MuonDetector
         /// @brief Total of muons detected
         int totalCounted = 0;
 
+        bool canBeUsed = false;
+
     public:
+
+        MuonDetector();
 
         /**
          * @brief Construct a new Muon Detector object.

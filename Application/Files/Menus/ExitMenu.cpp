@@ -49,9 +49,27 @@ bool ExitMenu::HandleKeyboard(int keyBoardKey)
     return false;
 }
 
+bool ExitMenu::OnEnter()
+{
+    needsToBeRedrawn = true;
+    return true;
+}
+
+bool ExitMenu::OnExit()
+{
+    needsToBeRedrawn = true;
+    return true;
+}
+
 bool ExitMenu::Draw()
 {
-    system("cls");
+    ResizeTerminal(36, 9);
+    if(needsToBeRedrawn)
+    {
+        needsToBeRedrawn = false;
+        system("cls");
+    }
+    SetTerminalCursorPosition(0,0);
 	std::cout << "############################################" << std::endl;
     std::cout << "                - BomberMan -               " << std::endl;
 	std::cout << "--------------------------------------------" << std::endl;
