@@ -34,13 +34,17 @@ class PlacedBomb : public Object
     private:
 
         /// @brief How long until the bomb starts exploding.
-        int timeTillBoom = 0;
+        SimpleTimer timeTillBoom = SimpleTimer(0);
 
         /// @brief The final explosion radius that the bomb will reach.
         int explosivePower = 0;
 
         /// @brief The current radius of the explosion. Starts at 0
         int currentExplosionRadius = 0;
+
+        bool isExploding = false;
+
+        bool isExploded = false;
 
     public:
 

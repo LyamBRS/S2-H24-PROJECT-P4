@@ -1,10 +1,10 @@
 #include "PlacedBomb.h"
 
-        PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength){
-            timeTillBoom = fuseLength;
-            explosivePower = explosiveForce;
-            position.SetNewCoordinates(x,y);
-        }
+PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength){
+    timeTillBoom.SetDuration(fuseLength);
+    explosivePower = explosiveForce;
+    position.SetNewCoordinates(x,y);
+}
 
         /**
          * @brief 
@@ -21,12 +21,14 @@
          * Failed to update the bomb. The bomb is
          * finished exploding.
          */
-        bool PlacedBomb::Update(){
-            if (HasFinishedExploding() == true)
-            {
-                return false;
+        bool PlacedBomb::Update(){ //wtf stay that size for a couple more update
+            if (timeTillBoom.TimeLeft() == 0) { 
+                isExploding = true;
             }
-            currentExplosionRadius+=1;
+            if (isExploding && (currentExplosionRadius < explosivePower)) {
+                currentExplosionRadius++;
+            }
+            isExploded = currentExplosionRadius >= explosivePower;
             return true;
         }
 
@@ -39,10 +41,6 @@
          * @return false:
          * Bomb still doing bomb shit.
          */
-        bool PlacedBomb::HasFinishedExploding(){
-            if(currentExplosionRadius <= explosivePower){
-                return false;
-            }
-            currentExplosionRadius = 0;
-            return true;
+        bool PlacedBomb::HasFinishedExploding(){ 
+            return isExploded;
         }
