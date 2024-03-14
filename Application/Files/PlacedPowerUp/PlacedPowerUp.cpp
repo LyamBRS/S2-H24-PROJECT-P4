@@ -30,5 +30,5 @@ bool PlacedPowerUp::Update()
 
 bool PlacedPowerUp::ShouldBeDeleted()
 {
-   return shoulbedeleted
+   return shoulbedeleted;
 }
