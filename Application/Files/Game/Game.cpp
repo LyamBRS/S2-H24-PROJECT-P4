@@ -260,7 +260,7 @@ bool Game::PutObjectsInMap()
                 Sleep(1000);
 
                 needToRedrawMap = true;
-                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::PLAYER);
+                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::PLAYER1);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
 
                 previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
