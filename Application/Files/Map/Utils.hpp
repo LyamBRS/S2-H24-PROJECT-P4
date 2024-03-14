@@ -78,5 +78,29 @@ std::string GetMapJsonError(nlohmann::json mapJSON);
  */
 bool VerifyMap(std::string path);
 
+/**
+ * @brief
+ * # Check if tile is walkable
+ * @brief
+ * Returns true if the tile is empty
+ * Return false if the tile is not walkable
+ * full list is available as defines in @ref Utils.hpp
+ * @return bool
+ */
+bool TileIsWalkable(TileTypes tile);
+
+
+ /**
+  * @brief
+  * # Check return the tile position of the player in param
+  * @brief
+  * return x and y of where
+  * Return false if the tile is not walkable
+  * full list is available as defines in @ref Utils.hpp
+  * @return std::string
+  */
+
+get player tile;
+
 std::vector<nlohmann::json> GetAllMaps();
 nlohmann::json GetMapJson(std::string path);

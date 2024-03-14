@@ -72,6 +72,36 @@ bool VerifyMap(std::string path)
     return true;
 }
 
+bool TileIsWalkable(TileTypes tile)
+{
+    switch (tile)
+    {
+    case TileTypes::EMPTY:
+        return true;
+        break;
+    case TileTypes::PERMAWALL:
+        return false;
+        break;
+    case TileTypes::WALL:
+        return false;
+        break;
+    case TileTypes::PLAYERSPAWN:
+        return true;
+        break;
+    case TileTypes::PLAYER:
+        return true;
+        break;
+    case TileTypes::SMOKE:
+        return true;
+        break;
+    case TileTypes::POWER:
+        return true;
+        break;
+    default:
+        break;
+    }
+}
+
 nlohmann::json GetMapJson(std::string path)
 {
     // Open the file
