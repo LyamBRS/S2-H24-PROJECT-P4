@@ -50,6 +50,8 @@
 
 #define PLAYER_CONTROLLER_THRESHOLD 30
 
+#define PLAYER_DEFAULT_SPEED_INTERVAL_MS 230
+
 // - FUNCTION - //
 int GetPlayerColor(unsigned int playerNumber);
 
@@ -89,6 +91,7 @@ class Player : BaseObject
         SimpleTimer bombPlacement = SimpleTimer(3000);
 
     public:
+        SimpleTimer movementFrameDelay = SimpleTimer(PLAYER_DEFAULT_SPEED_INTERVAL_MS);
 
         /**
          * @brief
@@ -247,4 +250,6 @@ class Player : BaseObject
         Movements* GetVelocity();
 
         Positions* GetCurrentCoordinates();
+
+        Positions* GetOldCoordinates();
 };

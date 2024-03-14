@@ -156,18 +156,36 @@ bool Game::HandleNextMouvements()
 
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
-        int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
-        int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
+        // HandleMovements is done in each frame update. This governs 
+        if(players[playerIndex].movementFrameDelay.TimeLeft() == 0)
+        {
+            int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
+            int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
 
-        int playerX = players[playerIndex].GetCurrentCoordinates()->X();
-        int playerY = players[playerIndex].GetCurrentCoordinates()->Y();
+            int playerX = players[playerIndex].GetCurrentCoordinates()->X();
+            int playerY = players[playerIndex].GetCurrentCoordinates()->Y();
 
-        // Test for wall in front of player
-        int testX = playerX + xVelocity;
-        int testY = playerY + yVelocity;
+            // Get wall coordinate for wall in front of player based on movements
+            int testX = playerX + xVelocity;
+            int testY = playerY + yVelocity;
 
-        if(testX < 0) testX=0;
-        if(testY < 0) testY=0;
+            if(testX < 0) testX=0;
+            if(testY < 0) testY=0;
+            if(testX > mapX) testX=mapX;
+            if(testY > mapY) testY=mapY;
+
+            // Check if the wanted coordinate is a wall or not.
+            int tileAtCoordinate = map->GetTileDataAtPosition(testX, testY);
+            if(tileAtCoordinate==1 || tileAtCoordinate==2)
+            {
+                players[playerIndex].GetVelocity()->ResetDeltas();
+            }
+            else
+            {
+                players[playerIndex].GetOldCoordinates()->SetNewCoordinates(playerX, playerY); // So we can erase the player from those coordinates.
+                players[playerIndex].GetCurrentCoordinates()->SetNewCoordinates(testX, testY);
+            }
+        }
 
     }
     return false;
@@ -189,6 +207,7 @@ bool Game::HandleNextMouvements()
  */
 bool Game::PutObjectsInMap()
 {
+    // Place players on the map.
     return false;
 }
 
