@@ -2,9 +2,10 @@
 #include <Arduino.h>
 #include "SimpleTimer.h"
 
-PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int type)
+PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int type) 
 {
-
+    this->position.SetNewCoordinates(initialX,initialY);
+    this->type=type;
 }
 
 PlacedPowerUp::~PlacedPowerUp()
@@ -14,19 +15,16 @@ PlacedPowerUp::~PlacedPowerUp()
 
 bool PlacedPowerUp::Update()
 {
-    
+    if (ShouldBeDeleted())
+    {return true;}
+    else if (!ShouldBeDeleted())
+    {return false;}
 }
 
 bool PlacedPowerUp::ShouldBeDeleted()
 {
-    
-    uint64_t PowerAvailable = TimeLeft();
-    if((timeTillDespawn - PowerAvailable) >= timeTillDespawn)
-    {
-        return true;
-    }
-    else
-    {
-        return false;
-    }
+   if (Timetilldespawn->TimeLeft()==0)
+   {return true;}
+   if (Timetilldespawn->TimeLeft()!=0)
+   {return false;}
 }
