@@ -151,7 +151,10 @@ class Game
         int timeSinceStart = 0;
         /// @brief How long until the game starts and players can move
         SimpleTimer startTimer = SimpleTimer(4000);
+        SimpleTimer handlerTimer = SimpleTimer(1);
         SimpleChrono gameDuration = SimpleChrono();
+
+        bool statusChanged = false;
 
         int gameStatus = 0;
         int gameWidth = 0;
@@ -552,4 +555,6 @@ class Game
         Controller* GetPlayerController(int playerIndex);
         bool AssignControllerToPlayer(int playerIndex, Controller* controllerRef);
         bool UnAssignPlayerController(int playerIndex);
+
+
 };

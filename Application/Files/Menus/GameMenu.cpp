@@ -486,8 +486,7 @@ bool GameMenu::DrawPaused()
 
 bool GameMenu::DrawGame()
 {
-    system("cls");
-    currentGame->FreshDraw();
+    currentGame->Draw();
     return true;
 }
 

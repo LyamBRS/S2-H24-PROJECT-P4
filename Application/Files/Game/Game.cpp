@@ -130,8 +130,6 @@ bool Game::DrawTimers()
 }
 
 
-
-
 /**
  * @brief 
  * # HandleNextMouvements
@@ -176,7 +174,7 @@ bool Game::HandleNextMouvements()
 
             // Check if the wanted coordinate is a wall or not.
             int tileAtCoordinate = map->GetTileDataAtPosition(testX, testY);
-            if(tileAtCoordinate==1 || tileAtCoordinate==2)
+            if(tileAtCoordinate = TileTypes::WALL || tileAtCoordinate==TilesTypes::PERMAWALL)
             {
                 players[playerIndex].GetVelocity()->ResetDeltas();
             }
@@ -208,7 +206,32 @@ bool Game::HandleNextMouvements()
 bool Game::PutObjectsInMap()
 {
     // Place players on the map.
-    return false;
+    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    {
+        Player* currentPlayer = &players[playerIndex];
+        Positions* previousPos = players[playerIndex].GetOldCoordinates();
+        Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
+
+        // Player needs to be removed from the map.
+        if(currentPlayer->NeedsToBeDeleted())
+        {
+            needToRedrawMap = true;
+            currentPlayer->SetPlayerAsDeleted();
+            map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
+            map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);  
+        }
+        else // Puts an empty space behind the player, and put the current player innit
+        {
+            if((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
+            {
+                needToRedrawMap = true;
+                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::PLAYER);
+                map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+                previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+            }
+        }
+    }
+    return true;
 }
 
 /**
@@ -246,7 +269,9 @@ bool Game::HandleBombs()
  */
 bool Game::HandlePlayers()
 {
-    return false;
+    HandleNextMouvements();
+    CheckForPlayerDamage();
+    return true;
 }
 
 /**
@@ -408,6 +433,7 @@ bool Game::Update()
     /////////////////////////////////////////
     if(gameStatus != oldGameStatus)
     {
+        statusChanged = true;
         // Game actually started! This is the first update frame.
         if(oldGameStatus==GameStatuses::countdown && gameStatus==GameStatuses::playing)
         {
@@ -425,7 +451,16 @@ bool Game::Update()
         needToRedrawTimers = true;
     }
 
-
+    ////////////////////////////////////////////
+    // Handle game attributes
+    ////////////////////////////////////////////
+    if(handlerTimer.TimeLeft() == 0)
+    {
+        HandlePlayers();
+        HandleBombs();
+        HandlePowerUp();
+        PutObjectsInMap();
+    }
     return true;
 }
 
@@ -709,6 +744,15 @@ bool Game::NeedsRedrawing()
 bool Game::Draw()
 {
     if(!canBeUsed) return false;
+
+    if(statusChanged)
+    {
+        statusChanged = false;
+        if(gameStatus == GameStatuses::playing)
+        {
+            FreshDraw();
+        }
+    }
 
     if(needToRedrawMap)
     {

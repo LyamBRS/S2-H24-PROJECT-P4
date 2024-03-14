@@ -84,6 +84,7 @@ class Player : BaseObject
         bool wantsToUseSelectedItem = false;
         /// @brief Simply says if the player is alive rn or not.
         bool isAlive = true;
+        bool isDead = false;
 
         /// @brief Linked to a real controller.
         Controller* controllerRef = new Controller();
@@ -252,4 +253,26 @@ class Player : BaseObject
         Positions* GetCurrentCoordinates();
 
         Positions* GetOldCoordinates();
+
+        /**
+         * @brief
+         * # NeedsToBeDeleted
+         * @brief
+         * Tells the game that the player should no longer be drawn 
+         * on the map. 
+         * @return true 
+         * @return false 
+         */
+        bool NeedsToBeDeleted();
+
+        /**
+         * @brief
+         * # NeedsToBeDeleted
+         * @brief
+         * Tells the game that the player is no longer be drawn 
+         * on the map. He dead as hell
+         * @return true 
+         * @return false 
+         */
+        bool SetPlayerAsDeleted();
 };

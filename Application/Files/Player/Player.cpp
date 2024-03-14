@@ -211,4 +211,32 @@ Positions* Player::GetOldCoordinates()
     return &OldPosition;
 }
 
+/**
+ * @brief
+ * # NeedsToBeDeleted
+ * @brief
+ * Tells the game that the player should no longer be drawn 
+ * on the map. 
+ * @return true 
+ * @return false 
+ */
+bool Player::NeedsToBeDeleted()
+{
+    return isAlive && Health()==0 && isDead==false;
+}
+
+/**
+ * @brief
+ * # NeedsToBeDeleted
+ * @brief
+ * Tells the game that the player is no longer be drawn 
+ * on the map. He dead as hell
+ * @return true 
+ * @return false 
+ */
+bool Player::SetPlayerAsDeleted()
+{
+    isDead = true;
+    return true;
+}
 
