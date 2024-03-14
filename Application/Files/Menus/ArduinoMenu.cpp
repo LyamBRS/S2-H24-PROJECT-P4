@@ -33,6 +33,7 @@ ArduinoMenu::ArduinoMenu(AppHandler* currentAppHandler)
  */
 bool ArduinoMenu::DrawArduinoMainMenu()
 {
+    ResizeTerminal(40, 8);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -207,6 +208,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
 
 bool ArduinoMenu::DrawBaudrateSelectionMenu()
 {
+    ResizeTerminal(40, 17);
     if(oldSelectedSubMenu != selectedSubMenu)
     {
         oldSelectedSubMenu = selectedSubMenu;
@@ -290,6 +292,10 @@ bool ArduinoMenu::DrawBaudrateSelectionMenu()
 
 bool ArduinoMenu::DrawComPortSelectionMenu()
 {
+    std::vector<std::wstring> ports = GetAvailableComPorts();
+    int amountOfSelections = ports.size();
+
+    ResizeTerminal(36, 6+amountOfSelections);
     system("cls");
 	std::cout << "############################################" << std::endl;
     std::cout << "              - Arduino setup -             " << std::endl;
@@ -341,9 +347,6 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
         std::cout << std::endl;
     };
 
-    std::vector<std::wstring> ports = GetAvailableComPorts();
-    int amountOfSelections = ports.size();
-
     if(amountOfSelections == 0)
     {
         PrintInColour(std::cout, "-          NO VALID COM PORTS FOUND        -\n", colors::red, colors::white);
@@ -373,6 +376,8 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
 
 bool ArduinoMenu::DrawConnectMenu()
 {
+    ResizeTerminal(36, 7);
+
     auto drawConnectionResult = [](int selection)
     {
         switch(selection)
@@ -551,6 +556,8 @@ bool ArduinoMenu::DrawIsConnectingMenu()
 
 bool ArduinoMenu::DrawDisconnectMenu()
 {
+    ResizeTerminal(36, 7);
+
     auto drawConnectionResult = [](int selection)
     {
         switch(selection)

@@ -25,6 +25,7 @@
 #include "../Menus/MainMenu.h"
 #include "../Menus/MapMenu.h"
 #include "../Menus/TestMenu.h"
+#include "../Menus/GameMenu.h"
 #include <conio.h>
 #include <vector>
 

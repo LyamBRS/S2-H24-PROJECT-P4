@@ -13,12 +13,12 @@
  * @copyright Copyright (c) 2024
  */
 
-#pragma once
-
  // - INCLUDES - //
 #include "../Controller/Controller.h"
 
- // - DEFINES - //
+ // - LOCALS - //
+Controller keyboardLeft;
+Controller keyboardRight;
 
  // - CLASS - //
 
@@ -73,3 +73,4 @@ bool Controller::Reset()
     isConnected = false;
 	return false;
 }
+

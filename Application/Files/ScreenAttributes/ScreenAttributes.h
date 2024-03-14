@@ -42,6 +42,8 @@ class ScreenAttributes
 
     public:
 
+        ScreenAttributes();
+
         /**
          * @brief Construct a new Screen Attributes object.
          * This object allows ASCII characters to represent

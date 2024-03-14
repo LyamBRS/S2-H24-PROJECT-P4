@@ -63,6 +63,7 @@ bool ExitMenu::OnExit()
 
 bool ExitMenu::Draw()
 {
+    ResizeTerminal(36, 9);
     if(needsToBeRedrawn)
     {
         needsToBeRedrawn = false;

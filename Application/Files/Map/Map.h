@@ -16,6 +16,7 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../JSON/json.hpp"
+#include "../Colour/Colour.h"
 // - DEFINES - //
 
 
@@ -139,8 +140,7 @@ struct BinaryTileMasks
  * ## BIT VALUES FOR A TILE'S ATTRIBUTES
  * @brief
  * Represents a 4 bit numbers leading up to an ID to tell more
- * precisely, exactly, whats on the tile. Boxes dont have their
- * own ID numbers because players can be on them. Smoke dont hold
+ * precisely, exactly, whats on the tile. Smoke dont hold
  * its own ID number because multiple things can be on it, and it
  * doesnt really need to be saved in the game.
  * Objects hold their own ID number so that they can be stored in
@@ -222,11 +222,13 @@ class Map
         /// @brief How big the map is vertically.
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
-        int map[1][1] = {};
+        int map[30][30] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
         std::string mapName = "UNTITLED";
+        /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
+        nlohmann::json storedMapData;
 
     public:
 
@@ -236,7 +238,7 @@ class Map
          * map through @ref LoadSavedMap
          * otherwise the map IS NOT USABLE AS IS.
          */
-        Map();
+        Map(nlohmann::json MapData);
 
         /**
          * @brief 
@@ -329,7 +331,7 @@ class Map
          * @return nlohmann::json
          * JSON object of the map.
          */
-        nlohmann::json* GetCurrentMap();
+        nlohmann::json GetCurrentMap();
 
         /**
          * @brief
@@ -349,4 +351,36 @@ class Map
          * Invalid name.
          */
         bool SetMapName(std::string newName);
+
+        /**
+         * @brief 
+         * # GetASpawnPosition
+         * @brief
+         * Returns the coordinate to a specified potential spawning location
+         * for a @ref Player on the map. You must create 2 int variables which
+         * are passed to this function as pointers. This allows the method
+         * to directly update these values instead of returning a pointer.
+         * 
+         * --> CHANGE THIS TO FIT HOW YOU FIND SPAWNS <--
+         * Spawn numbers are attributed like text is read... left to right,
+         * top to bottom
+         * 
+         * 
+         * @warning
+         * If the spawn number specified is out of bounds, (not enough
+         * spawns on this map for an Xth @ref Player), -1 will be stored
+         * as X and Y coordinates.
+         * 
+         * @param spawnNumber
+         * Which spawn coordinates should be returned? 0 to Xth
+         * @param resultedX
+         * horizontal position on the map
+         * @param resultedY
+         * vertical position on the map
+         * @return true:
+         * Successfully found that player spawn
+         * @return false:
+         * Failed to find that player's spawn. -1 is set as X and Y.
+         */
+        bool GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY);
 };
