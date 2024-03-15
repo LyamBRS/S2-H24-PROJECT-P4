@@ -76,26 +76,81 @@ bool Game::DrawInventories()
     return false;
 }
 
+bool Game::DrawHealths()
+{
+    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    {
+        SetTerminalCursorPosition(healthCursorX, playerCardStartY + playerIndex);
+        int playerHealth = players[playerIndex].Health();
+
+        if(playerHealth == 0)
+        {
+            PrintInColour(TER, "DEAD", colors::black, GAME_WINDOW_FIELD_BG);
+        }
+        else
+        {
+            int bg = GAME_WINDOW_FIELD_BG;
+            int fg = GAME_WINDOW_FIELD_BG;
+
+            if(playerHealth > 90)      {fg = colors::white; bg = colors::green;}
+            else if(playerHealth > 80) {fg = colors::lightgrey; bg = colors::green;}
+            else if(playerHealth > 70) {fg = colors::leaf; bg = colors::grey;}
+            else if(playerHealth > 60) {fg = colors::green; bg = colors::grey;}
+            else if(playerHealth > 50) {fg = colors::yellow; bg = colors::grey;}
+            else if(playerHealth > 40) {fg = colors::gold; bg = colors::grey;}
+            else if(playerHealth > 30) {fg = colors::lightred; bg = colors::gold;}
+            else if(playerHealth > 20) {fg = colors::red; bg = colors::gold;}
+            else if(playerHealth > 10) {fg = colors::lightred; bg = colors::grey;}
+            else                       {fg = colors::white; bg = colors::red;}
+
+            ConsecutiveChar(TER, CHAR_HEARTH, fg, bg, 1, false);
+
+            std::string result = std::to_string(playerHealth);
+            while(result.size() != 3) result.insert(0, " ");
+            PrintInColour(TER, result, fg, bg);
+        }
+    }
+    return true;
+}
+
 bool Game::DrawPlayerStatus()
 {
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
-        SetTerminalCursorPosition(bombStatusCursorX, playerCardStartY + playerIndex);
+        int hasMovementCooldown = players[playerIndex].movementFrameDelay.TimeLeftNoReset();
 
-        // That player is no longer connected.
-        if(!players[playerIndex].GetController()->isConnected)
+        if(players[playerIndex].GetController()->controllerID != 0)
         {
-            PrintInColour(TER, "!", colors::white, colors::red);
-        }
-        // That player is out of health. He dead as hell.
-        else if(players[playerIndex].Health() == 0)
-        {
-            PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
-        }
-        // That player is on cooldown
-        else
-        {
-            PrintInColour(TER, "C", colors::lightred, colors::red);
+            SetTerminalCursorPosition(bombStatusCursorX, playerCardStartY + playerIndex);
+            // That player is no longer connected.
+            if(!players[playerIndex].GetController()->isConnected)
+            {
+                PrintInColour(TER, "!", colors::white, colors::red);
+                players[playerIndex].newStatus = 1;
+            }
+            // That player is out of health. He dead as hell.
+            else if(players[playerIndex].Health() == 0)
+            {
+                PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
+                players[playerIndex].newStatus = 2;
+            }
+            else if(hasMovementCooldown)
+            {
+                PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
+                players[playerIndex].newStatus = 3;
+            }
+            // That player has no particular status to show
+            else
+            {
+                PrintInColour(TER, " ", GAME_FIELD_COLORS);
+                players[playerIndex].newStatus = 100;
+            }
+
+            if(players[playerIndex].newStatus != players[playerIndex].oldStatus)
+            {
+                players[playerIndex].oldStatus = players[playerIndex].newStatus;
+                needToRedrawPlayerStatus = true;
+            }
         }
     }
 
@@ -152,12 +207,10 @@ bool Game::HandleNextMouvements()
     int mapX = map->GetCurrentMap()["sizeX"];
     int mapY = map->GetCurrentMap()["sizeY"];
 
-    static int amogus = 0;
-
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
         // HandleMovements is done in each frame update. This governs 
-        if(players[playerIndex].movementFrameDelay.TimeLeft() == 0)
+        if(players[playerIndex].movementFrameDelay.TimeLeftNoReset() == 0)
         {
             int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
             int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
@@ -180,41 +233,37 @@ bool Game::HandleNextMouvements()
             }
             else
             {
-                //SetTerminalCursorPosition(0, 0);
-                //std::cout << "Player velocity is " << xVelocity << ", " << yVelocity << std::endl;
-                // Check if the wanted coordinate is a wall or not.
-                TileTypes tileAtCoordinate = map->GetTileDataAtPosition(testX, testY);
+                TileTypes horizontalTileAtCoordinate = map->GetTileDataAtPosition(testX, playerY);
+                TileTypes verticalTileAtCoordinate = map->GetTileDataAtPosition(playerX, testY);
 
-                //switch (tileAtCoordinate)
-                //{
-                //case(TileTypes::EMPTY):       std::cout << "EMPTY      " << std::endl; break;
-                //case(TileTypes::PERMAWALL):   std::cout << "PERMAWALL  " << std::endl; break;
-                //case(TileTypes::PLAYER):      std::cout << "PLAYER     " << std::endl; break;
-                //case(TileTypes::PLAYERSPAWN): std::cout << "PLAYERSPAWN" << std::endl; break;
-                //case(TileTypes::WALL):        std::cout << "WALL       " << std::endl; break;
-                //case(TileTypes::POWER):       std::cout << "POWER      " << std::endl; break;
-                //case(TileTypes::SMOKE):       std::cout << "SMOKE      " << std::endl; break;
-                //}
+                int horizontalVelocity = TileIsWalkable(horizontalTileAtCoordinate) ? xVelocity : 0;
+                int verticalVelocity = TileIsWalkable(verticalTileAtCoordinate) ? yVelocity : 0;
 
-                if(!TileIsWalkable(tileAtCoordinate))
+                // Set new possible velocities based on tiles next to the player. Avoids diagonal clipping through walls
+                players[playerIndex].GetVelocity()->SetDeltas(horizontalVelocity, verticalVelocity);
+
+                testX = playerX + horizontalVelocity;
+                testY = playerY + verticalVelocity;
+                if(testX < 0) testX=0;
+                if(testY < 0) testY=0;
+                if(testX > mapX) testX=mapX;
+                if(testY > mapY) testY=mapY;
+
+                // Get the new, fixed position to analyse
+                TileTypes tileAtWantedDestination = map->GetTileDataAtPosition(testX, testY);
+
+                if(!TileIsWalkable(tileAtWantedDestination))
                 {
                     players[playerIndex].GetVelocity()->ResetDeltas();
-                    //std::cout << "Tile at " << testX << ", " << testY << " is not walkable: " << std::endl;
                 }
                 else
                 {
+                    players[playerIndex].movementFrameDelay.Reset();
                     players[playerIndex].GetCurrentCoordinates()->SetNewCoordinates(testX, testY);
-                    //std::cout << "Player is now at " << testX << ", " << testY << std::endl;
+                    players[playerIndex].GiveDamage(1);
                 }
-                //Sleep(1000);
             }
         }
-        else
-        {
-            //SetTerminalCursorPosition(0, playerIndex);
-            //std::cout << "Player " << playerIndex << ": dX: " << "-" << " dY: " << "-" << std::endl;
-        }
-
     }
     return false;
 }
@@ -236,35 +285,52 @@ bool Game::HandleNextMouvements()
 bool Game::PutObjectsInMap()
 {
     // Place players on the map.
-    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
     {
         Player* currentPlayer = &players[playerIndex];
         Positions* previousPos = players[playerIndex].GetOldCoordinates();
         Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
 
-        // Player needs to be removed from the map.
-        if(currentPlayer->NeedsToBeDeleted())
+        if (currentPlayer->GetController()->controllerID != 0) // Otherwise, that player was not assigned a controller, thus is not playing.
         {
-            needToRedrawMap = true;
-            currentPlayer->SetPlayerAsDeleted();
-            map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
-            map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);  
-        }
-        else // Puts an empty space behind the player, and put the current player innit
-        {
-            if((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
+            // Player needs to be removed from the map.
+            if (currentPlayer->NeedsToBeDeleted())
             {
                 needToRedrawMap = true;
+                currentPlayer->SetPlayerAsDeleted();
+                map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
-                map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), TileTypes::POWER);
-
-                SetTerminalCursorPosition(0, 0);
-                std::cout << "old: " << previousPos->X() << "," << previousPos->Y() << " new:" << currentPos->X() << "," << currentPos->Y() << std::endl;
-                previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
-                std::cout << "new old: " << previousPos->X() << "," << previousPos->Y() << std::endl;
+            }
+            else // Puts an empty space behind the player, and put the current player innit
+            {
+                if ((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
+                {
+                    needToRedrawMap = true;
+                    if (!map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY))
+                    {
+                        SetTerminalCursorPosition(0, 0);
+                        std::cout << "FAILED PREVIOUS" << std::endl;
+                        Sleep(1000);
+                    }
+                    if (!map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex)))
+                    {
+                        SetTerminalCursorPosition(0, 0);
+                        std::cout << "FAILED CURRENT" << std::endl;
+                        Sleep(1000);
+                    }
+                    previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+                }
+                else
+                {
+                    if (map->GetTileDataAtPosition(currentPos->X(), currentPos->Y()) == TileTypes::EMPTY)
+                    {
+                        map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
+                    }
+                }
             }
         }
     }
+
     return true;
 }
 
@@ -307,9 +373,26 @@ bool Game::HandlePlayers()
     for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
     {
         players[playerIndex].UpdateFromController();
+        int playerHealth = players[playerIndex].Health();
+        int wantedBits = 0;
+        switch((playerHealth/10))
+        {
+            case(10): wantedBits = wantedBits ^= 1;
+            case(9): wantedBits = wantedBits ^= 2;
+            case(8): wantedBits = wantedBits ^= 4;
+            case(7): wantedBits = wantedBits ^= 8;
+            case(6): wantedBits = wantedBits ^= 16;
+            case(5): wantedBits = wantedBits ^= 32;
+            case(4): wantedBits = wantedBits ^= 64;
+            case(3): wantedBits = wantedBits ^= 128;
+            case(2): wantedBits = wantedBits ^= 256;
+            case(1): wantedBits = wantedBits ^= 512;
+        }
+        players[playerIndex].GetController()->SentBarGraphBits = wantedBits;
     }
     HandleNextMouvements();
     CheckForPlayerDamage();
+
     return true;
 }
 
@@ -346,6 +429,7 @@ bool Game::HandlePowerUp()
  */
 bool Game::CheckForPlayerDamage()
 {
+    needToRedrawPlayerHealth = true;
     return false;
 }
 
@@ -419,7 +503,7 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
     inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
 
-    playerCardStartY = 6 + mapSizeY + 4;
+    playerCardStartY = (6 + mapSizeY + 4)-1;
 
     // Create as much players as there is for that specific map.
     for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
@@ -756,7 +840,7 @@ bool Game::UnAssignPlayerController(int playerIndex)
 bool Game::NeedsRedrawing()
 {
     if(!canBeUsed) return false;
-    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers;
+    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers || needToRedrawPlayerHealth;
 }
 
 /**
@@ -809,10 +893,17 @@ bool Game::Draw()
         DrawInventories();
     }
 
+    needToRedrawPlayerStatus = true;
     if(needToRedrawPlayerStatus)
     {
         needToRedrawPlayerStatus = false;
         DrawPlayerStatus();
+    }
+
+    if(needToRedrawPlayerHealth)
+    {
+        needToRedrawPlayerHealth = false;
+        DrawHealths();
     }
 
     return true;
@@ -866,7 +957,7 @@ bool Game::FreshDraw()
 
         // Player name
         ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
-        PrintInColour(TER, playerName, GAME_FIELD_COLORS);
+        PrintInColour(TER, playerName, GetPlayerColor(playerNumber), GAME_WINDOW_FIELD_BG);
 
         // Bomb cooldown
         ConsecutiveChar(TER, GAME_DIVIDER_VERTICAL, 1, false);
@@ -973,7 +1064,26 @@ bool Game::FreshDraw()
     // ALL PLAYER CARDS. AS MANY AS THERE IS PLAYERS FOR THIS GAME
     for(int playerIndex = 0; playerIndex < map->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
     {
-        FreshDrawPlayer(playerIndex, gameWidth);
+        if(players[playerIndex].GetController()->controllerID != 0) 
+        {
+            FreshDrawPlayer(playerIndex, gameWidth);
+
+            // Replace the player spawn by the actual player
+            map->SetTileDataAtPosition(
+                players[playerIndex].GetCurrentCoordinates()->X(), 
+                players[playerIndex].GetCurrentCoordinates()->Y(),
+                map->GetPlayerTypeFromId(playerIndex)
+            );
+        }
+        else
+        {
+            // Player did not join. Replace by empty space
+            map->SetTileDataAtPosition(
+                players[playerIndex].GetCurrentCoordinates()->X(), 
+                players[playerIndex].GetCurrentCoordinates()->Y(),
+                TileTypes::EMPTY
+            );
+        }
     }
 
     // BOTTOM DIVIDER

@@ -185,6 +185,7 @@ class Game
         bool needToRedrawInventories = false;
         bool needToRedrawPlayerStatus = false;
         bool needToRedrawTimers = false;
+        bool needToRedrawPlayerHealth = false;
         
         /**
          * @brief 
@@ -205,9 +206,8 @@ class Game
         bool DrawGameHeader();
         bool DrawInventories();
         bool DrawPlayerStatus();
+        bool DrawHealths();
         bool DrawTimers();
-
-
 
         /**
          * @brief 
