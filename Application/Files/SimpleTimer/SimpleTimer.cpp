@@ -109,3 +109,15 @@ uint64_t SimpleTimer::TimeLeft()
     }
     return (timerDurationMS - delta);
 }
+
+uint64_t SimpleTimer::TimeLeftNoReset()
+{
+    currentValue = GetTimeSinceEpoch();
+    uint64_t delta = currentValue - lastCheckedValue;
+
+    if(delta >= timerDurationMS)
+    {
+        return 0;
+    }
+    return (timerDurationMS - delta);
+}

@@ -112,4 +112,6 @@ class SimpleTimer
          * How long until it reaches 0 (milliseconds) 
          */
         uint64_t TimeLeft();
+
+        uint64_t TimeLeftNoReset();
 };
