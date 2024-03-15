@@ -117,8 +117,8 @@ TileTypes Map::GetTileDataAtPosition(int x, int y)
 
 bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 {
-	for (int i = 0; i < sizeY; ++i) {
-		for (int j = 0; j < sizeX; ++j) {
+	for (int j = 0; j < sizeY; ++j) {
+		for (int i = 0; i < sizeX; ++i) {
 			if (i == x && j == y)
 			{
 				map[i][j] = wantedTile;
@@ -178,13 +178,13 @@ TileTypes Map::GetPlayerTypeFromId(int playerId)
 {
 	switch (playerId)
 	{
-		case 1:
+		case 0:
 			return TileTypes::PLAYER1;
-		case 2:
+		case 1:
 			return TileTypes::PLAYER2;
-		case 3:
+		case 2:
 			return TileTypes::PLAYER3;
-		case 4:
+		case 3:
 			return TileTypes::PLAYER4;
 	default:
 		break;
