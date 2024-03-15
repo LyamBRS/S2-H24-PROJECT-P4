@@ -29,10 +29,10 @@ int GetPlayerColor(unsigned int playerNumber)
 {
     switch(playerNumber)
     {
-        case(1): return PLAYER_A_COLOR;
-        case(2): return PLAYER_B_COLOR;
-        case(3): return PLAYER_C_COLOR;
-        case(4): return PLAYER_D_COLOR;
+        case(0): return PLAYER_A_COLOR;
+        case(1): return PLAYER_B_COLOR;
+        case(2): return PLAYER_C_COLOR;
+        case(3): return PLAYER_D_COLOR;
     }
     return colors::red;
 }
