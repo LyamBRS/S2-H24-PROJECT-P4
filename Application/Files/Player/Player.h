@@ -34,8 +34,8 @@
 #define PLAYER_D_COLOR colors::aqua
 
 #define PLAYER_KEY_SELECT       joystickButton
-#define PLAYER_KEY_Y_AXIS       joystickX
-#define PLAYER_KEY_X_AXIS       joystickY
+#define PLAYER_KEY_Y_AXIS       joystickY
+#define PLAYER_KEY_X_AXIS       joystickX
 #define PLAYER_KEY_INV_LEFT     leftButton
 #define PLAYER_KEY_INV_RIGHT    rightButton
 #define PLAYER_KEY_USE_PWR      topButton
@@ -95,8 +95,11 @@ class Player : BaseObject
     public:
         SimpleTimer movementFrameDelay = SimpleTimer(PLAYER_DEFAULT_SPEED_INTERVAL_MS);
 
-        TileTypes oldTileBelowPlayer = TileTypes::EMPTY;
-        TileTypes currentTileBelowPlayer = TileTypes::EMPTY;
+        //TileTypes oldTileBelowPlayer = TileTypes::EMPTY;
+        //TileTypes currentTileBelowPlayer = TileTypes::EMPTY;
+
+        int oldStatus = 0;
+        int newStatus = 0;
 
         /**
          * @brief
