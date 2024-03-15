@@ -34,11 +34,11 @@ void SetTerminalCursorPosition(int row, int column)
 
 void ResizeTerminal(int row, int column)
 {
-    HWND hwnd = GetConsoleWindow();
-    row = (row*8) + 100;
-    column = (column*16) + 100 + 8;
-    RECT rect = { 100, 100, row, column };
-    MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, false);
+    //HWND hwnd = GetConsoleWindow();
+    //row = (row*8) + 100;
+    //column = (column*16) + 100 + 8;
+    //RECT rect = { 100, 100, row, column };
+    //MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, false);
 }
 
 void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour)
