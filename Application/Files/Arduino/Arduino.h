@@ -122,6 +122,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
             Controller controllerA;
             Controller controllerB;
 
+            int detectedMuonCount = 0;
+
             SimpleTimer timeBetweenChecks = SimpleTimer(5);
             SimpleTimer timeBetweenHandshakes = SimpleTimer(1000);
         
@@ -247,6 +249,9 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * Invalid message bruh
              */
             bool SetNewLCDMessage(std::string newMessage);
+
+            int GetMuonCount();
+            bool ResetMuons();
 
             /**
              * @brief 

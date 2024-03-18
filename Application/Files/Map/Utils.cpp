@@ -132,6 +132,29 @@ bool TileIsWalkable(TileTypes tile)
     }
 }
 
+void PrintTileName(TileTypes tile)
+{
+    switch(tile)
+    {
+        case(TileTypes::BOMB):              std::cout << "BOMB          "; return;
+        case(TileTypes::EMPTY):             std::cout << "EMPTY         "; return;
+        case(TileTypes::PERMAWALL):         std::cout << "PERMAWALL     "; return;
+        case(TileTypes::PLAYER1):           std::cout << "PLAYER1       "; return;
+        case(TileTypes::PLAYER2):           std::cout << "PLAYER2       "; return;
+        case(TileTypes::PLAYER3):           std::cout << "PLAYER3       "; return;
+        case(TileTypes::PLAYER4):           std::cout << "PLAYER4       "; return;
+        case(TileTypes::PLAYERSPAWN):       std::cout << "PLAYERSPAWN   "; return;
+        case(TileTypes::POWER_DMG):         std::cout << "POWER_DMG     "; return;
+        case(TileTypes::POWER_HEART):       std::cout << "POWER_HEART   "; return;
+        case(TileTypes::POWER_MOREBOMB):    std::cout << "POWER_MOREBOMB"; return;
+        case(TileTypes::POWER_REACH):       std::cout << "POWER_REACH   "; return;
+        case(TileTypes::POWER_SPEED):       std::cout << "POWER_SPEED   "; return;
+        case(TileTypes::SMOKE):             std::cout << "SMOKE         "; return;
+        case(TileTypes::WALL):              std::cout << "WALL          "; return;
+    }
+    std::cout << "UNKNOWN       ";
+}
+
 nlohmann::json GetMapJson(std::string path)
 {
     // Open the file

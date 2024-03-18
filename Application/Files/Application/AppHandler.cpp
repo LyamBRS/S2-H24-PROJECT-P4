@@ -50,3 +50,13 @@ AppHandler::AppHandler()
 {
 
 }
+
+int AppHandler::GetDetectedMuons()
+{
+    return arduinoThread.GetArduino()->GetMuonCount();
+}
+
+bool AppHandler::ResetDetectedMuons()
+{
+    return arduinoThread.GetArduino()->ResetMuons();
+}

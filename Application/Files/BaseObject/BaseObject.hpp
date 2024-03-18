@@ -76,6 +76,14 @@ class BaseObject
         Positions* GetPosition();
 
         /**
+         * @brief Set the Position object
+         * Returns nothing
+         * position attribute class.
+         * @return  
+         */
+        void setPosition();
+
+        /**
          * @brief Get the old Position object
          * Simply returns a pointer to this objects
          * position attribute class.

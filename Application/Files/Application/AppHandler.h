@@ -113,4 +113,7 @@ class AppHandler
         Controller* GetHardwareController(int controllerTypeNumber);
 
         int UpdateKeyboardControllers();
+
+        int GetDetectedMuons();
+        bool ResetDetectedMuons();
 };

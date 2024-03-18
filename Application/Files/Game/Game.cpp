@@ -286,133 +286,92 @@ bool Game::PutObjectsInMap()
 {
     if(flipDrawingOrder)
     {
-        for (int bombIndex = 0; bombIndex<bombsOnMap.size(); bombIndex++)
-        {
-            if(map->GetTileDataAtPosition(bombsOnMap[bombIndex].GetCurrentCoordinates()->X(), bombsOnMap[bombIndex].GetCurrentCoordinates()->Y()) != TileTypes::BOMB)
-            {
-                needToRedrawMap = true;
-            }
-
-            map->SetTileDataAtPosition(
-                bombsOnMap[bombIndex].GetCurrentCoordinates()->X(), 
-                bombsOnMap[bombIndex].GetCurrentCoordinates()->Y(), 
-                TileTypes::BOMB);
-        }
-
-        // Place players on the map.
-        for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
-        {
-            Player* currentPlayer = &players[playerIndex];
-            Positions* previousPos = players[playerIndex].GetOldCoordinates();
-            Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
-    
-            if (currentPlayer->GetController()->controllerID != 0) // Otherwise, that player was not assigned a controller, thus is not playing.
-            {
-                // Player needs to be removed from the map.
-                if (currentPlayer->NeedsToBeDeleted())
-                {
-                    needToRedrawMap = true;
-                    currentPlayer->SetPlayerAsDeleted();
-                    map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
-                    map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
-                }
-                else // Puts an empty space behind the player, and put the current player innit
-                {
-                    if ((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
-                    {
-                        needToRedrawMap = true;
-                        if (!map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY))
-                        {
-                            SetTerminalCursorPosition(0, 0);
-                            std::cout << "FAILED PREVIOUS" << std::endl;
-                            Sleep(1000);
-                        }
-                        if (!map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex)))
-                        {
-                            SetTerminalCursorPosition(0, 0);
-                            std::cout << "FAILED CURRENT" << std::endl;
-                            Sleep(1000);
-                        }
-                        previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
-                        needToRedrawMap = true;
-                    }
-                    else
-                    {
-                        if (!checkIfTileIsPlayer(map->GetTileDataAtPosition(currentPos->X(), currentPos->Y())))
-                        {
-                            map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
-                            needToRedrawMap = true;
-                        }
-                    }
-                }
-            }
-        }
+        PutPlayersInMap();
+        PutBombsInMap();
     }
     else
     {
-        // Place players on the map.
-        for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
+        PutBombsInMap();
+        PutPlayersInMap();
+    }
+
+    return true;
+}
+
+bool Game::PutPlayersInMap()
+{
+    // Place players on the map.
+    for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
+    {
+        Player* currentPlayer = &players[playerIndex];
+        Positions* previousPos = players[playerIndex].GetOldCoordinates();
+        Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
+
+        if (currentPlayer->GetController()->controllerID != 0) // Otherwise, that player was not assigned a controller, thus is not playing.
         {
-            Player* currentPlayer = &players[playerIndex];
-            Positions* previousPos = players[playerIndex].GetOldCoordinates();
-            Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
-    
-            if (currentPlayer->GetController()->controllerID != 0) // Otherwise, that player was not assigned a controller, thus is not playing.
+            // Player needs to be removed from the map.
+            if (currentPlayer->NeedsToBeDeleted())
             {
-                // Player needs to be removed from the map.
-                if (currentPlayer->NeedsToBeDeleted())
+                needToRedrawMap = true;
+                currentPlayer->SetPlayerAsDeleted();
+                map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
+                map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+            }
+            else // Puts an empty space behind the player, and put the current player innit
+            {
+                if ((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
                 {
                     needToRedrawMap = true;
-                    currentPlayer->SetPlayerAsDeleted();
-                    map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
-                    map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
-                }
-                else // Puts an empty space behind the player, and put the current player innit
-                {
-                    if ((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
+                    if (!map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY))
                     {
-                        needToRedrawMap = true;
-                        if (!map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY))
-                        {
-                            SetTerminalCursorPosition(0, 0);
-                            std::cout << "FAILED PREVIOUS" << std::endl;
-                            Sleep(1000);
-                        }
-                        if (!map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex)))
-                        {
-                            SetTerminalCursorPosition(0, 0);
-                            std::cout << "FAILED CURRENT" << std::endl;
-                            Sleep(1000);
-                        }
-                        previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
-                        needToRedrawMap = true;
+                        SetTerminalCursorPosition(0, 0);
+                        std::cout << "FAILED PREVIOUS" << std::endl;
+                        Sleep(1000);
                     }
-                    else
+                    if (!map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex)))
                     {
-                        if (!checkIfTileIsPlayer(map->GetTileDataAtPosition(currentPos->X(), currentPos->Y())))
-                        {
-                            map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
-                            needToRedrawMap = true;
-                        }
+                        SetTerminalCursorPosition(0, 0);
+                        std::cout << "FAILED CURRENT" << std::endl;
+                        Sleep(1000);
+                    }
+                    previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+                    needToRedrawMap = true;
+                }
+                else
+                {
+                    if (!checkIfTileIsPlayer(map->GetTileDataAtPosition(currentPos->X(), currentPos->Y())))
+                    {
+                        map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
+                        needToRedrawMap = true;
                     }
                 }
             }
         }
+    }
+    return true;
+}
 
-        for (int bombIndex = 0; bombIndex<bombsOnMap.size(); bombIndex++)
+bool Game::PutBombsInMap()
+{
+    for (int bombIndex = 0; bombIndex<bombsOnMap.size(); bombIndex++)
+    {
+        if(bombsOnMap[bombIndex].IsExploding())
         {
-            if(map->GetTileDataAtPosition(bombsOnMap[bombIndex].GetCurrentCoordinates()->X(), bombsOnMap[bombIndex].GetCurrentCoordinates()->Y()) != TileTypes::BOMB)
+            bombsOnMap[bombIndex].Draw();
+            needToRedrawMap = true;
+        }
+        else
+        {
+            if(map->GetTileDataAtPosition(*bombsOnMap[bombIndex].GetCurrentCoordinates()) != TileTypes::BOMB)
             {
                 needToRedrawMap = true;
             }
-
             map->SetTileDataAtPosition(
                 bombsOnMap[bombIndex].GetCurrentCoordinates()->X(), 
                 bombsOnMap[bombIndex].GetCurrentCoordinates()->Y(), 
                 TileTypes::BOMB);
         }
     }
-
     return true;
 }
 
@@ -432,6 +391,7 @@ bool Game::PutObjectsInMap()
  */
 bool Game::HandleBombs()
 {
+    // Handle placement of new bombs on the map.
     for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
     {
         Player* currentPlayer = &players[playerIndex];
@@ -441,13 +401,67 @@ bool Game::HandleBombs()
             PlacedBomb newBomb = PlacedBomb(
                 currentPlayer->GetCurrentCoordinates()->X(),
                 currentPlayer->GetCurrentCoordinates()->Y(),
-                5,
-                1000
-                );
+                GAME_DEFAULT_BOMB_RADIUS,
+                2000,
+                map
+            );
             bombsOnMap.push_back(newBomb);
         }
     }
-    return false;
+
+    // Update all the bombs currently on the map.
+    // Also checks if they have finished exploding to clear and remove them.
+    if(bombUpdateTimer.TimeLeft() == 0)
+    {
+        for(int i=0; i<bombsOnMap.size(); i++)
+        {
+            bombsOnMap[i].Update();
+            if (bombsOnMap[i].HasFinishedExploding())
+            {
+                // Clear all the smoke from the map.
+                bombsOnMap[i].Clear();
+                // Check if tile is a bomb, if so, replace with empty tile.
+                Positions bombPlacement = *bombsOnMap[i].GetCurrentCoordinates();
+                if (map->GetTileDataAtPosition(bombPlacement) == TileTypes::BOMB)
+                {
+                    map->SetTileDataAtPosition(
+                        bombPlacement.X(),
+                        bombPlacement.Y(),
+                        TileTypes::EMPTY
+                    );
+                }
+            }
+
+            // Check the ends of raycasts to remove boxes.
+            for(int rayIndex=0; rayIndex<bombsOnMap[i].rays.size(); rayIndex++)
+            {
+                if(bombsOnMap[i].rays[rayIndex].HasEnded())
+                {
+                    Positions raysEndPos = bombsOnMap[i].rays[rayIndex].GetEndPosition();
+                    TileTypes tileAtEndOfRay = map->GetTileDataAtPosition(raysEndPos);
+
+                    if(tileAtEndOfRay == TileTypes::WALL) // Can be destroyed
+                    {
+                        map->SetTileDataAtPosition(
+                            raysEndPos.X(),
+                            raysEndPos.Y(),
+                        );
+                    }
+                }
+            }
+        }
+    }
+
+    // Delete the exploded bombs
+    for(int i=0; i<bombsOnMap.size(); i++)
+    {
+        if(bombsOnMap[i].HasFinishedExploding())
+        {
+            bombsOnMap.erase(bombsOnMap.begin() + i);
+        }
+    }
+
+    return true;
 }
 
 /**
@@ -530,7 +544,58 @@ bool Game::CheckForPlayerDamage()
     return false;
 }
 
+bool Game::HandleBoxDestruction(Positions boxPosition)
+{
+    // MUON STUFF HERE.
+    int detectedMuons = appRef->GetDetectedMuons();
 
+    // CHANGE THIS ONCE WE'VE GOT MUONS GOING
+    std::random_device dev;
+    std::mt19937 rng(dev());
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]
+
+    // - DESTROY BOX - //
+    map->SetTileDataAtPosition(
+        boxPosition.X(),
+        boxPosition.Y(),
+        TileTypes::EMPTY
+    );
+
+    int randomNumber = dist6(rng);
+    TileTypes wantedTile = TileTypes::EMPTY;
+    switch(randomNumber)
+    {
+        case(0):
+            wantedTile = TileTypes::POWER_DMG;
+            break;
+
+        case(1):
+            wantedTile = TileTypes::POWER_HEART;
+            break;
+
+        case(2):
+            wantedTile = TileTypes::POWER_MOREBOMB;
+            break;
+
+        case(3):
+            wantedTile = TileTypes::POWER_REACH;
+            break;
+
+        case(4):
+            wantedTile = TileTypes::POWER_SPEED;
+            break;
+    }
+
+    // - Test if the tile is no longer empty. If thats the case, a powerup needs to be created.
+    if(wantedTile != TileTypes::EMPTY)
+    {
+        itemsOnMap.push_back(PlacedPowerUp(
+            boxPosition.X(),
+            boxPosition.Y(),
+            
+        ))
+    }
+}
 
 
 /**

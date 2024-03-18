@@ -19,6 +19,7 @@
 #include "../Colour/Colour.h"
 #include <map>
 #include "../Player/Player.h"
+#include "../Positions/Positions.h" 
 // - DEFINES - //
 
 
@@ -330,6 +331,7 @@ class Map
          * @return TileType 
          */
         TileTypes GetTileDataAtPosition(int x, int y);
+        TileTypes GetTileDataAtPosition(Positions pos);
 
         /**
          * @brief

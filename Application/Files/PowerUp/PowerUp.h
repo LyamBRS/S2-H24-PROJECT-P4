@@ -76,4 +76,18 @@ class PowerUp
          * from?
          */
         PowerUp(PlacedPowerUp* powerUpToPickUp);
+        
+        /**
+         * @brief 
+         * return the binary number from PowerUpID
+         * Uses the type from PlacedPowerUP
+         */
+        unsigned int getPowerUpValue(int type);
+
+        
+        std::string getDescription();
+        void setDescription(std::string nom);
+
+        int getType();
+
 };

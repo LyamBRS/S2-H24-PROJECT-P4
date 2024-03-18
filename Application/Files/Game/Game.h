@@ -27,6 +27,7 @@
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleChrono.h"
 #include "../PlacedBomb/PlacedBomb.h"
+#include <random>
 
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
@@ -83,6 +84,9 @@
 
 #define GAME_CURSOR_GAMETIMER_Y 3
 #define GAME_CURSOR_MAP_Y 6
+
+#define GAME_BOMB_UPDATE_DELAY_MS 50
+#define GAME_DEFAULT_BOMB_RADIUS 8
 
 #define TER std::cout
 
@@ -144,7 +148,7 @@ class Game
         /// @brief All the bombs that are currently on the map.
         std::vector<PlacedBomb> bombsOnMap;
         /// @brief All the potential power ups on the map that a player can pick up.
-        std::vector<PlacedPowerUp*> itemsOnMap;
+        std::vector<PlacedPowerUp> itemsOnMap;
 
         std::string errorMessage = "";
 
@@ -154,6 +158,7 @@ class Game
         SimpleTimer startTimer = SimpleTimer(4000);
         SimpleTimer handlerTimer = SimpleTimer(1);
         SimpleChrono gameDuration = SimpleChrono();
+        SimpleTimer bombUpdateTimer = SimpleTimer(GAME_BOMB_UPDATE_DELAY_MS);
 
         bool statusChanged = false;
 
@@ -247,6 +252,10 @@ class Game
          * Failed to put objects on the map.
          */
         bool PutObjectsInMap();
+        bool PutPlayersInMap();
+        bool PutBombsInMap();
+
+        bool HandleBoxDestruction(Positions boxPosition);
 
         /**
          * @brief 

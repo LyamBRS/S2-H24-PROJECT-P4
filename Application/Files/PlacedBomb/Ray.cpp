@@ -36,7 +36,11 @@ Ray::Ray(int initialX, int initialY, int endLength, float newAssociatedAngle)
 bool Ray::Update()
 {
     if(!canContinueExpanding) return false;
-    if(length >= maxLength) return false;
+    if(length >= maxLength)
+    {
+        SetAsEnded();
+        return false;
+    }
 
     length = length + 1;
     end = GetSpecificPosition(length);
@@ -54,7 +58,7 @@ bool Ray::Update()
  */
 Positions Ray::GetSpecificPosition(int atThisLength)
 {
-    if(atThisLength > maxLength) return GetEndPosition();
+    //if(atThisLength > maxLength) return GetEndPosition();
     if(atThisLength < 0) return GetSpecificPosition(0);
 
     float x = (cosf(associatedAngle) * atThisLength) + (float(bombCenter.X()));
@@ -96,7 +100,7 @@ int Ray::GetLength()
  */
 bool Ray::HasEnded()
 {
-    return canContinueExpanding;
+    return !canContinueExpanding;
 }
 
 /**
@@ -107,7 +111,7 @@ bool Ray::HasEnded()
  */
 bool Ray::SetAsEnded()
 {
-    if(!canContinueExpanding)
+    if(canContinueExpanding)
     {
         length = length - 1;
         if(length < 0) length = 0;

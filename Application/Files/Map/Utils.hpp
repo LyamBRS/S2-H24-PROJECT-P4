@@ -89,6 +89,8 @@ bool VerifyMap(std::string path);
  */
 bool TileIsWalkable(TileTypes tile);
 
+void PrintTileName(TileTypes tile);
+
 
 bool checkIfTileIsPlayer(TileTypes tile);
 

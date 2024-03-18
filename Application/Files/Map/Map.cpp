@@ -118,6 +118,11 @@ TileTypes Map::GetTileDataAtPosition(int x, int y)
 	return map[x][y];
 }
 
+TileTypes Map::GetTileDataAtPosition(Positions pos)
+{
+	return map[pos.X()][pos.Y()];
+}
+
 bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 {
 	for (int j = 0; j < sizeY; ++j) {

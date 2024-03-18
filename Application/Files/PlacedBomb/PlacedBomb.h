@@ -14,8 +14,17 @@
 // - INCLUDES - //
 #include "../BaseObject/BaseObject.hpp"
 #include "../SimpleTimer/SimpleTimer.h"
+#include "../Map/Map.h"
+#include "../Map/Utils.hpp"
+#include "../Positions/Positions.h"
+#include "Ray.h"
+#include <vector>
 
 // - DEFINES - //
+#define BOMB_END_FRAMES 10
+
+// - FUNCTIONS - //
+float GetRaycastAngleIncrement(int bombFinalRadius);
 
 // - CLASS - //
 
@@ -36,18 +45,30 @@ class PlacedBomb : public BaseObject
 
         /// @brief How long until the bomb starts exploding.
         SimpleTimer timeTillBoom = SimpleTimer(0);
+        int endFrameCounter = BOMB_END_FRAMES;
 
         /// @brief The final explosion radius that the bomb will reach.
         int explosivePower = 0;
 
         /// @brief The current radius of the explosion. Starts at 0
         int currentExplosionRadius = 0;
+        int wantedExplosionRadius = 0;
 
         bool isExploding = false;
-
         bool isExploded = false;
+        bool hasFinishedFrames = false;
+
+        Map* mapReference;
+
+        bool UpdateRays();
+
+        bool CheckAllRaysForCollisions();
+
+        bool AllRaysFinished();
 
     public:
+
+        std::vector<Ray> rays;
 
         /**
          * @brief Construct a new Placed Bomb object.
@@ -68,7 +89,7 @@ class PlacedBomb : public BaseObject
          * @param fuseLength
          * How long until it actually detonates.
          */
-        PlacedBomb(int x, int y, int explosiveForce, int fuseLength);
+        PlacedBomb(int x, int y, int explosiveForce, int fuseLength, Map* newMapReference);
 
         /**
          * @brief 
@@ -97,6 +118,7 @@ class PlacedBomb : public BaseObject
          * Bomb still doing bomb shit.
          */
         bool HasFinishedExploding();
+        bool IsExploding();
 
         // Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
         Movements* GetVelocity();
@@ -104,4 +126,9 @@ class PlacedBomb : public BaseObject
         Positions* GetCurrentCoordinates();
 
         Positions* GetOldCoordinates();
+
+        bool IsInsideExplosion(int x, int y);
+
+        bool Draw();
+        bool Clear();
 };

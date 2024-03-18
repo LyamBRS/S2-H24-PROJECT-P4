@@ -122,6 +122,12 @@ bool Arduino::ParseReceivedMessage()
         return false;
     }
 
+    // - MUONS - //
+    if(!jsonToParse[CA_DETECTED_MUONS].is_null())
+    {
+        detectedMuonCount = detectedMuonCount + jsonToParse[CA_DETECTED_MUONS].template get<int>();
+    }
+
     // - ACCELEROMETER - //
     if(!jsonToParse[CA_ACCELEROMETER_X_A].is_null())    GetPlayerController(0)->accelerometerX = jsonToParse[CA_ACCELEROMETER_X_A].template get<int>(); else GetPlayerController(0)->accelerometerX = -1;
     if(!jsonToParse[CA_ACCELEROMETER_Y_A].is_null())    GetPlayerController(0)->accelerometerY = jsonToParse[CA_ACCELEROMETER_Y_A].template get<int>(); else GetPlayerController(0)->accelerometerY = -1;
@@ -435,6 +441,17 @@ bool Arduino::SetNewLCDMessage(std::string newMessage)
 std::string Arduino::GetLCDMessage()
 {
     return wantedLCDMessage;
+}
+
+int Arduino::GetMuonCount()
+{
+    return detectedMuonCount;
+}
+
+bool Arduino::ResetMuons()
+{
+    detectedMuonCount = 0;
+    return true;
 }
 
 /**

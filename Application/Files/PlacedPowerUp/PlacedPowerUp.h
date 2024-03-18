@@ -93,4 +93,6 @@ class PlacedPowerUp : public BaseObject
          * Nah, it should stay
          */
         bool ShouldBeDeleted();
+
+        int GetType();
 };

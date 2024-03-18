@@ -15,6 +15,8 @@
 // - INCLUDES - //
 #include "../Positions/Positions.h"
 #include "math.h"
+#include <iostream>
+#include "../Colour/Colour.h"
 
 // - DEFINES - //
 
