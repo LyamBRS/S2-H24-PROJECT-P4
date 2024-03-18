@@ -31,6 +31,9 @@
     <ClCompile Include="Files\Menus\ArduinoMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\BaseObject\BaseObject.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="BomberMan.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -47,6 +50,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Files\Game\Game.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\Menus\GameMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Files\Inventory\Inventory.cpp">
@@ -91,6 +97,9 @@
     <ClCompile Include="Files\Serial\SerialPort.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Files\SimpleTimer\SimpleTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -105,15 +114,6 @@
     </ClCompile>
     <ClCompile Include="Files\Map\Utils.cpp">
       <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\Menus\GameMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\BaseObject\BaseObject.cpp">
-      <Filter>Generated Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

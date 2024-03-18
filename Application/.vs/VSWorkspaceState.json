@@ -1,12 +1,11 @@
 {
   "ExpandedNodes": [
     "",
-    "\\Files\\Communication",
-    "\\Files\\Map",
-    "\\Files\\Menus",
-    "\\Files\\PowerUp",
-    "\\Maps"
+    "\\Files",
+    "\\Files\\PlacedBomb",
+    "\\Files\\Serial",
+    "\\Files\\SimpleTimer"
   ],
-  "SelectedNode": "\\Maps\\Lv1.json",
+  "SelectedNode": "\\Files\\PlacedBomb\\PlacedBomb.cpp",
   "PreviewInSolutionExplorer": false
 }
