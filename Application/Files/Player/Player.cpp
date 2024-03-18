@@ -140,6 +140,15 @@ bool Player::UpdateFromController()
     if (PLAYER_LOCAL_Y_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
     if (PLAYER_LOCAL_Y_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
 
+    if(bombPlacement.TimeLeftNoReset() == 0)
+    {
+        if(PLAYER_LOCAL_SELECT)
+        {
+            wantsToPlaceBomb = true;
+            bombPlacement.Reset();
+        }
+    }
+
     return true;
 }
 

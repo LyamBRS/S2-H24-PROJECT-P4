@@ -187,6 +187,9 @@ class Game
         bool needToRedrawPlayerStatus = false;
         bool needToRedrawTimers = false;
         bool needToRedrawPlayerHealth = false;
+
+        SimpleTimer drawingFlipper = SimpleTimer(200);
+        bool flipDrawingOrder = false;
         
         /**
          * @brief 

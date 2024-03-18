@@ -124,14 +124,4 @@
       <Filter>Generated Files</Filter>
     </CustomBuild>
   </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Files\Menus\GameMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\SimpleTimer\SimpleChrono.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
-    <ClInclude Include="Files\Map\Utils.hpp" />
-  </ItemGroup>
 </Project>

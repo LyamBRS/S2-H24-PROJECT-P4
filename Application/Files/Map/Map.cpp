@@ -102,6 +102,9 @@ bool Map::Draw()
 				case TileTypes::POWER_SPEED:
 					PrintInColour(std::cout, tileChar[TileTypes::POWER_SPEED], colors::green, colors::black);
 					break;
+				case TileTypes::BOMB:
+					PrintInColour(std::cout, tileChar[TileTypes::BOMB], colors::lightred, colors::black);
+					break;
 			}
 		}
 		std::cout << std::endl;

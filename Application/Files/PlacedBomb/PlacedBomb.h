@@ -97,4 +97,11 @@ class PlacedBomb : public BaseObject
          * Bomb still doing bomb shit.
          */
         bool HasFinishedExploding();
+
+        // Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+        Movements* GetVelocity();
+
+        Positions* GetCurrentCoordinates();
+
+        Positions* GetOldCoordinates();
 };
