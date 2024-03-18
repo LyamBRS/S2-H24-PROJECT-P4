@@ -30,22 +30,22 @@
  * way I could come up with to store data in each
  * tiles on the map.
  */
-struct PowerUpID
+enum PowerUpID
 {
-    unsigned int powerUpAName = 0b0000'0000'0000'0000;
-    unsigned int powerUpBName = 0b0001'0000'0000'0000;
-    unsigned int powerUpCName = 0b0010'0000'0000'0000;
-    unsigned int powerUpDName = 0b0011'0000'0000'0000;
-    unsigned int powerUpEName = 0b0100'0000'0000'0000;
-    unsigned int powerUpFName = 0b0101'0000'0000'0000;
-    unsigned int powerUpGName = 0b0111'0000'0000'0000;
-    unsigned int powerUpHName = 0b1000'0000'0000'0000;
-    unsigned int powerUpIName = 0b1001'0000'0000'0000;
-    unsigned int powerUpJName = 0b1010'0000'0000'0000;
-    unsigned int powerUpKName = 0b1011'0000'0000'0000;
-    unsigned int powerUpLName = 0b1100'0000'0000'0000;
-    unsigned int powerUpMName = 0b1101'0000'0000'0000;
-    unsigned int powerUpNName = 0b1111'0000'0000'0000;
+    damage_increase = 0b0000'0000'0000'0000,
+    speed_increase = 0b0001'0000'0000'0000,
+    explosion_radius_increase = 0b0010'0000'0000'0000,
+    health_increase = 0b0011'0000'0000'0000,
+    nb_bomb_increase = 0b0100'0000'0000'0000,
+    powerUpFName = 0b0101'0000'0000'0000,
+    powerUpGName = 0b0111'0000'0000'0000,
+    powerUpHName = 0b1000'0000'0000'0000,
+    powerUpIName = 0b1001'0000'0000'0000,
+    powerUpJName = 0b1010'0000'0000'0000,
+    powerUpKName = 0b1011'0000'0000'0000,
+    powerUpLName = 0b1100'0000'0000'0000,
+    powerUpMName = 0b1101'0000'0000'0000,
+    powerUpNName = 0b1111'0000'0000'0000
 };
 
 // - CLASS - //

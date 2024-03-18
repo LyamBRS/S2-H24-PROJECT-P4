@@ -16,6 +16,8 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../BaseObject/BaseObject.hpp"
+#include "../SimpleTimer/SimpleTimer.h"
+#include "../PowerUp/PowerUp.h"
 // - DEFINES - //
 #define POWERUP_DESPAWN_TIMER_VALUE 10000
 
@@ -39,8 +41,8 @@ class PlacedPowerUp : public BaseObject
         /// @brief Which type of PowerUp is it?
         int type = 0;
         /// @brief How long until it despawns because no players picked it up?
-        int timeTillDespawn = POWERUP_DESPAWN_TIMER_VALUE;
-
+        SimpleTimer* Timetilldespawn = new SimpleTimer(POWERUP_DESPAWN_TIMER_VALUE);
+        bool shoulbedeleted=0;
     public:
         /**
          * @brief
