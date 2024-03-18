@@ -331,6 +331,14 @@ bool Game::PutObjectsInMap()
         }
     }
 
+    for (int bombIndex = 0; bombIndex<bombsOnMap.size(); bombIndex++)
+    {
+        map->SetTileDataAtPosition(
+            bombsOnMap[bombIndex].GetPosition()->X(), 
+            bombsOnMap[bombIndex].GetPosition()->Y(), 
+            TileTypes::BOMB);
+    }
+
     return true;
 }
 
@@ -348,8 +356,23 @@ bool Game::PutObjectsInMap()
  * @return false:
  * Error occured while handling bombs. BOOM.
  */
-bool Game::HandleBombs()
+    bool Game::HandleBombs()
 {
+    for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
+    {
+        Player* currentPlayer = &players[playerIndex];
+        if(currentPlayer->WantsToPlaceABomb())
+        {
+            currentPlayer->PlacedABomb();
+            PlacedBomb newBomb = PlacedBomb(
+                currentPlayer->GetCurrentCoordinates()->X(),
+                currentPlayer->GetCurrentCoordinates()->Y(),
+                5,
+                1000
+                );
+            bombsOnMap.push_back(newBomb);
+        }
+    }
     return false;
 }
 

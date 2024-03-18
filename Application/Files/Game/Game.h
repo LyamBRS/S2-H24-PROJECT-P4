@@ -26,6 +26,7 @@
 #include "../Application/AppHandler.h"
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleChrono.h"
+#include "../PlacedBomb/PlacedBomb.h"
 
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
@@ -141,7 +142,7 @@ class Game
         /// @brief All the players currently playing.
         std::vector<Player> players;
         /// @brief All the bombs that are currently on the map.
-        std::vector<PlacedBomb*> bombsOnMap;
+        std::vector<PlacedBomb> bombsOnMap;
         /// @brief All the potential power ups on the map that a player can pick up.
         std::vector<PlacedPowerUp*> itemsOnMap;
 

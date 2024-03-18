@@ -49,6 +49,13 @@ Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedCo
 
 bool Player::PlacedABomb()
 {
+    wantsToPlaceBomb = false;
+    bombPlacement.Reset();
+    return true;
+}
+
+bool Player::WantsToPlaceABomb()
+{
     return wantsToPlaceBomb;
 }
 

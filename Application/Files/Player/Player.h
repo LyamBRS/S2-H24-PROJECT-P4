@@ -136,6 +136,7 @@ class Player : BaseObject
          * The player SHOULDN'T place a bomb on the next frame.
          */
         bool PlacedABomb();
+        bool WantsToPlaceABomb();
 
         /**
          * @brief
