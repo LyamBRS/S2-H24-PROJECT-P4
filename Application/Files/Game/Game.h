@@ -82,6 +82,7 @@
 #define GAME_FIELD_WIDTH_HEALTH 4
 #define GAME_FIELD_WIDTH_INVENTORY 5
 
+#define GAME_CURSOR_GAME_MESSAGE 1
 #define GAME_CURSOR_GAMETIMER_Y 3
 #define GAME_CURSOR_MAP_Y 6
 
@@ -152,6 +153,7 @@ class Game
         std::vector<PlacedPowerUp> itemsOnMap;
 
         std::string errorMessage = "";
+        std::string gameMessage = "";
 
         /// @brief How long has the game been going for? (in milliseconds)
         int timeSinceStart = 0;
@@ -171,6 +173,7 @@ class Game
         int gameTimerOffset = 0;
         int playerCardOffsetX = 0;
         int firstPlayerCardY = 0;
+        int messageCursorY = 0;
         
         int cooldownCursorX = 0;
         int bombStatusCursorX = 0;
@@ -193,9 +196,11 @@ class Game
         bool needToRedrawPlayerStatus = true;
         bool needToRedrawTimers = true;
         bool needToRedrawPlayerHealth = true;
+        bool needToRedrawMessage = true;
 
         SimpleTimer drawingFlipper = SimpleTimer(200);
         SimpleTimer playerDeathMessage = SimpleTimer(2000);
+        SimpleTimer gameMessageReset = SimpleTimer(2000);
         bool flipDrawingOrder = false;
         
         /**
@@ -220,6 +225,7 @@ class Game
         bool DrawHealths();
         bool DrawTimers();
         bool DrawCooldowns();
+        bool DrawMessages();
 
         /**
          * @brief 
@@ -337,6 +343,8 @@ class Game
          * Failed the test 
          */
         bool SelfCheck();
+
+        bool SetGameMessage(std::string newMessage);
 
     public:
 

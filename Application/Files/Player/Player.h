@@ -21,6 +21,7 @@
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleTimer.h"
 #include "../PlacedBomb/PlacedBomb.h"
+#include "../Inventory/Inventory.h"
 #include <windows.h>
 
 // - DEFINES - //
@@ -48,8 +49,21 @@
 
 #define PLAYER_DEFAULT_SPEED_INTERVAL_MS 230
 #define PLAYER_INVULNURABILITY_TIMER 25
-#define PLAYER_DEFAULT_BOMB_RADIUS 4
+#define PLAYER_DEFAULT_BOMB_RADIUS 2
 #define PLAYER_DEFAULT_BOMB_FUSE 3000
+#define PLAYER_DEFAULT_BOMB_DAMAGE 1
+#define PLAYER_INVENTORY_DEFAULT_SIZE 5
+#define PLAYER_INVENTORY_MOVEMENT_FRAME 150
+
+#define PLAYER_MIN_SPEED_INTERVALS 100
+#define PLAYER_MIN_BOMB_INTERVALS 1000
+#define PLAYER_MAX_BOMB_RADIUS 10
+#define PLAYER_MAX_BOMB_DMG 5
+#define PLAYER_BONUS_SPEED 25
+#define PLAYER_HEALTH_BONUS 25
+#define PLAYER_BOMB_RADIUS_BONUS 2
+#define PLAYER_BOMB_DAMAGE_BONUS 1
+#define PLAYER_BOMB_PLACEMENT_BONUS 500
 
 // - FUNCTION - //
 
@@ -80,25 +94,34 @@ class Player : BaseObject
         bool wantsToPlaceBomb = false;
         /// @brief Tells if the player wants to use item he has currently selected.
         bool wantsToUseSelectedItem = false;
+        bool wantsToRemoveSelectedItem = false;
+        bool inventoryRequiresRedraw = true;
         /// @brief Simply says if the player is alive rn or not.
         bool isAlive = true;
+        /// @brief Tells if the player is dead and removed from the map.
         bool isDead = false;
 
         /// @brief Linked to a real controller.
         Controller* controllerRef = new Controller();
-
-        SimpleTimer bombPlacement = SimpleTimer(3000);
-
+        
+        /// @brief How big of a radius do the regular bombs have by default?
         int bombRadius = PLAYER_DEFAULT_BOMB_RADIUS;
+        int bombDamage = PLAYER_DEFAULT_BOMB_DAMAGE;
 
     public:
+        /// @brief How long until the player can take damages again
         SimpleTimer invulnurability = SimpleTimer(PLAYER_INVULNURABILITY_TIMER);
+        /// @brief How long until that player can move to a different coordinate
         SimpleTimer movementFrameDelay = SimpleTimer(PLAYER_DEFAULT_SPEED_INTERVAL_MS);
+        /// @brief How long until a new bomb can be placed.
+        SimpleTimer bombPlacement = SimpleTimer(PLAYER_DEFAULT_BOMB_FUSE);
 
-        //TileTypes oldTileBelowPlayer = TileTypes::EMPTY;
-        //TileTypes currentTileBelowPlayer = TileTypes::EMPTY;
+        Inventory inventory = Inventory(PLAYER_INVENTORY_DEFAULT_SIZE);
+        SimpleTimer inventoryUIFrames = SimpleTimer(PLAYER_INVENTORY_MOVEMENT_FRAME);
 
+        /// @brief Used in game drawings to avoid constant redraws of player status
         int oldStatus = 0;
+        /// @brief Used in game drawings to avoid constant redraws of player status
         int newStatus = 0;
 
         /**
@@ -137,6 +160,79 @@ class Player : BaseObject
          */
         bool PlacedABomb();
         bool WantsToPlaceABomb();
+        
+
+        /**
+         * @brief 
+         * Simply says if we need to redraw the player's
+         * inventory.
+         * @return true 
+         * @return false 
+         */
+        bool NeedToRedrawInventory();
+        bool InventoryRedrawn();
+        /**
+         * @brief 
+         * The player wants to get rid of their selected powerup.
+         * This means re-drawing their inventories.
+         * @return true 
+         * @return false 
+         */
+        bool WantsToDiscardSelected();
+
+        /**
+         * @brief 
+         * The player wants to use the selected powerup. This
+         * means re-drawing their inventories.
+         * @return true 
+         * @return false 
+         */
+        bool WantsToUseSelected();
+
+        /**
+         * @brief
+         * # GetActivatedPowerUp
+         * @brief
+         * Returns a reference to the @ref PowerUp that the
+         * player has currently selected AND wants to use.
+         * This is used so that the powerup can be applied
+         * in the game's space and later removed from their
+         * inventory if needs be.
+         * @warning
+         * If the player DOES NOT want to use that powerup,
+         * @ref nullptr is returned. BE CAREFUL.
+         * @return PowerUp* 
+         */
+        PowerUp* GetActivatedPowerUp();
+        bool PickUpPowerUp(PowerUp pickedUp);
+
+        /**
+         * @brief
+         * # RemoveSelectedPowerUp
+         * @brief
+         * Removes the currently selected @ref PowerUp from
+         * the player's inventory. They will no longer be
+         * able to see that @ref PowerUp nor use it.
+         * @return true:
+         * Successfully removed the power up.
+         * @return false:
+         * Failed to remove the power up.
+         */
+        bool RemoveSelectedPowerUp();
+
+        /**
+         * @brief 
+         * Makes the user use their current selected Power ups.
+         * @return true 
+         * @return false 
+         */
+        bool UseSelected();
+
+        bool SetBombRadius(int newRadius);
+        int GetBombRadius();
+
+        bool SetBombDamage(int newDamage);
+        int GetBombDamage();
 
         /**
          * @brief
@@ -214,35 +310,7 @@ class Player : BaseObject
          */
         bool UpdateFromController();
 
-        /**
-         * @brief
-         * # GetActivatedPowerUp
-         * @brief
-         * Returns a reference to the @ref PowerUp that the
-         * player has currently selected AND wants to use.
-         * This is used so that the powerup can be applied
-         * in the game's space and later removed from their
-         * inventory if needs be.
-         * @warning
-         * If the player DOES NOT want to use that powerup,
-         * @ref nullptr is returned. BE CAREFUL.
-         * @return PowerUp* 
-         */
-        PowerUp* GetActivatedPowerUp();
 
-        /**
-         * @brief
-         * # RemoveSelectedPowerUp
-         * @brief
-         * Removes the currently selected @ref PowerUp from
-         * the player's inventory. They will no longer be
-         * able to see that @ref PowerUp nor use it.
-         * @return true:
-         * Successfully removed the power up.
-         * @return false:
-         * Failed to remove the power up.
-         */
-        bool RemoveSelectedPowerUp();
 
         /**
          * @brief 
@@ -286,3 +354,10 @@ class Player : BaseObject
 
         PlacedBomb GetABomb(Map* mapReference);
 };
+
+// - FUNCTIONS - //
+bool AffectPlayer_HealthBonus(Player* player);
+bool AffectPlayer_SpeedBonus(Player* player);
+bool AffectPlayer_BombRadiusBonus(Player* player);
+bool AffectPlayer_BombDamageBonus(Player* player);
+bool AffectPlayer_BombPlacementSpeed(Player* player);

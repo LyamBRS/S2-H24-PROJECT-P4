@@ -1,9 +1,10 @@
 #include "PowerUp.h"
 
-//PowerUp::PowerUp(PlacedPowerUp* powerUpToPickUp)
-//{
-//    this->type = powerUpToPickUp->GetType(); // donne le type de quand le power up est place
-//}
+PowerUp::PowerUp(int powerUpID, int amountOfUses)
+{
+   type = powerUpID;
+   useLeft = amountOfUses;
+}
 
 // Function to get the power-up value based on type
 unsigned int PowerUp::getPowerUpValue(int type) 
@@ -30,22 +31,6 @@ unsigned int PowerUp::getPowerUpValue(int type)
             name = "Unknown";
             break;
     }
-
-    //static std::unordered_map<std::string, unsigned int> powerUpMap = {
-    //    {"vitesse", powerUpID.vitesse},
-    //    {"soin", powerUpID.soin},
-    //    {"grosseBombe", powerUpID.grosseBombe},
-    //    {"tresGrosseBombe", powerUpID.tresGrosseBombe},
-    //    {"augmentationDegat", powerUpID.augmentationDegat},
-    //};
-//
-    //// vérifier si le nom du power-up est "Unknown" avant de le rechercher dans la map
-    //if (name != "Unknown") {
-    //    return powerUpMap[name];
-    //} else {
-    //    // Gérer le cas où le nom du power-up est inconnu
-    //    return 0; // Par exemple, retourner une valeur par défaut
-    //}
     return 0;
 }
         
@@ -66,7 +51,37 @@ int PowerUp::getType()
 }
 
 
+bool PowerUp::Use()
+{
+    if(useLeft <= 0) return false;
+    useLeft--;
+    return true;
+}
 
+bool PowerUp::IsDrained()
+{
+    return useLeft==0;
+}
+
+int PowerUp::GetUsesLeft()
+{
+    return useLeft;
+}
+
+std::string GetPowerUpName(int ID)
+{
+    std::map<int, std::string> names = 
+    {
+        { PowerUpID::nil,                            "UNDEFINED"},
+        { PowerUpID::damage_increase,                "DAMAGE INCREASE"},
+        { PowerUpID::explosion_radius_increase,      "EXPLOSION RADIUS"},
+        { PowerUpID::health_increase,                "HEALTH PACK"},
+        { PowerUpID::nb_bomb_increase,               "MORE BOMBS"},
+        { PowerUpID::speed_increase,                 "SPEED INCREASE"},
+    };
+
+    return names[ID];
+}
 
 //plus de dégat
 //plus rapide

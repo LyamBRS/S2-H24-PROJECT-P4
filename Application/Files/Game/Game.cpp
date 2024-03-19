@@ -73,7 +73,40 @@ bool Game::DrawGameHeader()
 
 bool Game::DrawInventories()
 {
-    return false;
+    int offset = -1;
+    for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
+    {
+        // Test if inventory needs to be redrawn
+        if(players[playerIndex].GetController()->controllerID == 0) continue;
+        offset++;
+        if(!players[playerIndex].NeedToRedrawInventory()) continue;
+
+        // - Draw each slots of the player's inventory
+        SetTerminalCursorPosition(inventoryCursorX, playerCardStartY + offset);
+        for(int i=0; i<INVENTORY_MAX_SLOT; i++)
+        {
+            PowerUp* currentSlot = players[playerIndex].inventory.Get(i);
+            int ID = currentSlot->getType();
+
+            int backColor = GAME_WINDOW_FIELD_BG;
+            if(players[playerIndex].inventory.CurrentIndex() == i)
+            {
+                backColor = colors::green;
+            }
+
+            switch (ID) {
+                case PowerUpID::speed_increase:             PrintInColour(TER, ">", colors::aqua, backColor);   break;
+                case PowerUpID::damage_increase:            PrintInColour(TER, STRING_SPADE, colors::aqua, backColor);   break;
+                case PowerUpID::explosion_radius_increase:  PrintInColour(TER, "R", colors::aqua, backColor);   break;
+                case PowerUpID::health_increase:            PrintInColour(TER, STRING_HEARTH, colors::aqua, backColor);   break;
+                case PowerUpID::nb_bomb_increase:           PrintInColour(TER, "+", colors::aqua, backColor);   break;
+                case PowerUpID::nil:                        PrintInColour(TER, " ", colors::aqua, backColor);   break;
+            }
+        }
+
+        players[playerIndex].InventoryRedrawn();
+    }
+    return true;
 }
 
 bool Game::DrawHealths()
@@ -220,6 +253,29 @@ bool Game::DrawCooldowns()
     return false;
 }
 
+bool Game::DrawMessages()
+{
+    std::string result = gameMessage;
+
+    bool flip = false;
+    while(result.size() < (gameWidth-2))
+    {
+        flip = !flip;
+        if(flip)
+        {
+            result.insert(0, " ");
+        }
+        else
+        {
+            result.append(" ");       
+        }
+    }
+
+    SetTerminalCursorPosition(GAME_CURSOR_GAME_MESSAGE, messageCursorY);
+    PrintInColour(TER, result, GAME_WINDOW_BACKGROUND_FG, GAME_WINDOW_BACKGROUND_BG);
+    return true;
+}
+
 /**
  * @brief 
  * # HandleNextMouvements
@@ -249,9 +305,6 @@ bool Game::HandleNextMouvements()
         {
             int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
             int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
-
-            SetTerminalCursorPosition(0,playerIndex);
-            std::cout << xVelocity << std::endl;
 
             int playerX = players[playerIndex].GetCurrentCoordinates()->X();
             int playerY = players[playerIndex].GetCurrentCoordinates()->Y();
@@ -422,10 +475,6 @@ bool Game::PutPowerUpsInMap()
         Positions powerUpPos = *itemsOnMap[i].GetCurrentCoordinates();
         TileTypes associatedTile = GetTileFromPowerUp(itemsOnMap[i].GetType());
 
-        //SetTerminalCursorPosition(60,i);
-        //PrintTileName(associatedTile);
-        //std::cout << ": " << itemsOnMap[i].GetType();
-
         map->SetTileDataAtPosition(
            powerUpPos.X(),
            powerUpPos.Y(),
@@ -559,6 +608,7 @@ bool Game::HandlePlayers()
             result.append(std::to_string((playerIndex+1)));
             result.append(" died ");
             appRef->SetMessage(result);
+            SetGameMessage(result);
             players[playerIndex].SetPlayerAsDeleted();
 
             // Erase player from the map
@@ -574,6 +624,92 @@ bool Game::HandlePlayers()
         }
     }
     HandleNextMouvements();
+
+    // - Handle inventories
+    for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
+    {
+        Player* player = &players[playerIndex];
+
+        if(player->GetController()->controllerID == 0) continue;
+        if(player->Health() == 0) continue;
+        if(player->NeedToRedrawInventory()) needToRedrawInventories = true;
+
+        // - Check if the player wants to do something with their current powerups.
+        if(player->WantsToUseSelected())
+        {
+            PowerUp* selected = player->GetActivatedPowerUp();
+            int ID = selected->getType();
+
+            std::string result = "Player ";
+            if(playerIndex<10) result.append("0");
+            result.append(std::to_string(playerIndex));
+            result.append("'s ");
+            // result.append(GetPowerUpName(ID));
+
+            int previous = 0;
+            int current = 0;
+
+            bool success = false;
+            switch(ID)
+            {
+                case(PowerUpID::damage_increase):
+                    result.append("damage ");
+                    previous = player->GetBombDamage();
+                    success = AffectPlayer_BombDamageBonus(player);
+                    current = player->GetBombDamage();
+                    break;
+
+                case(PowerUpID::explosion_radius_increase):
+                    result.append("radius ");
+                    previous = player->GetBombRadius();
+                    success = AffectPlayer_BombRadiusBonus(player);
+                    current = player->GetBombRadius();
+                    break;
+
+                case(PowerUpID::health_increase):
+                    result.append("health ");
+                    previous = player->Health();
+                    success = AffectPlayer_HealthBonus(player);
+                    needToRedrawPlayerHealth = true;
+                    current = player->Health();
+                    break;
+
+                case(PowerUpID::nb_bomb_increase):
+                    result.append("bombs ");
+                    previous = player->bombPlacement.GetDuration();
+                    success = AffectPlayer_BombPlacementSpeed(player);
+                    current = player->bombPlacement.GetDuration();
+                    break;
+
+                case(PowerUpID::speed_increase):
+                    result.append("speed ");
+                    previous = player->movementFrameDelay.GetDuration();
+                    success = AffectPlayer_SpeedBonus(player);
+                    current = player->movementFrameDelay.GetDuration();
+                    break;
+            }
+
+            if(current != previous)
+            {
+                result.append("went from ");
+                result.append(std::to_string(previous));
+                result.append(" to ");
+                result.append(std::to_string(current));
+            }
+            else
+            {
+                result.append(" is already maxed");    
+            }
+
+            SetGameMessage(result);
+            player->UseSelected();
+        }
+
+        if(player->WantsToDiscardSelected())
+        {
+            player->RemoveSelectedPowerUp();
+        }
+    }
     return true;
 }
 
@@ -601,9 +737,23 @@ bool Game::HandlePowerUp()
         for(int p=0; p<players.size(); p++)
         {
             Positions playerPos = *players[p].GetCurrentCoordinates();
+            
+            if(!(playerPos == powerUpPos)) continue;       // Cant pick it up if you are not standing on it.
+            if(players[p].inventory.IsFull()) continue; // Cant pick it up if you got no space in yo inventory.
 
-            if(playerPos == powerUpPos)
+            int ID = itemsOnMap[i].GetType();
+            PowerUp createdPowerUp = PowerUp(ID, 1);
+            if(players[p].PickUpPowerUp(createdPowerUp))
             {
+                
+                std::string result = "Player ";
+                if((p+1)<10) result.append("0");
+                result.append(std::to_string((p+1)));
+                result.append(" picked up a ");
+                result.append(GetPowerUpName(ID));
+                SetGameMessage(result);
+
+                needToRedrawInventories = true;
                 itemsOnMap.erase(itemsOnMap.begin() + i);
             }
         }
@@ -647,7 +797,7 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
     // CHANGE THIS ONCE WE'VE GOT MUONS GOING
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,6); // distribution in range [1, 6]
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,5); // distribution in range [1, 5]
 
     // - DESTROY BOX - //
     map->SetTileDataAtPosition(
@@ -657,29 +807,7 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
     );
 
     int randomNumber = dist6(rng);
-    TileTypes wantedTile = TileTypes::EMPTY;
-    switch(randomNumber)
-    {
-        case(0):
-            wantedTile = TileTypes::POWER_DMG;
-            break;
-
-        case(1):
-            wantedTile = TileTypes::POWER_HEART;
-            break;
-
-        case(2):
-            wantedTile = TileTypes::POWER_MOREBOMB;
-            break;
-
-        case(3):
-            wantedTile = TileTypes::POWER_REACH;
-            break;
-
-        case(4):
-            wantedTile = TileTypes::POWER_SPEED;
-            break;
-    }
+    TileTypes wantedTile = GetTileFromPowerUp(randomNumber);
 
     // - Test if the tile is no longer empty. If thats the case, a powerup needs to be created.
     if(wantedTile != TileTypes::EMPTY)
@@ -690,12 +818,6 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
             GetPowerUpFromTile(wantedTile)
         ));
     }
-
-    // SetTerminalCursorPosition(0,0);
-    // std::cout << "Created powerup with ID " << GetPowerUpFromTile(wantedTile) << " tile name: ";
-    // PrintTileName(wantedTile);
-    // std::cout << " at coordinates: " << boxPosition.X() << "," << boxPosition.Y() << std::endl;
-    // Sleep(1000);
 
     return true;
 }
@@ -768,7 +890,9 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
     healthCursorX = bombStatusCursorX + GAME_FIELD_WIDTH_BOMB_STATUS + 1;
     inventoryCursorX = healthCursorX + GAME_FIELD_WIDTH_HEALTH + 1;
 
-    playerCardStartY = (6 + mapSizeY + 4)-1;
+    messageCursorY = 5 + mapSizeY + 3;
+
+    playerCardStartY = (messageCursorY+5);
 
     // Create as much players as there is for that specific map.
     for(int playerIndex=0; playerIndex<amountOfPlayers; playerIndex++)
@@ -789,6 +913,7 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
         Player player = Player(initialPosX, initialPosY, " @ ", GetPlayerColor(playerIndex));
         players.push_back(player);
     }
+
 
     gameHeight = 6 + mapSizeY + 2 + amountOfPlayers;
 
@@ -863,6 +988,11 @@ bool Game::Update()
         {
             gameStatus = GameStatuses::ended;
         }
+    }
+
+    if(gameMessageReset.TimeLeftNoReset() == 0)
+    {
+        SetGameMessage(" ");
     }
 
     ////////////////////////////////////////////
@@ -1139,7 +1269,13 @@ int Game::GetWinningPlayerID()
     return -1;
 }
 
-
+bool Game::SetGameMessage(std::string newMessage)
+{
+    gameMessage = newMessage;
+    needToRedrawMessage = true;
+    gameMessageReset.Reset();
+    return true;
+}
 
 /**
  * @brief 
@@ -1166,7 +1302,7 @@ int Game::GetWinningPlayerID()
 bool Game::NeedsRedrawing()
 {
     if(!canBeUsed) return false;
-    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers || needToRedrawPlayerHealth;
+    return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers || needToRedrawPlayerHealth || needToRedrawMessage;
 }
 
 /**
@@ -1217,6 +1353,12 @@ bool Game::Draw()
     {
         needToRedrawInventories = false;
         DrawInventories();
+    }
+
+    if(needToRedrawMessage)
+    {
+        needToRedrawMessage = false;
+        DrawMessages();
     }
 
     needToRedrawPlayerStatus = true;
@@ -1361,6 +1503,16 @@ bool Game::FreshDraw()
     //# MAP PORTION, leaving 1 black line below it.                 #
     //###############################################################
     DrawMap();
+    ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
+
+    //###############################################################
+    //# MESSAGE PORTION, 1 black line below it                      #
+    //###############################################################
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
+    ConsecutiveChar(TER, GAME_BORDER, 1, false);
+    ConsecutiveChar(TER, GAME_BACKGROUND, gameWidth-2, false);
+    ConsecutiveChar(TER, GAME_BORDER, 1, true);
+    ConsecutiveChar(TER, GAME_BORDER, gameWidth, true);
     ConsecutiveChar(TER, ' ', colors::black, colors::black, gameWidth, true);
 
     //###############################################################

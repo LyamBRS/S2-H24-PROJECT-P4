@@ -113,6 +113,8 @@ bool Player::GiveDamage(int damagePoints){
  */
 bool Player::UpdateFromController()
 {
+    static bool wasPressing = false;
+
     // Check if connected, if there is no controllers... we cant really control a player can we.
     if(!controllerRef->isConnected)
     {
@@ -132,6 +134,7 @@ bool Player::UpdateFromController()
     if (PLAYER_LOCAL_Y_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
     if (PLAYER_LOCAL_Y_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
 
+    // Bomb placement handling
     if(bombPlacement.TimeLeftNoReset() == 0)
     {
         if(PLAYER_LOCAL_SELECT)
@@ -141,42 +144,48 @@ bool Player::UpdateFromController()
         }
     }
 
+    // Inventory UI handling
+    if(inventoryUIFrames.TimeLeftNoReset() == 0)
+    {
+        if(PLAYER_LOCAL_INV_RIGHT)
+        {
+            if(inventory.SelectNext()) 
+            {
+                inventoryUIFrames.Reset();
+                inventoryRequiresRedraw = true;
+            }
+        }
+
+        if(PLAYER_LOCAL_INV_LEFT)
+        {
+            if(inventory.SelectPrevious()) 
+            {
+                inventoryUIFrames.Reset();
+                inventoryRequiresRedraw = true;
+            }
+        }
+
+        if(PLAYER_LOCAL_USE_PWR)
+        {
+            if(inventory.SelectedIsUsable())
+            {
+                wantsToUseSelectedItem = true;
+                wantsToRemoveSelectedItem = false;
+                inventoryRequiresRedraw = true;
+                inventoryUIFrames.Reset();
+            }
+        }
+
+        if(PLAYER_LOCAL_DISCARD_PWR)
+        {
+            wantsToUseSelectedItem = false;
+            wantsToRemoveSelectedItem = true;
+            inventoryRequiresRedraw = true;
+            inventoryUIFrames.Reset();
+        }
+    }
+
     return true;
-}
-
-/**
- * @brief
- * # GetActivatedPowerUp
- * @brief
- * Returns a reference to the @ref PowerUp that the
- * player has currently selected AND wants to use.
- * This is used so that the powerup can be applied
- * in the game's space and later removed from their
- * inventory if needs be.
- * @warning
- * If the player DOES NOT want to use that powerup,
- * @ref nullptr is returned. BE CAREFUL.
- * @return PowerUp* 
- */
-PowerUp* Player::GetActivatedPowerUp(){
-    return nullptr;
-}
-
-/**
- * @brief
- * # RemoveSelectedPowerUp
- * @brief
- * Removes the currently selected @ref PowerUp from
- * the player's inventory. They will no longer be
- * able to see that @ref PowerUp nor use it.
- * @return true:
- * Successfully removed the power up.
- * @return false:
- * Failed to remove the power up.
- */
-bool Player::RemoveSelectedPowerUp()
-{
-    return false;
 }
 
 /**
@@ -268,4 +277,177 @@ PlacedBomb Player::GetABomb(Map* mapReference)
         PLAYER_DEFAULT_BOMB_FUSE,
         mapReference
     );
+}
+
+/**
+ * @brief 
+ * Simply says if we need to redraw the player's
+ * inventory.
+ * @return true 
+ * @return false 
+ */
+bool Player::NeedToRedrawInventory()
+{
+    return inventoryRequiresRedraw;
+}
+
+bool Player::InventoryRedrawn()
+{
+    inventoryRequiresRedraw = false;
+    return true;
+}
+
+/**
+ * @brief 
+ * The player wants to get rid of their selected powerup.
+ * This means re-drawing their inventories.
+ * @return true 
+ * @return false 
+ */
+bool Player::WantsToDiscardSelected()
+{
+    return wantsToRemoveSelectedItem;
+}
+
+/**
+ * @brief 
+ * The player wants to use the selected powerup. This
+ * means re-drawing their inventories.
+ * @return true 
+ * @return false 
+ */
+bool Player::WantsToUseSelected()
+{
+    return wantsToUseSelectedItem;
+}
+
+/**
+ * @brief
+ * # GetActivatedPowerUp
+ * @brief
+ * Returns a reference to the @ref PowerUp that the
+ * player has currently selected AND wants to use.
+ * This is used so that the powerup can be applied
+ * in the game's space and later removed from their
+ * inventory if needs be.
+ * @warning
+ * If the player DOES NOT want to use that powerup,
+ * @ref nullptr is returned. BE CAREFUL.
+ * @return PowerUp* 
+ */
+PowerUp* Player::GetActivatedPowerUp()
+{
+    return inventory.GetSelected();
+}
+
+bool Player::PickUpPowerUp(PowerUp pickedUp)
+{
+    if(inventory.IsFull()) return false;
+    inventoryRequiresRedraw = true;
+    return inventory.Add(pickedUp);
+}
+
+/**
+ * @brief
+ * # RemoveSelectedPowerUp
+ * @brief
+ * Removes the currently selected @ref PowerUp from
+ * the player's inventory. They will no longer be
+ * able to see that @ref PowerUp nor use it.
+ * @return true:
+ * Successfully removed the power up.
+ * @return false:
+ * Failed to remove the power up.
+ */
+bool Player::RemoveSelectedPowerUp()
+{
+    if(!inventory.SelectedIsUsable()) return false;
+    inventoryRequiresRedraw = true;
+    wantsToRemoveSelectedItem = false;
+    inventory.DiscardSelected();
+    return true;
+}
+
+/**
+ * @brief 
+ * Makes the user use their current selected Power ups.
+ * @return true 
+ * @return false 
+ */
+bool Player::UseSelected()
+{
+    if(!inventory.SelectedIsUsable()) return false;
+    inventoryRequiresRedraw = true;
+    wantsToUseSelectedItem = false;
+    inventory.UseSelected();
+    return true;
+}
+
+bool Player::SetBombRadius(int newRadius)
+{
+    bombRadius = newRadius;
+    return true;
+}
+int Player::GetBombRadius()
+{
+    return bombRadius;
+}
+
+bool Player::SetBombDamage(int newDamage)
+{
+    bombDamage = newDamage;
+    return true;
+}
+int Player::GetBombDamage()
+{
+    return bombDamage;
+}
+
+
+
+
+
+
+
+// - FUNCTIONS - //
+bool AffectPlayer_HealthBonus(Player* player)
+{
+    player->GiveHealth(PLAYER_HEALTH_BONUS);
+    return true;
+}
+
+bool AffectPlayer_SpeedBonus(Player* player)
+{
+    int current = player->movementFrameDelay.GetDuration();
+    current -= PLAYER_BONUS_SPEED;
+    if(current < PLAYER_MIN_SPEED_INTERVALS) current = PLAYER_MIN_SPEED_INTERVALS;
+    player->movementFrameDelay.SetDuration(current);
+    return true;
+}
+
+bool AffectPlayer_BombRadiusBonus(Player* player)
+{
+    int current = player->GetBombRadius();
+    current += PLAYER_BOMB_RADIUS_BONUS;
+    if(current > PLAYER_MAX_BOMB_RADIUS) current = PLAYER_MAX_BOMB_RADIUS;
+    player->SetBombRadius(current);
+    return true;
+}
+
+bool AffectPlayer_BombDamageBonus(Player* player)
+{
+    int current = player->GetBombDamage();
+    current += PLAYER_BOMB_DAMAGE_BONUS;
+    if(current > PLAYER_MAX_BOMB_DMG) current = PLAYER_MAX_BOMB_DMG;
+    player->SetBombDamage(current);
+    return true;
+}
+
+bool AffectPlayer_BombPlacementSpeed(Player* player)
+{
+    int current = player->bombPlacement.GetDuration();
+    current -= PLAYER_BOMB_PLACEMENT_BONUS;
+    if(current < PLAYER_MIN_BOMB_INTERVALS) current = PLAYER_MIN_BOMB_INTERVALS;
+    player->bombPlacement.SetDuration(current);
+    return true;
 }

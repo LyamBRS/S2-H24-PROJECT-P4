@@ -121,3 +121,8 @@ uint64_t SimpleTimer::TimeLeftNoReset()
     }
     return (timerDurationMS - delta);
 }
+
+int SimpleTimer::GetDuration()
+{
+    return int(timerDurationMS);
+}

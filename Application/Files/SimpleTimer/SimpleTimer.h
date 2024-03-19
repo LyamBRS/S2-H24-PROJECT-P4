@@ -90,6 +90,7 @@ class SimpleTimer
          * Failed to set a new duration to the timer.
          */
         bool SetDuration(uint64_t newTimerDurationInMS);
+        int GetDuration(); 
 
         /**
          * @brief 

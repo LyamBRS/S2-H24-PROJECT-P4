@@ -16,6 +16,7 @@
 // - INCLUDES - //
 #include <iostream>
 #include "../PlacedPowerUp/PlacedPowerUp.h"
+#include <map>
 
 // - DEFINES - //
 /**
@@ -32,6 +33,7 @@
  */
 enum PowerUpID
 {
+    nil = 0,
     damage_increase = 1,
     speed_increase = 2,
     explosion_radius_increase = 3,
@@ -48,6 +50,25 @@ enum PowerUpID
     powerUpNName = 14
 };
 
+struct PowerUpNames
+{
+    std::string nil                         = "UNDEFINED";
+    std::string damage_increase             = "DAMAGE INCREASE";
+    std::string speed_increase              = "SPEED INCREASE";
+    std::string explosion_radius_increase   = "EXPLOSION RADIUS";
+    std::string health_increase             = "HEALTH PACK";
+    std::string nb_bomb_increase            = "MORE BOMBS";
+    std::string powerUpFName                = "RESERVED";
+    std::string powerUpGName                = "RESERVED";
+    std::string powerUpHName                = "RESERVED";
+    std::string powerUpIName                = "RESERVED";
+    std::string powerUpJName                = "RESERVED";
+    std::string powerUpKName                = "RESERVED";
+    std::string powerUpLName                = "RESERVED";
+    std::string powerUpMName                = "RESERVED";
+    std::string powerUpNName                = "RESERVED";
+};
+
 // - CLASS - //
 class PowerUp
 {
@@ -58,6 +79,7 @@ class PowerUp
         std::string description = "UNDEFINED";
         /// @brief The type of this power up.
         int type = 0;
+        int useLeft = 0;
 
     public:
         /**
@@ -75,7 +97,7 @@ class PowerUp
          * @ref Inventory based power up be created
          * from?
          */
-        //PowerUp(PlacedPowerUp* powerUpToPickUp);
+        PowerUp(int powerUpID, int amountOfUses);
         
         /**
          * @brief 
@@ -90,4 +112,9 @@ class PowerUp
 
         int getType();
 
+        bool Use();
+        int GetUsesLeft();
+        bool IsDrained();
 };
+
+std::string GetPowerUpName(int ID);

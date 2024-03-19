@@ -202,7 +202,7 @@ int GetPowerUpFromTile(TileTypes tile)
     case TileTypes::POWER_DMG:      return PowerUpID::damage_increase;
     case TileTypes::POWER_HEART:    return PowerUpID::health_increase;
     case TileTypes::POWER_MOREBOMB: return PowerUpID::nb_bomb_increase;
-    case TileTypes::POWER_REACH:    return PowerUpID::powerUpFName;
+    case TileTypes::POWER_REACH:    return PowerUpID::explosion_radius_increase;
     case TileTypes::POWER_SPEED:    return PowerUpID::speed_increase;
     default:                        return -1;
     }
@@ -210,15 +210,13 @@ int GetPowerUpFromTile(TileTypes tile)
 
 TileTypes GetTileFromPowerUp(int powerUpID)
 {
-    SetTerminalCursorPosition(0,0);
-    std::cout << powerUpID << std::endl;
     switch (powerUpID)
     {
-        case(PowerUpID::damage_increase):   return TileTypes::POWER_DMG;
-        case(PowerUpID::health_increase):   return TileTypes::POWER_HEART;
-        case(PowerUpID::nb_bomb_increase):  return TileTypes::POWER_MOREBOMB;
-        case(PowerUpID::powerUpFName):      return TileTypes::POWER_REACH;
-        case(PowerUpID::speed_increase):    return TileTypes::POWER_SPEED;
+        case(PowerUpID::damage_increase):           return TileTypes::POWER_DMG;
+        case(PowerUpID::health_increase):           return TileTypes::POWER_HEART;
+        case(PowerUpID::nb_bomb_increase):          return TileTypes::POWER_MOREBOMB;
+        case(PowerUpID::explosion_radius_increase): return TileTypes::POWER_REACH;
+        case(PowerUpID::speed_increase):            return TileTypes::POWER_SPEED;
         default:   return TileTypes::EMPTY;
     }
 }
