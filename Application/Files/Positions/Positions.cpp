@@ -28,3 +28,9 @@ int Positions::Y(int newY){
     y = newY;
     return 1;
 }
+
+bool Positions::operator==(Positions comparator)
+{
+    if((X()==comparator.X()) && (Y()==comparator.Y())) return true;
+    return false;
+}

@@ -434,13 +434,7 @@ bool Game::HandleBombs()
         if(currentPlayer->WantsToPlaceABomb())
         {
             currentPlayer->PlacedABomb();
-            PlacedBomb newBomb = PlacedBomb(
-                currentPlayer->GetCurrentCoordinates()->X(),
-                currentPlayer->GetCurrentCoordinates()->Y(),
-                GAME_DEFAULT_BOMB_RADIUS,
-                2000,
-                map
-            );
+            PlacedBomb newBomb = currentPlayer->GetABomb(map);
             bombsOnMap.push_back(newBomb);
         }
     }
@@ -554,7 +548,22 @@ bool Game::HandlePlayers()
  */
 bool Game::HandlePowerUp()
 {
-    return false;
+    for(int i=0; i<itemsOnMap.size(); i++)
+    {
+        Positions powerUpPos = *itemsOnMap[i].GetCurrentCoordinates();
+
+        // Check if any players are on that power up.
+        for(int p=0; p<players.size(); p++)
+        {
+            Positions playerPos = *players[p].GetCurrentCoordinates();
+
+            if(playerPos == powerUpPos)
+            {
+                itemsOnMap.erase(itemsOnMap.begin() + i);
+            }
+        }
+    }
+    return true;
 }
 
 /**

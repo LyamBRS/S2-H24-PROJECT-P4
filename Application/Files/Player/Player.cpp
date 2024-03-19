@@ -25,18 +25,6 @@
 // - INCLUDES - //
 #include "Player.h"
 
-int GetPlayerColor(unsigned int playerNumber)
-{
-    switch(playerNumber)
-    {
-        case(0): return PLAYER_A_COLOR;
-        case(1): return PLAYER_B_COLOR;
-        case(2): return PLAYER_C_COLOR;
-        case(3): return PLAYER_D_COLOR;
-    }
-    return colors::red;
-}
-
 // - PRORGAM - //
 Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedColour) : BaseObject()
 {
@@ -268,5 +256,16 @@ bool Player::SetPlayerAsDeleted()
 {
     isDead = true;
     return true;
+}
+
+PlacedBomb Player::GetABomb(Map* mapReference)
+{
+    return PlacedBomb(
+        position.X(),
+        position.Y(),
+        bombRadius,
+        PLAYER_DEFAULT_BOMB_FUSE,
+        mapReference
+    );
 }
 

@@ -20,18 +20,13 @@
 #include "../PowerUp/PowerUp.h"
 #include "../Colour/Colour.h"
 #include "../SimpleTimer/SimpleTimer.h"
-#include "../Map/Map.h"
+#include "../PlacedBomb/PlacedBomb.h"
 #include <windows.h>
 
 // - DEFINES - //
 #define PLAYER_FULL_HEALTH 100
 #define PLAYER_BASE_BOMB_PLACEMENT_TIMER 2000
 #define boutonBombe 1
-
-#define PLAYER_A_COLOR colors::electric
-#define PLAYER_B_COLOR colors::yellow
-#define PLAYER_C_COLOR colors::leaf
-#define PLAYER_D_COLOR colors::aqua
 
 #define PLAYER_KEY_SELECT       joystickButton
 #define PLAYER_KEY_Y_AXIS       joystickY
@@ -53,9 +48,10 @@
 
 #define PLAYER_DEFAULT_SPEED_INTERVAL_MS 230
 #define PLAYER_INVULNURABILITY_TIMER 25
+#define PLAYER_DEFAULT_BOMB_RADIUS 4
+#define PLAYER_DEFAULT_BOMB_FUSE 3000
 
 // - FUNCTION - //
-int GetPlayerColor(unsigned int playerNumber);
 
 // - CLASS - //
 
@@ -92,6 +88,8 @@ class Player : BaseObject
         Controller* controllerRef = new Controller();
 
         SimpleTimer bombPlacement = SimpleTimer(3000);
+
+        int bombRadius = PLAYER_DEFAULT_BOMB_RADIUS;
 
     public:
         SimpleTimer invulnurability = SimpleTimer(PLAYER_INVULNURABILITY_TIMER);
@@ -285,4 +283,6 @@ class Player : BaseObject
          * @return false 
          */
         bool SetPlayerAsDeleted();
+
+        PlacedBomb GetABomb(Map* mapReference);
 };

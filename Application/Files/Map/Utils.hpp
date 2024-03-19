@@ -10,6 +10,8 @@
  * @copyright Copyright (c) 2024
  */
 
+#pragma once
+
 // - INCLUDES - //
 #include "Map.h"
 #include <iostream>

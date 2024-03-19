@@ -103,4 +103,6 @@ class Positions
          * @return int 
          */
         int Y(int newY);
+
+        bool operator==(Positions comparator);
 };

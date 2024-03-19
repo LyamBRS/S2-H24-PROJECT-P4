@@ -90,6 +90,11 @@ enum colors {
     white = 15,
 };
 
+#define PLAYER_A_COLOR colors::electric
+#define PLAYER_B_COLOR colors::yellow
+#define PLAYER_C_COLOR colors::leaf
+#define PLAYER_D_COLOR colors::aqua
+
 void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour);
 
 void SetTerminalCursorPosition(int row, int column);
@@ -110,5 +115,7 @@ void ResizeTerminal(int row, int column);
  * @param lineEnd 
  */
 void ConsecutiveChar(std::ostream & os, char characterToDraw, int foregroundColour, int backgroundColour, int howMuchToRepeat, bool lineEnd);
+
+int GetPlayerColor(unsigned int playerNumber);
 
 std::string ExePath();
