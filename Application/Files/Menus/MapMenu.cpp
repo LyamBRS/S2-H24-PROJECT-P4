@@ -138,6 +138,27 @@ bool MapMenu::Draw()
     PrintInColour(std::cout, std::to_string(amountOfMaps),  colors::white, colors::darkpurple);
     PrintInColour(std::cout, " >                -\n",       colors::white, colors::darkpurple);
 
+    std::string result = "< ";
+    result.append(std::to_string(selection+1));
+    result.append(" // ");
+    result.append(std::to_string(amountOfMaps));
+    result.append(" >");
+
+    bool flip = false;
+    while(result.size() < 16)
+    {
+        flip = !flip;
+        if(flip)
+        {
+            result.insert(0, " ");
+        }
+        else
+        {
+            result.append(" ");       
+        }
+    }
+    appRef->SetMessage(result);
+
     // VERIFY THE MAP PRIOR TO PULLING ITS DATA
     std::string error = GetMapJsonError(allMaps[selection]);
     if(error != EM_MAP_NO_ERROR)

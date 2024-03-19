@@ -78,6 +78,7 @@ bool Game::DrawInventories()
 
 bool Game::DrawHealths()
 {
+    int offset = 0;
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
         // That player is not used in the game.
@@ -86,7 +87,8 @@ bool Game::DrawHealths()
             continue;
         }
 
-        SetTerminalCursorPosition(healthCursorX, playerCardStartY + playerIndex);
+        SetTerminalCursorPosition(healthCursorX, playerCardStartY + offset);
+        offset++;
         int playerHealth = players[playerIndex].Health();
 
         if(playerHealth == 0)
@@ -121,13 +123,14 @@ bool Game::DrawHealths()
 
 bool Game::DrawPlayerStatus()
 {
+    int offset = 0;
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
         int hasMovementCooldown = players[playerIndex].movementFrameDelay.TimeLeftNoReset();
 
         if(players[playerIndex].GetController()->controllerID != 0)
         {
-            SetTerminalCursorPosition(bombStatusCursorX, playerCardStartY + playerIndex);
+            SetTerminalCursorPosition(bombStatusCursorX, playerCardStartY + offset);
             // That player is no longer connected.
             if(!players[playerIndex].GetController()->isConnected)
             {
@@ -162,6 +165,7 @@ bool Game::DrawPlayerStatus()
                 players[playerIndex].oldStatus = players[playerIndex].newStatus;
                 needToRedrawPlayerStatus = true;
             }
+            offset++;
         }
     }
 
@@ -189,6 +193,22 @@ bool Game::DrawTimers()
     result += minutes;
     result += ":";
     result += seconds;
+
+    std::string timerOnArduino = result;
+    bool flip = false;
+    while(timerOnArduino.size() < 16)
+    {
+        flip = !flip;
+        if(flip)
+        {
+            timerOnArduino.insert(0, " ");
+        }
+        else
+        {
+            timerOnArduino.append(" ");       
+        }
+    }
+    if(playerDeathMessage.TimeLeftNoReset()==0) appRef->SetMessage(timerOnArduino);
 
     PrintInColour(TER, result, GAME_FIELD_COLORS);
     needToRedrawTimers = false;
@@ -225,10 +245,13 @@ bool Game::HandleNextMouvements()
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
         // HandleMovements is done in each frame update. This governs 
-        if(players[playerIndex].movementFrameDelay.TimeLeftNoReset() == 0)
+        if((players[playerIndex].movementFrameDelay.TimeLeftNoReset() == 0))
         {
             int xVelocity = players[playerIndex].GetVelocity()->DeltaX();
             int yVelocity = players[playerIndex].GetVelocity()->DeltaY();
+
+            SetTerminalCursorPosition(0,playerIndex);
+            std::cout << xVelocity << std::endl;
 
             int playerX = players[playerIndex].GetCurrentCoordinates()->X();
             int playerY = players[playerIndex].GetCurrentCoordinates()->Y();
@@ -323,7 +346,7 @@ bool Game::PutPlayersInMap()
         Positions* previousPos = players[playerIndex].GetOldCoordinates();
         Positions* currentPos = players[playerIndex].GetCurrentCoordinates();
 
-        if (currentPlayer->GetController()->controllerID != 0) // Otherwise, that player was not assigned a controller, thus is not playing.
+        if ((currentPlayer->GetController()->controllerID != 0) && (currentPlayer->Health()!=0)) // Otherwise, that player was not assigned a controller, thus is not playing.
         {
             // Player needs to be removed from the map.
             if (currentPlayer->NeedsToBeDeleted())
@@ -332,6 +355,7 @@ bool Game::PutPlayersInMap()
                 currentPlayer->SetPlayerAsDeleted();
                 map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+                playerDeathMessage.Reset();
             }
             else // Puts an empty space behind the player, and put the current player innit
             {
@@ -527,6 +551,27 @@ bool Game::HandlePlayers()
             case(1): wantedBits = wantedBits ^= 512;
         }
         players[playerIndex].GetController()->SentBarGraphBits = wantedBits;
+
+        if(players[playerIndex].NeedsToBeDeleted())
+        {
+            std::string result = " Player ";
+            if((playerIndex+1)<10) result.append("0");
+            result.append(std::to_string((playerIndex+1)));
+            result.append(" died ");
+            appRef->SetMessage(result);
+            players[playerIndex].SetPlayerAsDeleted();
+
+            // Erase player from the map
+            TileTypes currentPlayerTile = map->GetTileDataAtPosition(*players[playerIndex].GetCurrentCoordinates());
+            if(checkIfTileIsPlayer(currentPlayerTile))
+            {
+                map->SetTileDataAtPosition(
+                    players[playerIndex].GetCurrentCoordinates()->X(),
+                    players[playerIndex].GetCurrentCoordinates()->Y(),
+                    TileTypes::EMPTY
+                );
+            }
+        }
     }
     HandleNextMouvements();
     return true;
@@ -820,6 +865,17 @@ bool Game::Update()
         }
     }
 
+    ////////////////////////////////////////////
+    // Handle game end.
+    ////////////////////////////////////////////
+    if(gameStatus == GameStatuses::countdown)
+    {
+        std::string result = "-      0";
+        result.append(std::to_string(GetCountdownValue()));
+        result.append("      -");
+        appRef->SetMessage(result);
+    }
+
     return true;
 }
 
@@ -859,6 +915,7 @@ bool Game::Pause()
     if(gameStatus != GameStatuses::playing) return false;
     gameStatus = GameStatuses::paused;
     gameDuration.Stop();
+    appRef->SetMessage("  Game  paused  ");
     return true;
 }
 
@@ -882,6 +939,7 @@ bool Game::Resume()
     // Sleep(1000);
     gameStatus = GameStatuses::playing;
     gameDuration.Resume();
+    appRef->SetMessage("  Game  resumed  ");
     return true;
 }
 
@@ -936,7 +994,7 @@ int Game::GetCountdownValue()
 {
     if(!canBeUsed) return 0;
 
-    int timeLeft = startTimer.TimeLeft();
+    int timeLeft = startTimer.TimeLeftNoReset();
 
     if(gameStatus != GameStatuses::countdown)
     {
@@ -1040,12 +1098,26 @@ Controller* Game::GetPlayerController(int playerIndex)
 bool Game::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
 {
     if(!canBeUsed) {std::cout << "GAME CONSTRUCTOR ERROR: AssignControllerToPlayer: NO PLAYERS IN VECTOR" << std::endl; return false;}
+
+    std::string result = "Player ";
+    if((playerIndex+1)<10) result.append("0");
+    result.append(std::to_string((playerIndex+1)));
+    result.append(" joined");
+    appRef->SetMessage(result);
+
     return players[playerIndex].LinkController(controllerRef);
 }
 
 bool Game::UnAssignPlayerController(int playerIndex)
 {
     players[playerIndex].UnlinkController();
+
+    std::string result = "Player ";
+    if((playerIndex+1)<10) result.append("0");
+    result.append(std::to_string((playerIndex+1)));
+    result.append(" left  ");
+    appRef->SetMessage(result);
+
     return true;
 }
 

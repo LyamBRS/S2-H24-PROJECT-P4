@@ -240,7 +240,7 @@ Positions* Player::GetOldCoordinates()
  */
 bool Player::NeedsToBeDeleted()
 {
-    return isAlive && Health()==0 && isDead==false;
+    return (isAlive && Health()==0 && isDead==false);
 }
 
 /**
@@ -255,6 +255,7 @@ bool Player::NeedsToBeDeleted()
 bool Player::SetPlayerAsDeleted()
 {
     isDead = true;
+    health = 0;
     return true;
 }
 
@@ -268,4 +269,3 @@ PlacedBomb Player::GetABomb(Map* mapReference)
         mapReference
     );
 }
-

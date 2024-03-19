@@ -200,6 +200,8 @@ bool GameMenu::OnEnter()
     }
 
     gameIsValid = true;
+
+    appRef->SetMessage(" Please join... ");
     return true;
 }
 
@@ -647,6 +649,7 @@ bool GameMenu::DrawEnd()
     {
         rectangles(16, BG, false);
         PrintInColour(std::cout, "NOBODY WON", colors::red, BG);
+        appRef->SetMessage("   No  Winner   ");
         rectangles(16, BG, false);
         rectangles(2, colors::black, true);
     }
@@ -656,9 +659,26 @@ bool GameMenu::DrawEnd()
         std::string result = "Player  ";
         if(ID<10) result.append("0");
         result.append(std::to_string(ID));
-        PrintInColour(std::cout, result, GetPlayerColor(ID), colors::grey); 
+        PrintInColour(std::cout, result, GetPlayerColor(ID), BG);
         rectangles(16, BG, false);
         rectangles(1, colors::black, true);
+
+        bool flip = false;
+        std::string lcdResult = result;
+        lcdResult.append(" won");
+        while(lcdResult.size() < 16)
+        {
+            flip = !flip;
+            if(flip)
+            {
+                lcdResult.insert(0, " ");
+            }
+            else
+            {
+                lcdResult.append(" ");       
+            }
+        }
+        appRef->SetMessage(lcdResult);
     }
 
     // Draw buttons

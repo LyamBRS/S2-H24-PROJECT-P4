@@ -83,6 +83,7 @@ bool ExitMenu::Draw()
             PrintInColour(std::cout, "[NO]",       colors::white, colors::blue);
             std::cout << "           ";
             PrintInColour(std::cout, "[YES]\n",       colors::grey, colors::black);
+            appRef->SetMessage("    Go back?    ");
             break;
 
         case(1):
@@ -90,6 +91,7 @@ bool ExitMenu::Draw()
             PrintInColour(std::cout, "[NO]",       colors::grey, colors::black);
             std::cout << "           ";
             PrintInColour(std::cout, "[YES]\n",       colors::white, colors::blue);
+            appRef->SetMessage("     Leave?     ");
             break;
     }
     std::cout << "############################################" << std::endl;

@@ -195,6 +195,7 @@ class Game
         bool needToRedrawPlayerHealth = true;
 
         SimpleTimer drawingFlipper = SimpleTimer(200);
+        SimpleTimer playerDeathMessage = SimpleTimer(2000);
         bool flipDrawingOrder = false;
         
         /**

@@ -103,6 +103,7 @@ bool MainMenu::Draw()
             PrintInColour(std::cout, "   2: Arduino setup\n",   colors::grey, colors::black);
             PrintInColour(std::cout, "-> 3: Game Menu\n",       colors::aqua, colors::black);
             PrintInColour(std::cout, "   4: Exit Menu\n",       colors::grey, colors::black);
+            appRef->SetMessage("3:     Game menu");
             break;
 
         case(APP_TEST_MENU):
@@ -110,6 +111,7 @@ bool MainMenu::Draw()
             PrintInColour(std::cout, "   2: Arduino setup\n",   colors::grey, colors::black);
             PrintInColour(std::cout, "   3: Game Menu\n",       colors::grey, colors::black);
             PrintInColour(std::cout, "   4: Exit Menu\n",       colors::grey, colors::black);
+            appRef->SetMessage("1:     Test menu");
             break;
 
         case(APP_EXIT_MENU):
@@ -117,6 +119,7 @@ bool MainMenu::Draw()
             PrintInColour(std::cout, "   2: Arduino setup\n",   colors::grey, colors::black);
             PrintInColour(std::cout, "   3: Game Menu\n",       colors::grey, colors::black);
             PrintInColour(std::cout, "-> 4: Exit Menu\n",       colors::red, colors::black);
+            appRef->SetMessage("4:     Exit menu");
             break;
 
         case(APP_ARDUINO_MENU):
@@ -124,6 +127,7 @@ bool MainMenu::Draw()
             PrintInColour(std::cout, "-> 2: Arduino setup\n",   colors::aqua, colors::black);
             PrintInColour(std::cout, "   3: Game Menu\n",       colors::grey, colors::black);
             PrintInColour(std::cout, "   4: Exit Menu\n",       colors::grey, colors::black);
+            appRef->SetMessage("2:  Arduino menu");
             break;
     }
     std::cout << "############################################" << std::endl;

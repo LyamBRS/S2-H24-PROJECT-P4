@@ -117,6 +117,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
+            appRef->SetMessage("Change  baudrate");
             break;
 
         case(1):
@@ -130,6 +131,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
+            appRef->SetMessage("Change  Com port");
             break;
 
         case(2):
@@ -143,6 +145,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
+            appRef->SetMessage("Connect  arduino");
             break;
 
         case(3):
@@ -168,6 +171,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "   Back to main menu", colors::grey, colors::black);
             std::cout << "  ----------------------" << std::endl;
+            appRef->SetMessage(" Remove arduino ");
             break;
 
         case(4):
@@ -200,6 +204,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
             printCommunicationStatus(appRef->arduinoThread.GetArduino()->Verify());
             PrintInColour(std::cout, "-> Back to main menu", colors::aqua, colors::black);
             std::cout << "  ----------------------" << std::endl;
+            appRef->SetMessage("     Go back    ");
             break;
     }
     std::cout << "############################################" << std::endl;
@@ -638,6 +643,16 @@ bool ArduinoMenu::DrawDisconnectMenu()
 	std::cout << "--------------------------------------------" << std::endl;
     drawButtons(selection);
     std::cout << "############################################" << std::endl;
+
+    if(selection==0)
+    {
+        appRef->SetMessage("     Go back    ");
+    }
+    else
+    {
+        appRef->SetMessage("   Disconnect?  ");
+    }
+
     return true;
 }
 
@@ -945,6 +960,7 @@ bool ArduinoMenu::OnEnter()
     selectedSubMenu = 0;
     oldSelectedSubMenu = -1;
     selection = 0;
+    // appRef->SetMessage(" Arduino  setup ");
     return true;
 }
 

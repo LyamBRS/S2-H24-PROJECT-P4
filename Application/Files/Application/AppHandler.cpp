@@ -60,3 +60,8 @@ bool AppHandler::ResetDetectedMuons()
 {
     return arduinoThread.GetArduino()->ResetMuons();
 }
+
+bool AppHandler::SetMessage(std::string LCDmessage)
+{
+    return arduinoThread.GetArduino()->SetNewLCDMessage(LCDmessage);
+}

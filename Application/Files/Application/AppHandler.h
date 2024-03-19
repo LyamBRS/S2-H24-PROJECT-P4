@@ -116,4 +116,5 @@ class AppHandler
 
         int GetDetectedMuons();
         bool ResetDetectedMuons();
+        bool SetMessage(std::string LCDmessage);
 };
