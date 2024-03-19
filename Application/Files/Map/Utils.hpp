@@ -18,6 +18,7 @@
 #include <fstream>
 #include <string>
 #include "../Colour/Colour.h"
+#include "../PowerUp/PowerUp.h"
 
 // - DEFINES - //
 #define EM_MAP_WRONG_AMOUNT_OF_PLAYERS  "Invalid specified amount of players"
@@ -93,6 +94,8 @@ void PrintTileName(TileTypes tile);
 
 
 bool checkIfTileIsPlayer(TileTypes tile);
+int GetPowerUpFromTile(TileTypes tile);
+TileTypes GetTileFromPowerUp(int powerUpID);
 
 std::vector<nlohmann::json> GetAllMaps();
 nlohmann::json GetMapJson(std::string path);

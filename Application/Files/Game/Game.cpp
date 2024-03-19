@@ -80,6 +80,12 @@ bool Game::DrawHealths()
 {
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
+        // That player is not used in the game.
+        if(players[playerIndex].GetController()->controllerID == 0)
+        {
+            continue;
+        }
+
         SetTerminalCursorPosition(healthCursorX, playerCardStartY + playerIndex);
         int playerHealth = players[playerIndex].Health();
 
@@ -134,10 +140,15 @@ bool Game::DrawPlayerStatus()
                 PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
                 players[playerIndex].newStatus = 2;
             }
+            else if(players[playerIndex].invulnurability.TimeLeftNoReset()!=0)
+            {
+                PrintInColour(TER, STRING_HEARTH, colors::red, GAME_WINDOW_FIELD_BG);
+                players[playerIndex].newStatus = 3;
+            }
             else if(hasMovementCooldown)
             {
-                PrintInColour(TER, STRING_HEARTH, colors::black, GAME_WINDOW_FIELD_BG);
-                players[playerIndex].newStatus = 3;
+                PrintInColour(TER, "M", colors::black, GAME_WINDOW_FIELD_BG);
+                players[playerIndex].newStatus = 4;
             }
             // That player has no particular status to show
             else
@@ -184,6 +195,10 @@ bool Game::DrawTimers()
     return true;
 }
 
+bool Game::DrawCooldowns()
+{
+    return false;
+}
 
 /**
  * @brief 
@@ -260,7 +275,6 @@ bool Game::HandleNextMouvements()
                 {
                     players[playerIndex].movementFrameDelay.Reset();
                     players[playerIndex].GetCurrentCoordinates()->SetNewCoordinates(testX, testY);
-                    players[playerIndex].GiveDamage(1);
                 }
             }
         }
@@ -288,9 +302,11 @@ bool Game::PutObjectsInMap()
     {
         PutPlayersInMap();
         PutBombsInMap();
+        PutPowerUpsInMap();
     }
     else
     {
+        PutPowerUpsInMap();
         PutBombsInMap();
         PutPlayersInMap();
     }
@@ -375,6 +391,26 @@ bool Game::PutBombsInMap()
     return true;
 }
 
+bool Game::PutPowerUpsInMap()
+{
+    for(int i=0; i<itemsOnMap.size(); i++)
+    {
+        Positions powerUpPos = *itemsOnMap[i].GetCurrentCoordinates();
+        TileTypes associatedTile = GetTileFromPowerUp(itemsOnMap[i].GetType());
+
+        //SetTerminalCursorPosition(60,i);
+        //PrintTileName(associatedTile);
+        //std::cout << ": " << itemsOnMap[i].GetType();
+
+        map->SetTileDataAtPosition(
+           powerUpPos.X(),
+           powerUpPos.Y(),
+           associatedTile
+        );
+    }
+    return true;
+}
+
 /**
  * @brief 
  * # HandleBombs
@@ -430,22 +466,19 @@ bool Game::HandleBombs()
                         TileTypes::EMPTY
                     );
                 }
-            }
 
-            // Check the ends of raycasts to remove boxes.
-            for(int rayIndex=0; rayIndex<bombsOnMap[i].rays.size(); rayIndex++)
-            {
-                if(bombsOnMap[i].rays[rayIndex].HasEnded())
+                // Check the ends of raycasts to remove boxes.
+                for(int rayIndex=0; rayIndex<bombsOnMap[i].rays.size(); rayIndex++)
                 {
-                    Positions raysEndPos = bombsOnMap[i].rays[rayIndex].GetEndPosition();
-                    TileTypes tileAtEndOfRay = map->GetTileDataAtPosition(raysEndPos);
-
-                    if(tileAtEndOfRay == TileTypes::WALL) // Can be destroyed
+                    if(bombsOnMap[i].rays[rayIndex].HasEnded())
                     {
-                        map->SetTileDataAtPosition(
-                            raysEndPos.X(),
-                            raysEndPos.Y(),
-                        );
+                        Positions raysEndPos = bombsOnMap[i].rays[rayIndex].GetEndPosition();
+                        TileTypes tileAtEndOfRay = map->GetTileDataAtPosition(raysEndPos);
+    
+                        if(tileAtEndOfRay == TileTypes::WALL) // Can be destroyed
+                        {
+                            HandleBoxDestruction(raysEndPos);
+                        }
                     }
                 }
             }
@@ -502,8 +535,6 @@ bool Game::HandlePlayers()
         players[playerIndex].GetController()->SentBarGraphBits = wantedBits;
     }
     HandleNextMouvements();
-    CheckForPlayerDamage();
-
     return true;
 }
 
@@ -540,7 +571,17 @@ bool Game::HandlePowerUp()
  */
 bool Game::CheckForPlayerDamage()
 {
-    needToRedrawPlayerHealth = true;
+    for(int i=0; i<players.size(); i++)
+    {
+        Positions playerCurrentPositions = *players[i].GetCurrentCoordinates();
+        TileTypes tileUnderPlayer = map->GetTileDataAtPosition(playerCurrentPositions);
+
+        if(tileUnderPlayer == TileTypes::SMOKE) // Player is currently inside of a smoke tile
+        {
+            players[i].GiveDamage(GAME_DEFAULT_DAMAGE);
+            needToRedrawPlayerHealth = true;
+        }
+    }
     return false;
 }
 
@@ -592,9 +633,17 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
         itemsOnMap.push_back(PlacedPowerUp(
             boxPosition.X(),
             boxPosition.Y(),
-            
-        ))
+            GetPowerUpFromTile(wantedTile)
+        ));
     }
+
+    // SetTerminalCursorPosition(0,0);
+    // std::cout << "Created powerup with ID " << GetPowerUpFromTile(wantedTile) << " tile name: ";
+    // PrintTileName(wantedTile);
+    // std::cout << " at coordinates: " << boxPosition.X() << "," << boxPosition.Y() << std::endl;
+    // Sleep(1000);
+
+    return true;
 }
 
 
@@ -689,8 +738,8 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
 
     gameHeight = 6 + mapSizeY + 2 + amountOfPlayers;
 
-    std::cout << "GAME CAN NOW BE USED" << std::endl;
-    Sleep(1000);
+    // std::cout << "GAME CAN NOW BE USED" << std::endl;
+    // Sleep(1000);
 
     canBeUsed = true;
     gameStatus = GameStatuses::awaitingPlayers;
@@ -745,9 +794,23 @@ bool Game::Update()
         HandleBombs();
         HandlePowerUp();
         PutObjectsInMap();
+        CheckForPlayerDamage();
     }
 
     if(drawingFlipper.TimeLeft()==0) flipDrawingOrder = !flipDrawingOrder;
+
+    ////////////////////////////////////////////
+    // Handle game end.
+    ////////////////////////////////////////////
+    if(gameStatus == GameStatuses::playing)
+    {
+        int ID = GetWinningPlayerID();
+        if(ID != -1)
+        {
+            gameStatus = GameStatuses::ended;
+        }
+    }
+
     return true;
 }
 
@@ -804,7 +867,10 @@ bool Game::Pause()
  */
 bool Game::Resume()
 {
-    if((gameStatus != GameStatuses::paused) || (gameStatus != GameStatuses::awaitingConnection)) return false;
+    if((gameStatus != GameStatuses::paused) || (gameStatus == GameStatuses::awaitingConnection)) return false;
+    SetTerminalCursorPosition(0,0);
+    // std::cout << "GAME RESUMED" << std::endl;
+    // Sleep(1000);
     gameStatus = GameStatuses::playing;
     gameDuration.Resume();
     return true;
@@ -943,8 +1009,6 @@ bool Game::isValidated()
 
 
 
-
-
 Controller* Game::GetPlayerController(int playerIndex)
 {
     if(!canBeUsed)
@@ -976,10 +1040,23 @@ bool Game::UnAssignPlayerController(int playerIndex)
     return true;
 }
 
+int Game::GetWinningPlayerID()
+{
+    int amountOfPlayersAlive = 0;
+    int lastPlayerID = 0;
+    for(int i=0; i<players.size(); i++)
+    {
+        if((players[i].Health() != 0) && (players[i].GetController()->controllerID!=0))
+        {
+            amountOfPlayersAlive++;
+            lastPlayerID = i;
+        }
+    }
 
-
-
-
+    if(amountOfPlayersAlive == 1) return lastPlayerID;
+    if(amountOfPlayersAlive == 0) return 0;
+    return -1;
+}
 
 
 /**
@@ -1277,6 +1354,7 @@ bool Game::FreshDraw()
     DrawTimers();
     DrawInventories();
     DrawPlayerStatus();
+    DrawHealths();
 
     needToRedrawInventories = false;
     needToRedrawMap = false;

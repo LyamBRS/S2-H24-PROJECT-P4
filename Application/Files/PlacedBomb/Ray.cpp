@@ -58,7 +58,7 @@ bool Ray::Update()
  */
 Positions Ray::GetSpecificPosition(int atThisLength)
 {
-    //if(atThisLength > maxLength) return GetEndPosition();
+    if(atThisLength > length) atThisLength=length;
     if(atThisLength < 0) return GetSpecificPosition(0);
 
     float x = (cosf(associatedAngle) * atThisLength) + (float(bombCenter.X()));

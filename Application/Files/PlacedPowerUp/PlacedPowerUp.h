@@ -63,7 +63,7 @@ class PlacedPowerUp : public BaseObject
          * @param type
          * Which type of @ref PowerUp is this?
          */
-        PlacedPowerUp(int initialX, int initialY, int type);
+        PlacedPowerUp(int initialX, int initialY, int newType);
 
         /**
          * @brief
@@ -95,4 +95,11 @@ class PlacedPowerUp : public BaseObject
         bool ShouldBeDeleted();
 
         int GetType();
+
+        // Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+        Movements* GetVelocity();
+
+        Positions* GetCurrentCoordinates();
+
+        Positions* GetOldCoordinates();
 };

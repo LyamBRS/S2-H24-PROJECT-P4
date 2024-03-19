@@ -87,6 +87,7 @@
 
 #define GAME_BOMB_UPDATE_DELAY_MS 50
 #define GAME_DEFAULT_BOMB_RADIUS 8
+#define GAME_DEFAULT_DAMAGE 1
 
 #define TER std::cout
 
@@ -187,11 +188,11 @@ class Game
         /// @brief reference to the attributes of the current application
         AppHandler* appRef;
 
-        bool needToRedrawMap = false;
-        bool needToRedrawInventories = false;
-        bool needToRedrawPlayerStatus = false;
-        bool needToRedrawTimers = false;
-        bool needToRedrawPlayerHealth = false;
+        bool needToRedrawMap = true;
+        bool needToRedrawInventories = true;
+        bool needToRedrawPlayerStatus = true;
+        bool needToRedrawTimers = true;
+        bool needToRedrawPlayerHealth = true;
 
         SimpleTimer drawingFlipper = SimpleTimer(200);
         bool flipDrawingOrder = false;
@@ -217,6 +218,7 @@ class Game
         bool DrawPlayerStatus();
         bool DrawHealths();
         bool DrawTimers();
+        bool DrawCooldowns();
 
         /**
          * @brief 
@@ -254,6 +256,7 @@ class Game
         bool PutObjectsInMap();
         bool PutPlayersInMap();
         bool PutBombsInMap();
+        bool PutPowerUpsInMap();
 
         bool HandleBoxDestruction(Positions boxPosition);
 
@@ -569,5 +572,5 @@ class Game
         bool AssignControllerToPlayer(int playerIndex, Controller* controllerRef);
         bool UnAssignPlayerController(int playerIndex);
 
-
+        int GetWinningPlayerID();
 };

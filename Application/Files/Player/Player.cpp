@@ -91,15 +91,19 @@ bool Player::GiveHealth(int healthPoint){
  * The player cant take damages at the moment.
  */
 bool Player::GiveDamage(int damagePoints){
-    if(health == 0){
-        return false;
+    if(invulnurability.TimeLeft() == 0)
+    {
+        if(health == 0){
+            return false;
+        }
+        health = health - damagePoints;
+        if(health<0){
+            isAlive = false;
+            health = 0;
+        }
+        return true;     
     }
-    health = health - damagePoints;
-    if(health<0){
-        isAlive = false;
-        health = 0;
-    }
-    return true;            
+    return false;       
 }
 
 /**

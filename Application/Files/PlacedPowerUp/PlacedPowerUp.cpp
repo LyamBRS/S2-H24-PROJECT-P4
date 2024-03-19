@@ -1,11 +1,10 @@
 #include "PlacedPowerUp.h"
-#include <Arduino.h>
-#include "SimpleTimer.h"
 
-PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int type) 
+PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int newType) : BaseObject()
 {
     this->position.SetNewCoordinates(initialX,initialY);
     
+    type = newType;
     switch (type)
     {
     case PowerUpID::damage_increase:
@@ -49,11 +48,6 @@ PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int type)
     }
 }
 
-PlacedPowerUp::~PlacedPowerUp()
-{
-
-}
-
 bool PlacedPowerUp::Update()
 {
    if (Timetilldespawn->TimeLeft()==0)
@@ -72,4 +66,25 @@ bool PlacedPowerUp::Update()
 bool PlacedPowerUp::ShouldBeDeleted()
 {
    return shoulbedeleted;
+}
+
+// Fuck you C++ inheritance. Wasted 2h on your ass for jack shit.
+Movements* PlacedPowerUp::GetVelocity()
+{
+    return &movement;
+}
+
+Positions* PlacedPowerUp::GetCurrentCoordinates()
+{
+    return &position;
+}
+
+Positions* PlacedPowerUp::GetOldCoordinates()
+{
+    return &OldPosition;
+}
+
+int PlacedPowerUp::GetType()
+{
+    return type;
 }

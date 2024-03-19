@@ -23,6 +23,17 @@
 // - DEFINES - //
 #define BOMB_END_FRAMES 10
 
+#define ANGLE_R 0.0f
+#define ANGLE_TR 0.78f
+#define ANGLE_T 1.57f
+#define ANGLE_TL 2.34f
+#define ANGLE_L 3.14f
+#define ANGLE_BL 3.9f
+#define ANGLE_B 4.71f
+#define ANGLE_BR 5.49f
+
+#define ANGLE_THRESHOLD 0.39
+
 // - FUNCTIONS - //
 float GetRaycastAngleIncrement(int bombFinalRadius);
 
@@ -57,6 +68,16 @@ class PlacedBomb : public BaseObject
         bool isExploding = false;
         bool isExploded = false;
         bool hasFinishedFrames = false;
+
+        bool canGo_TR = false; // Can any rays go diagonal top right
+        bool canGo_TL = false; // Can any rays go diagonal top left
+        bool canGo_BR = false; // Can any rays go diagonal down right
+        bool canGo_BL = false; // Can any rays go diagonal down left
+
+        bool canGo_U = false; // Can any rays go up?
+        bool canGo_D = false; // Can any rays go down?
+        bool canGo_L = false; // Can any rays go left?
+        bool canGo_R = false; // Can any rays go right?
 
         Map* mapReference;
 

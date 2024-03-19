@@ -52,6 +52,7 @@
 #define PLAYER_CONTROLLER_THRESHOLD 30
 
 #define PLAYER_DEFAULT_SPEED_INTERVAL_MS 230
+#define PLAYER_INVULNURABILITY_TIMER 25
 
 // - FUNCTION - //
 int GetPlayerColor(unsigned int playerNumber);
@@ -93,6 +94,7 @@ class Player : BaseObject
         SimpleTimer bombPlacement = SimpleTimer(3000);
 
     public:
+        SimpleTimer invulnurability = SimpleTimer(PLAYER_INVULNURABILITY_TIMER);
         SimpleTimer movementFrameDelay = SimpleTimer(PLAYER_DEFAULT_SPEED_INTERVAL_MS);
 
         //TileTypes oldTileBelowPlayer = TileTypes::EMPTY;

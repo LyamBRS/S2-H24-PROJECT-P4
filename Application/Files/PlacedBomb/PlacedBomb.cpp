@@ -11,12 +11,57 @@ PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, Map* ne
     position.SetNewCoordinates(x,y);
     mapReference = newMapReference;
 
-    float initialAngle = GetRaycastAngleIncrement(explosiveForce);
+    Positions right         = Positions(x+1,y);
+    Positions topRight      = Positions(x+1,y-1);
+    Positions top           = Positions(x,y-1);
+    Positions topLeft       = Positions(x-1,y-1);
+    Positions Left          = Positions(x-1,y);
+    Positions bottomLeft    = Positions(x-1,y+1);
+    Positions bottom        = Positions(x,y+1);
+    Positions bottomRight   = Positions(x+1,y+1);
 
+    if(mapReference->GetTileDataAtPosition(right)       != TileTypes::PERMAWALL) canGo_R=true;
+    if(mapReference->GetTileDataAtPosition(topRight)    != TileTypes::PERMAWALL) canGo_TR=true;
+    if(mapReference->GetTileDataAtPosition(top)         != TileTypes::PERMAWALL) canGo_U=true;
+    if(mapReference->GetTileDataAtPosition(topLeft)     != TileTypes::PERMAWALL) canGo_TL=true;
+    if(mapReference->GetTileDataAtPosition(Left)        != TileTypes::PERMAWALL) canGo_L=true;
+    if(mapReference->GetTileDataAtPosition(bottomLeft)  != TileTypes::PERMAWALL) canGo_BL=true;
+    if(mapReference->GetTileDataAtPosition(bottom)      != TileTypes::PERMAWALL) canGo_D=true;
+    if(mapReference->GetTileDataAtPosition(bottomRight) != TileTypes::PERMAWALL) canGo_BR=true;
+
+    if(canGo_BL && !canGo_L) canGo_BL = false;
+    if(canGo_TL && !canGo_L) canGo_TL = false;
+    if(canGo_BR && !canGo_R) canGo_BR = false;
+    if(canGo_TR && !canGo_R) canGo_TR = false;
+
+    if(canGo_TL && !canGo_U) canGo_TL = false;
+    if(canGo_TR && !canGo_U) canGo_TR = false;
+    if(canGo_BR && !canGo_D) canGo_BR = false;
+    if(canGo_BL && !canGo_D) canGo_BL = false;
+
+    //SetTerminalCursorPosition(0,0);
+    //std::cout << "R: " << canGo_R << " TR: " << canGo_TR << " T: " << canGo_U << " TL: " << canGo_TL << " L: " << canGo_L << " BL: " << canGo_BL << " B: " << canGo_D << " BR: " << canGo_BR << std::endl;
+
+    float initialAngle = GetRaycastAngleIncrement(explosiveForce);
     for(int i=0; i < 2*explosiveForce; i++)
     {
         rays.push_back(Ray(x, y, explosiveForce, initialAngle));
+
+        bool cantGo = true;
+        // Test to see if we need to terminate that raycast before it even started based on walls directly next to the bomb.
+        if(!canGo_R &&  ((initialAngle > (6.28f-ANGLE_THRESHOLD)) || (initialAngle < (ANGLE_THRESHOLD))))           {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_U &&  ((initialAngle > (ANGLE_T-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_T+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_D &&  ((initialAngle > (ANGLE_B-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_B+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_L &&  ((initialAngle > (ANGLE_L-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_L+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+
+        if(!canGo_BR &&  ((initialAngle > (ANGLE_BR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_BL &&  ((initialAngle > (ANGLE_BL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_TR &&  ((initialAngle > (ANGLE_TR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_TL &&  ((initialAngle > (ANGLE_TL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+
         initialAngle = initialAngle + GetRaycastAngleIncrement(explosiveForce);
+        //SetTerminalCursorPosition(60,i);
+        //std::cout << initialAngle << ":\t" << cantGo << std::endl;
     }
 }
 
@@ -149,7 +194,7 @@ bool PlacedBomb::Draw()
 {
     for(int i=0; i<rays.size(); i++)
     {
-        for(int l=0; l<rays[i].GetLength(); l++)
+        for(int l=0; l<=rays[i].GetLength(); l++)
         {
             Positions coordinateInRay = rays[i].GetSpecificPosition(l);
             mapReference->SetTileDataAtPosition(
@@ -166,7 +211,7 @@ bool PlacedBomb::Clear()
 {
     for(int i=0; i<rays.size(); i++)
     {
-        for(int l=0; l<rays[i].GetLength(); l++)
+        for(int l=0; l<=rays[i].GetLength(); l++)
         {
             Positions coordinateInRay = rays[i].GetSpecificPosition(l);
             TileTypes tileAtThatCoordinate = mapReference->GetTileDataAtPosition(coordinateInRay);

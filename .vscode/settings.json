@@ -93,6 +93,7 @@
         "*.tcc": "cpp",
         "cinttypes": "cpp",
         "hashtable": "cpp",
-        "fstream": "cpp"
+        "fstream": "cpp",
+        "random": "cpp"
     }
 }

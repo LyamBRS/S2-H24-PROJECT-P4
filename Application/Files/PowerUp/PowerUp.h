@@ -32,20 +32,20 @@
  */
 enum PowerUpID
 {
-    damage_increase = 0b0000'0000'0000'0000,
-    speed_increase = 0b0001'0000'0000'0000,
-    explosion_radius_increase = 0b0010'0000'0000'0000,
-    health_increase = 0b0011'0000'0000'0000,
-    nb_bomb_increase = 0b0100'0000'0000'0000,
-    powerUpFName = 0b0101'0000'0000'0000,
-    powerUpGName = 0b0111'0000'0000'0000,
-    powerUpHName = 0b1000'0000'0000'0000,
-    powerUpIName = 0b1001'0000'0000'0000,
-    powerUpJName = 0b1010'0000'0000'0000,
-    powerUpKName = 0b1011'0000'0000'0000,
-    powerUpLName = 0b1100'0000'0000'0000,
-    powerUpMName = 0b1101'0000'0000'0000,
-    powerUpNName = 0b1111'0000'0000'0000
+    damage_increase = 1,
+    speed_increase = 2,
+    explosion_radius_increase = 3,
+    health_increase = 4,
+    nb_bomb_increase = 5,
+    powerUpFName = 6,
+    powerUpGName = 7,
+    powerUpHName = 8,
+    powerUpIName = 9,
+    powerUpJName = 10,
+    powerUpKName = 11,
+    powerUpLName = 12,
+    powerUpMName = 13,
+    powerUpNName = 14
 };
 
 // - CLASS - //
@@ -75,7 +75,7 @@ class PowerUp
          * @ref Inventory based power up be created
          * from?
          */
-        PowerUp(PlacedPowerUp* powerUpToPickUp);
+        //PowerUp(PlacedPowerUp* powerUpToPickUp);
         
         /**
          * @brief 

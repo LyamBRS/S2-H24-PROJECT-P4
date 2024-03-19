@@ -215,8 +215,11 @@ bool GameMenu::OnExit()
 
 bool GameMenu::Draw()
 {
-    if(needsToBeRedrawn)
+    static int oldStatus = 0;
+
+    if(needsToBeRedrawn || (currentGame->GetStatus() != oldStatus))
     {
+        oldStatus = currentGame->GetStatus();
         needsToBeRedrawn = false;
         system("cls");
     }
@@ -480,8 +483,55 @@ bool GameMenu::DrawWaitingForConnection()
 
 bool GameMenu::DrawPaused()
 {
-    std::cout << "DrawPaused" << std::endl;
-    return false;
+    auto rectangles = [](int amount, int color, bool lineEnd)
+    {
+        ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);
+    };
+
+    rectangles(44, colors::black, true);                                                                                                                                //"############################################";
+    rectangles(1, colors::black, false); rectangles(16, BG, false); PrintInColour(std::cout, "BOMBER MAN", colors::black, BG); rectangles(16, BG, false); rectangles(1, colors::black, true);
+
+    // Draw the name of the map dead center. Because why not.
+    // To pull this off, we've got 42 characters of space to deal with.
+    std::string mapName = currentGame->GetMap()->GetName();
+    int seperationBetweenTextAndBorder = (42-mapName.length())/2;
+
+    rectangles(1, colors::black, false);
+    rectangles(seperationBetweenTextAndBorder, BG, false);
+    PrintInColour(std::cout, mapName, colors::black, BG);
+    rectangles(seperationBetweenTextAndBorder, BG, false);
+
+    if(mapName.length()%2 != 0) rectangles(1, BG, false);
+
+    rectangles(1, colors::grey, true);
+    rectangles(2, colors::black, false); rectangles(42, colors::grey, true);
+    rectangles(44, colors::black, true);
+
+    // Draw buttons
+    rectangles(1, colors::black, false); 
+    rectangles(9, BG, false); 
+    if(selection==0)
+    {
+        PrintInColour(std::cout, "[LEAVE]", colors::black, colors::aqua);
+    }
+    else
+    {
+        PrintInColour(std::cout, "[LEAVE]", colors::black, BG);
+    }
+    rectangles(9, BG, false); 
+    if(selection==1)
+    {
+        PrintInColour(std::cout, "[RESUME]", colors::black, colors::aqua);
+    }
+    else
+    {
+        PrintInColour(std::cout, "[RESUME]", colors::black, BG);
+    }
+    rectangles(9, BG, true); 
+    rectangles(2, colors::black, false);
+    rectangles(42, colors::grey, true);
+
+    return true;
 }
 
 bool GameMenu::DrawGame()
@@ -566,8 +616,69 @@ bool GameMenu::DrawStart()
 
 bool GameMenu::DrawEnd()
 {
-    std::cout << "DrawEnd" << std::endl;
-    return false;
+    auto rectangles = [](int amount, int color, bool lineEnd)
+    {
+        ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);
+    };
+
+    rectangles(44, colors::black, true);                                                                                                                                //"############################################";
+    rectangles(1, colors::black, false); rectangles(16, BG, false); PrintInColour(std::cout, "BOMBER MAN", colors::black, BG); rectangles(16, BG, false); rectangles(1, colors::black, true);
+
+    // Draw the name of the map dead center. Because why not.
+    // To pull this off, we've got 42 characters of space to deal with.
+    std::string mapName = currentGame->GetMap()->GetName();
+    int seperationBetweenTextAndBorder = (42-mapName.length())/2;
+
+    rectangles(1, colors::black, false);
+    rectangles(seperationBetweenTextAndBorder, BG, false);
+    PrintInColour(std::cout, mapName, colors::black, BG);
+    rectangles(seperationBetweenTextAndBorder, BG, false);
+
+    if(mapName.length()%2 != 0) rectangles(1, BG, false);
+
+    rectangles(1, colors::grey, true);
+    rectangles(2, colors::black, false); rectangles(42, colors::grey, true);
+    rectangles(44, colors::black, true);
+
+    // Draw winner
+    rectangles(1, colors::black, false); 
+    int ID = currentGame->GetWinningPlayerID();
+    if(ID == 0)
+    {
+        rectangles(16, BG, false);
+        PrintInColour(std::cout, "NOBODY WON", colors::red, BG);
+        rectangles(16, BG, false);
+        rectangles(2, colors::black, true);
+    }
+    else
+    {
+        rectangles(16, BG, false);
+        std::string result = "Player  ";
+        if(ID<10) result.append("0");
+        result.append(std::to_string(ID));
+        PrintInColour(std::cout, result, GetPlayerColor(ID), colors::grey); 
+        rectangles(16, BG, false);
+        rectangles(1, colors::black, true);
+    }
+
+    // Draw buttons
+    rectangles(1, colors::black, false); 
+    rectangles(18, BG, false); 
+    if(selection==0)
+    {
+        PrintInColour(std::cout, "[LEAVE]", colors::black, colors::aqua);
+    }
+    else
+    {
+        PrintInColour(std::cout, "[LEAVE]", colors::black, BG);
+    }
+    rectangles(17, BG, false);
+    rectangles(1, colors::grey, true);
+
+    rectangles(2, colors::black, false);
+    rectangles(42, colors::grey, true);
+
+    return true;
 }
 
 
@@ -619,12 +730,24 @@ bool GameMenu::KeyboardPaused(int keyBoardKey)
     switch (keyBoardKey)
     {    
         case KB_RIGHT:
+                selection++;
+                if(selection>1) selection=0;
                 return true;            
     
         case KB_LEFT:
+                selection--;
+                if(selection<0) selection=1;
                 return true;                  
 
         case KB_ENTER:
+                if(selection==0)
+                {
+                    appRef->currentSelectedMenu = APP_MAP_MENU;
+                }
+                else
+                {
+                    currentGame->Resume();
+                }
                 return true;
     }        
     return false;
@@ -641,6 +764,10 @@ bool GameMenu::KeyboardGame(int keyBoardKey)
                 return true;                  
 
         case KB_ENTER:
+                return true;
+
+        case KB_ESCAPE:
+                currentGame->Pause();
                 return true;
     }        
     return false;
@@ -673,6 +800,7 @@ bool GameMenu::KeyboardEnd(int keyBoardKey)
                 return true;                  
 
         case KB_ENTER:
+                appRef->currentSelectedMenu = APP_MAP_MENU;
                 return true;
     }        
     return false;
