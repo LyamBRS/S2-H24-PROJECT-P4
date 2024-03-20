@@ -239,6 +239,8 @@ enum class TileTypes
     PLAYER3,
     PLAYER4,
     BOMB,
+    POWER_DEPLOYABLE_WALL,
+    POWER_BOMB_OF_WALLS
 };
 
 
@@ -271,6 +273,7 @@ class Map
             { TileTypes::SMOKE2, "&%&"},
             { TileTypes::SMOKE3, "&%&"},
             { TileTypes::SMOKE4, "&%&"},
+            { TileTypes::SMOKE5, "&%&"},
             { TileTypes::POWER_HEART, special + STRING_HEARTH + " "},
             { TileTypes::POWER_DMG, special + STRING_SPADE + " "},
             { TileTypes::POWER_MOREBOMB, " + "},
@@ -280,6 +283,8 @@ class Map
             { TileTypes::PLAYER2, " @ "},
             { TileTypes::PLAYER3, " @ "},
             { TileTypes::PLAYER4, "GOD"},
+            { TileTypes::POWER_BOMB_OF_WALLS, "#\x05#"},
+            { TileTypes::POWER_DEPLOYABLE_WALL, ">#<"},
             { TileTypes::BOMB, special + STRING_CLUB + " "},
         };   
 

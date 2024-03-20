@@ -39,8 +39,8 @@ enum PowerUpID
     explosion_radius_increase = 3,
     health_increase = 4,
     nb_bomb_increase = 5,
-    powerUpFName = 6,
-    powerUpGName = 7,
+    deployableWall = 6,
+    bombWall = 7,
     powerUpHName = 8,
     powerUpIName = 9,
     powerUpJName = 10,
@@ -58,8 +58,8 @@ struct PowerUpNames
     std::string explosion_radius_increase   = "EXPLOSION RADIUS";
     std::string health_increase             = "HEALTH PACK";
     std::string nb_bomb_increase            = "MORE BOMBS";
-    std::string powerUpFName                = "RESERVED";
-    std::string powerUpGName                = "RESERVED";
+    std::string deployableWall              = "DEPLOYABLE WALL";
+    std::string bombWall                    = "BOMB OF WALLS";
     std::string powerUpHName                = "RESERVED";
     std::string powerUpIName                = "RESERVED";
     std::string powerUpJName                = "RESERVED";

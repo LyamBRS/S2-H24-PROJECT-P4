@@ -101,6 +101,8 @@ bool Game::DrawInventories()
                 case PowerUpID::explosion_radius_increase:  PrintInColour(TER, "R", colors::aqua, backColor);   break;
                 case PowerUpID::health_increase:            PrintInColour(TER, STRING_HEARTH, colors::aqua, backColor);   break;
                 case PowerUpID::nb_bomb_increase:           PrintInColour(TER, "+", colors::aqua, backColor);   break;
+                case PowerUpID::deployableWall:             PrintInColour(TER, "#", colors::aqua, backColor);   break;
+                case PowerUpID::bombWall:                   PrintInColour(TER, "W", colors::yellow, backColor);   break;
                 case PowerUpID::nil:                        PrintInColour(TER, " ", colors::aqua, backColor);   break;
             }
         }
@@ -416,25 +418,39 @@ bool Game::PutPlayersInMap()
                 if ((currentPos->X() != previousPos->X()) || (currentPos->Y() != previousPos->Y()))
                 {
                     needToRedrawMap = true;
+                    if (map->GetTileDataAtPosition(*previousPos) == TileTypes::WALL)
+                    {
+                        previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+                        continue;
+                    }
+
                     if (!map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY))
                     {
                         SetTerminalCursorPosition(0, 0);
                         std::cout << "FAILED PREVIOUS" << std::endl;
                         Sleep(1000);
                     }
+
+                    if (map->GetTileDataAtPosition(*currentPos) == TileTypes::WALL)
+                    {
+                        previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
+                        continue;
+                    }
+
                     if (!map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex)))
                     {
                         SetTerminalCursorPosition(0, 0);
                         std::cout << "FAILED CURRENT" << std::endl;
                         Sleep(1000);
                     }
-                    previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
                     needToRedrawMap = true;
+                    previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
                 }
                 else
                 {
-                    if (!checkIfTileIsPlayer(map->GetTileDataAtPosition(currentPos->X(), currentPos->Y())))
+                    if (!checkIfTileIsPlayer(map->GetTileDataAtPosition(*currentPos)))
                     {
+                        if (map->GetTileDataAtPosition(*currentPos) == TileTypes::WALL) continue;     
                         map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
                         needToRedrawMap = true;
                     }
@@ -520,34 +536,37 @@ bool Game::HandleBombs()
         for(int i=0; i<bombsOnMap.size(); i++)
         {
             bombsOnMap[i].Update();
-            if (bombsOnMap[i].HasFinishedExploding())
-            {
-                // Clear all the smoke from the map.
-                bombsOnMap[i].Clear();
-                // Check if tile is a bomb, if so, replace with empty tile.
-                Positions bombPlacement = *bombsOnMap[i].GetCurrentCoordinates();
-                if (map->GetTileDataAtPosition(bombPlacement) == TileTypes::BOMB)
-                {
-                    map->SetTileDataAtPosition(
-                        bombPlacement.X(),
-                        bombPlacement.Y(),
-                        TileTypes::EMPTY
-                    );
-                }
-
-                // Check the ends of raycasts to remove boxes.
-                for(int rayIndex=0; rayIndex<bombsOnMap[i].rays.size(); rayIndex++)
-                {
-                    if(bombsOnMap[i].rays[rayIndex].HasEnded())
-                    {
-                        Positions raysEndPos = bombsOnMap[i].rays[rayIndex].GetEndPosition();
-                        TileTypes tileAtEndOfRay = map->GetTileDataAtPosition(raysEndPos);
+            if (!bombsOnMap[i].HasFinishedExploding()) continue;
     
-                        if(tileAtEndOfRay == TileTypes::WALL) // Can be destroyed
-                        {
-                            HandleBoxDestruction(raysEndPos);
-                        }
-                    }
+            // Clear all the smoke from the map.
+            bombsOnMap[i].Clear();
+            needToRedrawMap = true;
+
+            // If that bomb cant destroy shit, why bother doing it eh?
+            if(!bombsOnMap[i].CanDestroy()) continue;
+
+            // Check if tile is a bomb, if so, replace with empty tile.
+            Positions bombPlacement = *bombsOnMap[i].GetCurrentCoordinates();
+            if (map->GetTileDataAtPosition(bombPlacement) == TileTypes::BOMB)
+            {
+                map->SetTileDataAtPosition(
+                    bombPlacement.X(),
+                    bombPlacement.Y(),
+                    TileTypes::EMPTY
+                );
+            }
+
+            // Check the ends of raycasts to remove boxes.
+            for(int rayIndex=0; rayIndex<bombsOnMap[i].rays.size(); rayIndex++)
+            {
+                if(!bombsOnMap[i].rays[rayIndex].HasEnded()) continue;
+
+                Positions raysEndPos = bombsOnMap[i].rays[rayIndex].GetEndPosition();
+                TileTypes tileAtEndOfRay = map->GetTileDataAtPosition(raysEndPos);
+
+                if(tileAtEndOfRay == TileTypes::WALL) // Can be destroyed
+                {
+                    HandleBoxDestruction(raysEndPos);
                 }
             }
         }
@@ -644,31 +663,31 @@ bool Game::HandlePlayers()
             std::string result = "Player ";
             if(playerIndex<10) result.append("0");
             result.append(std::to_string(playerIndex));
-            result.append("'s ");
             // result.append(GetPowerUpName(ID));
 
             int previous = 0;
             int current = 0;
 
             bool success = false;
+            bool isntAnUpgrade = false;
             switch(ID)
             {
                 case(PowerUpID::damage_increase):
-                    result.append("damage ");
+                    result.append("'s damage ");
                     previous = player->GetBombDamage();
                     success = AffectPlayer_BombDamageBonus(player);
                     current = player->GetBombDamage();
                     break;
 
                 case(PowerUpID::explosion_radius_increase):
-                    result.append("radius ");
+                    result.append("'s radius ");
                     previous = player->GetBombRadius();
                     success = AffectPlayer_BombRadiusBonus(player);
                     current = player->GetBombRadius();
                     break;
 
                 case(PowerUpID::health_increase):
-                    result.append("health ");
+                    result.append("'s health ");
                     previous = player->Health();
                     success = AffectPlayer_HealthBonus(player);
                     needToRedrawPlayerHealth = true;
@@ -676,30 +695,67 @@ bool Game::HandlePlayers()
                     break;
 
                 case(PowerUpID::nb_bomb_increase):
-                    result.append("bombs ");
+                    result.append("'s bombs ");
                     previous = player->bombPlacement.GetDuration();
                     success = AffectPlayer_BombPlacementSpeed(player);
                     current = player->bombPlacement.GetDuration();
                     break;
 
                 case(PowerUpID::speed_increase):
-                    result.append("speed ");
+                    result.append("'s speed ");
                     previous = player->movementFrameDelay.GetDuration();
                     success = AffectPlayer_SpeedBonus(player);
                     current = player->movementFrameDelay.GetDuration();
                     break;
+                
+                case(PowerUpID::deployableWall):
+                    isntAnUpgrade = true;
+                    result.append(" deployed a wall");
+                    map->SetTileDataAtPosition(
+                        player->GetOldCoordinates()->X(),
+                        player->GetOldCoordinates()->Y(),
+                        TileTypes::WALL
+                    );
+                    break;
+
+                case(PowerUpID::bombWall):
+                    isntAnUpgrade = true;
+                    result.append(" DEPLOYED A BOMB OF WALLS");
+
+                    bombsOnMap.push_back(
+                        PlacedBomb(
+                            player->GetCurrentCoordinates()->X(),
+                            player->GetCurrentCoordinates()->Y(),
+                            PLAYER_MAX_BOMB_RADIUS,
+                            PLAYER_BASE_BOMB_PLACEMENT_TIMER,
+                            0,
+                            map,
+                            false,
+                            TileTypes::WALL,
+                            true,
+                            false
+                        )
+                    );
+                    break;
             }
 
-            if(current != previous)
+            if(isntAnUpgrade)
             {
-                result.append("went from ");
-                result.append(std::to_string(previous));
-                result.append(" to ");
-                result.append(std::to_string(current));
+
             }
             else
             {
-                result.append(" is already maxed");    
+                if(current != previous)
+                {
+                    result.append("went from ");
+                    result.append(std::to_string(previous));
+                    result.append(" to ");
+                    result.append(std::to_string(current));
+                }
+                else
+                {
+                    result.append(" is already maxed");    
+                }
             }
 
             SetGameMessage(result);

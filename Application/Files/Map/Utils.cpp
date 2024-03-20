@@ -165,6 +165,8 @@ int GetPowerUpFromTile(TileTypes tile)
     case TileTypes::POWER_MOREBOMB: return PowerUpID::nb_bomb_increase;
     case TileTypes::POWER_REACH:    return PowerUpID::explosion_radius_increase;
     case TileTypes::POWER_SPEED:    return PowerUpID::speed_increase;
+    case TileTypes::POWER_DEPLOYABLE_WALL:    return PowerUpID::deployableWall;
+    case TileTypes::POWER_BOMB_OF_WALLS:    return PowerUpID::bombWall;
     default:                        return -1;
     }
 }
@@ -178,6 +180,8 @@ TileTypes GetTileFromPowerUp(int powerUpID)
         case(PowerUpID::nb_bomb_increase):          return TileTypes::POWER_MOREBOMB;
         case(PowerUpID::explosion_radius_increase): return TileTypes::POWER_REACH;
         case(PowerUpID::speed_increase):            return TileTypes::POWER_SPEED;
+        case(PowerUpID::bombWall):                  return TileTypes::POWER_BOMB_OF_WALLS;
+        case(PowerUpID::deployableWall):            return TileTypes::POWER_DEPLOYABLE_WALL;
         default:   return TileTypes::EMPTY;
     }
 }

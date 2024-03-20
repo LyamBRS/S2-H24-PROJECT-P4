@@ -117,6 +117,12 @@ bool Map::Draw()
 				case TileTypes::POWER_SPEED:
 					PrintInColour(std::cout, tileChar[TileTypes::POWER_SPEED], colors::green, colors::black);
 					break;
+				case TileTypes::POWER_BOMB_OF_WALLS:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_BOMB_OF_WALLS], colors::yellow, colors::black);
+					break;
+				case TileTypes::POWER_DEPLOYABLE_WALL:
+					PrintInColour(std::cout, tileChar[TileTypes::POWER_DEPLOYABLE_WALL], colors::green, colors::black);
+					break;
 				case TileTypes::BOMB:
 					PrintInColour(std::cout, tileChar[TileTypes::BOMB], colors::lightred, colors::black);
 					break;

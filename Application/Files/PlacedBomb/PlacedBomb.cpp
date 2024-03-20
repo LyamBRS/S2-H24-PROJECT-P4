@@ -22,7 +22,7 @@ int GetAngleGenericDirection(float angle)
 
 
 
-PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile){
+PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile, bool stopOnPlayer, bool canDestroyBoxes){
     timeTillBoom.SetDuration(fuseLength);
     explosivePower = explosiveForce;
     position.SetNewCoordinates(x,y);
@@ -30,6 +30,8 @@ PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int dam
     damage = damagePerTick;
     wantedTile = usedTile;
     clearAtEnd = clearOnceFinished;
+    canDestroy = canDestroyBoxes;
+    stopOnPlayers = stopOnPlayer;
 
     Positions right         = Positions(x+1,y);
     Positions topRight      = Positions(x+1,y-1);
@@ -70,15 +72,15 @@ PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int dam
         bool cantGo = true;
 
         // Test to see if we need to terminate that raycast before it even started based on walls directly next to the bomb.
-        if(!canGo_R &&  ((initialAngle > (6.28f-ANGLE_THRESHOLD)) || (initialAngle < (ANGLE_THRESHOLD))))           {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_U &&  ((initialAngle > (ANGLE_T-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_T+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_D &&  ((initialAngle > (ANGLE_B-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_B+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_L &&  ((initialAngle > (ANGLE_L-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_L+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_R &&  ((initialAngle > (6.28f-ANGLE_THRESHOLD)) || (initialAngle < (ANGLE_THRESHOLD))))           {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_U &&  ((initialAngle > (ANGLE_T-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_T+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_D &&  ((initialAngle > (ANGLE_B-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_B+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_L &&  ((initialAngle > (ANGLE_L-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_L+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
 
-        if(!canGo_BR &&  ((initialAngle > (ANGLE_BR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_BL &&  ((initialAngle > (ANGLE_BL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_TR &&  ((initialAngle > (ANGLE_TR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
-        if(!canGo_TL &&  ((initialAngle > (ANGLE_TL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_BR &&  ((initialAngle > (ANGLE_BR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_BL &&  ((initialAngle > (ANGLE_BL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_TR &&  ((initialAngle > (ANGLE_TR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        if(!canGo_TL &&  ((initialAngle > (ANGLE_TL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
 
         initialAngle = initialAngle + GetRaycastAngleIncrement(explosiveForce);
     }
@@ -175,7 +177,7 @@ bool PlacedBomb::CheckAllRaysForCollisions()
         Positions rayEnd = rays[i].GetEndPosition();
         TileTypes tileThere = mapReference->GetTileDataAtPosition(rayEnd);
 
-        if(!TileIsWalkable(tileThere))
+        if(!TileIsWalkable(tileThere) || (checkIfTileIsPlayer(tileThere) && stopOnPlayers))
         {
             rays[i].SetAsEnded();
             continue;
@@ -217,7 +219,10 @@ bool PlacedBomb::CheckAllRaysForCollisions()
         TileTypes tileA = mapReference->GetTileDataAtPosition(posA);
         TileTypes tileB = mapReference->GetTileDataAtPosition(posB);
 
-        if(!TileIsWalkable(tileA) && !TileIsWalkable(tileB))
+        bool tileAIsValid = !TileIsWalkable(tileA) || (checkIfTileIsPlayer(tileA) && stopOnPlayers);
+        bool tileBIsValid = !TileIsWalkable(tileB) || (checkIfTileIsPlayer(tileB) && stopOnPlayers);
+
+        if(tileAIsValid && tileBIsValid)
         {
             rays[i].SetAsEnded();
             continue;
@@ -298,6 +303,11 @@ bool PlacedBomb::Clear()
         }
     }
     return true;
+}
+
+bool PlacedBomb::CanDestroy()
+{
+    return canDestroy;
 }
 
 int PlacedBomb::GetDamagePoints()

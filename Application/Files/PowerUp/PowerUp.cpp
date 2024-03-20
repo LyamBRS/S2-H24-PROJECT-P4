@@ -78,8 +78,10 @@ std::string GetPowerUpName(int ID)
         { PowerUpID::health_increase,                "HEALTH PACK"},
         { PowerUpID::nb_bomb_increase,               "MORE BOMBS"},
         { PowerUpID::speed_increase,                 "SPEED INCREASE"},
+        { PowerUpID::bombWall,                       "BOMB OF WALLS"},
+        { PowerUpID::deployableWall,                 "DEPLOYABLE WALL"},
     };
-
+    
     return names[ID];
 }
 

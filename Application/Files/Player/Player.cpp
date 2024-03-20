@@ -289,7 +289,9 @@ PlacedBomb Player::GetABomb(Map* mapReference)
         bombDamage,
         mapReference,
         true,
-        smokeToUse
+        smokeToUse,
+        false,
+        true
     );
 }
 

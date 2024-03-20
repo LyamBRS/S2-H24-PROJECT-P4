@@ -87,6 +87,8 @@ class PlacedBomb : public BaseObject
         int currentExplosionRadius = 0;
         int wantedExplosionRadius = 0;
         int damage = 0;
+        bool canDestroy = true;
+        bool stopOnPlayers = false;
 
         bool isExploding = false;
         bool isExploded = false;
@@ -137,7 +139,7 @@ class PlacedBomb : public BaseObject
          * @param fuseLength
          * How long until it actually detonates.
          */
-        PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile);
+        PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile, bool stopOnPlayer, bool canDestroyBoxes);
 
         /**
          * @brief 
@@ -177,6 +179,8 @@ class PlacedBomb : public BaseObject
 
         bool IsInsideExplosion(int x, int y);
         int GetDamagePoints();
+
+        bool CanDestroy();
 
         bool Draw();
         bool Clear();

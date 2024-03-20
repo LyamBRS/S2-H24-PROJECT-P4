@@ -22,12 +22,6 @@ PlacedPowerUp::PlacedPowerUp(int initialX, int initialY, int newType) : BaseObje
     case PowerUpID::nb_bomb_increase:
         type=PowerUpID::nb_bomb_increase;
         break;
-    case PowerUpID::powerUpFName:
-        type=PowerUpID::powerUpFName;
-        break;
-    case PowerUpID::powerUpGName:
-        type=PowerUpID::powerUpGName;
-        break;
     case PowerUpID::powerUpHName:
         type=PowerUpID::powerUpHName;
         break;
