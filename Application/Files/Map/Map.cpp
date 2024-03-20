@@ -87,6 +87,21 @@ bool Map::Draw()
 				case TileTypes::SMOKE:
 					PrintInColour(std::cout, tileChar[TileTypes::SMOKE], colors::grey, colors::black);
 					break;
+				case TileTypes::SMOKE1:
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE1], colors::lightgrey, colors::black);
+					break;
+				case TileTypes::SMOKE2:
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE2], colors::white, colors::black);
+					break;
+				case TileTypes::SMOKE3:
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE3], colors::yellow, colors::black);
+					break;
+				case TileTypes::SMOKE4:
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE4], colors::lightred, colors::black);
+					break;
+				case TileTypes::SMOKE5:
+					PrintInColour(std::cout, tileChar[TileTypes::SMOKE5], colors::aqua, colors::black);
+					break;
 				case TileTypes::POWER_DMG:
 					PrintInColour(std::cout, tileChar[TileTypes::POWER_DMG], colors::green, colors::black);
 					break;
