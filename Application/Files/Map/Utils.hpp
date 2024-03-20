@@ -94,7 +94,7 @@ bool TileIsWalkable(TileTypes tile);
 
 void PrintTileName(TileTypes tile);
 
-
+bool TileIsSmoke(TileTypes tile);
 bool checkIfTileIsPlayer(TileTypes tile);
 int GetPowerUpFromTile(TileTypes tile);
 TileTypes GetTileFromPowerUp(int powerUpID);

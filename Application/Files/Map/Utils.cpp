@@ -85,51 +85,12 @@ bool TileIsWalkable(TileTypes tile)
 {
     switch (tile)
     {
-    case TileTypes::EMPTY:
-        return true;
-        break;
-    case TileTypes::PERMAWALL:
-        return false;
-        break;
-    case TileTypes::WALL:
-        return false;
-        break;
-    case TileTypes::PLAYERSPAWN:
-        return true;
-        break;
-    case TileTypes::PLAYER1:
-        return true;
-        break;
-    case TileTypes::PLAYER2:
-        return true;
-        break;
-    case TileTypes::PLAYER3:
-        return true;
-        break;
-    case TileTypes::PLAYER4:
-        return true;
-        break;
-    case TileTypes::BOMB:
-        return true;
-        break;
-    case TileTypes::SMOKE:
-        return true;
-        break;
-    case TileTypes::POWER_DMG:
-        return true;
-    case TileTypes::POWER_HEART:
-        return true;
-    case TileTypes::POWER_MOREBOMB:
-        return true;
-    case TileTypes::POWER_REACH:
-        return true;
-    case TileTypes::POWER_SPEED:
-        return true;
-        break;
-    default:
-        return false;
-        break;
+        case TileTypes::PERMAWALL:
+        case TileTypes::WALL:
+            return false;
+            break;
     }
+    return true;
 }
 
 void PrintTileName(TileTypes tile)
@@ -219,6 +180,22 @@ TileTypes GetTileFromPowerUp(int powerUpID)
         case(PowerUpID::speed_increase):            return TileTypes::POWER_SPEED;
         default:   return TileTypes::EMPTY;
     }
+}
+
+bool TileIsSmoke(TileTypes tile)
+{
+    switch (tile)
+    {
+        case TileTypes::SMOKE:
+        case TileTypes::SMOKE1:
+        case TileTypes::SMOKE2:
+        case TileTypes::SMOKE3:
+        case TileTypes::SMOKE4:
+        case TileTypes::SMOKE5:
+            return true;
+            break;
+    }
+    return false;
 }
 
 /**
