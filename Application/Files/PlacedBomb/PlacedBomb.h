@@ -37,6 +37,28 @@
 // - FUNCTIONS - //
 float GetRaycastAngleIncrement(int bombFinalRadius);
 
+/**
+ * @brief
+ * - 0: right
+ * @brief
+ * - 1: top right
+ * @brief
+ * - 2: top
+ * @brief
+ * - 3: top left
+ * @brief
+ * - 4: left
+ * @brief
+ * - 5: bottom left
+ * @brief
+ * - 6: bottom
+ * @brief
+ * - 7: bottom right
+ * @param angle 
+ * @return int 
+ */
+int GetAngleGenericDirection(float angle);
+
 // - CLASS - //
 
 /**
@@ -64,6 +86,7 @@ class PlacedBomb : public BaseObject
         /// @brief The current radius of the explosion. Starts at 0
         int currentExplosionRadius = 0;
         int wantedExplosionRadius = 0;
+        int damage = 0;
 
         bool isExploding = false;
         bool isExploded = false;
@@ -86,6 +109,10 @@ class PlacedBomb : public BaseObject
         bool CheckAllRaysForCollisions();
 
         bool AllRaysFinished();
+
+        TileTypes wantedTile = TileTypes::EMPTY;
+
+        bool clearAtEnd = false;
 
     public:
 
@@ -110,7 +137,7 @@ class PlacedBomb : public BaseObject
          * @param fuseLength
          * How long until it actually detonates.
          */
-        PlacedBomb(int x, int y, int explosiveForce, int fuseLength, Map* newMapReference);
+        PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile);
 
         /**
          * @brief 
@@ -149,6 +176,7 @@ class PlacedBomb : public BaseObject
         Positions* GetOldCoordinates();
 
         bool IsInsideExplosion(int x, int y);
+        int GetDamagePoints();
 
         bool Draw();
         bool Clear();

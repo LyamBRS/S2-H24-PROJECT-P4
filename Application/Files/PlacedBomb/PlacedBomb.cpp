@@ -5,11 +5,31 @@ float GetRaycastAngleIncrement(int bombFinalRadius)
     return 6.28f / (2*bombFinalRadius);
 }
 
-PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, Map* newMapReference){
+int GetAngleGenericDirection(float angle)
+{
+    if((angle > (6.28f-ANGLE_THRESHOLD)) || (angle < (ANGLE_THRESHOLD)))           return 0; 
+    if((angle > (ANGLE_T-ANGLE_THRESHOLD)) && (angle < (ANGLE_T+ANGLE_THRESHOLD))) return 2;
+    if((angle > (ANGLE_B-ANGLE_THRESHOLD)) && (angle < (ANGLE_B+ANGLE_THRESHOLD))) return 6;
+    if((angle > (ANGLE_L-ANGLE_THRESHOLD)) && (angle < (ANGLE_L+ANGLE_THRESHOLD))) return 4;
+
+    if((angle> (ANGLE_BR-ANGLE_THRESHOLD)) && (angle < (ANGLE_BR+ANGLE_THRESHOLD))) return 7;
+    if((angle> (ANGLE_BL-ANGLE_THRESHOLD)) && (angle < (ANGLE_BL+ANGLE_THRESHOLD))) return 5;
+    if((angle> (ANGLE_TR-ANGLE_THRESHOLD)) && (angle < (ANGLE_TR+ANGLE_THRESHOLD))) return 1;
+    if((angle> (ANGLE_TL-ANGLE_THRESHOLD)) && (angle < (ANGLE_TL+ANGLE_THRESHOLD))) return 3;
+    return -1;
+}
+
+
+
+
+PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, int damagePerTick, Map* newMapReference, bool clearOnceFinished, TileTypes usedTile){
     timeTillBoom.SetDuration(fuseLength);
     explosivePower = explosiveForce;
     position.SetNewCoordinates(x,y);
     mapReference = newMapReference;
+    damage = damagePerTick;
+    wantedTile = usedTile;
+    clearAtEnd = clearOnceFinished;
 
     Positions right         = Positions(x+1,y);
     Positions topRight      = Positions(x+1,y-1);
@@ -48,20 +68,19 @@ PlacedBomb::PlacedBomb(int x, int y, int explosiveForce, int fuseLength, Map* ne
         rays.push_back(Ray(x, y, explosiveForce, initialAngle));
 
         bool cantGo = true;
-        // Test to see if we need to terminate that raycast before it even started based on walls directly next to the bomb.
-        if(!canGo_R &&  ((initialAngle > (6.28f-ANGLE_THRESHOLD)) || (initialAngle < (ANGLE_THRESHOLD))))           {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_U &&  ((initialAngle > (ANGLE_T-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_T+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_D &&  ((initialAngle > (ANGLE_B-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_B+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_L &&  ((initialAngle > (ANGLE_L-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_L+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
 
-        if(!canGo_BR &&  ((initialAngle > (ANGLE_BR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_BL &&  ((initialAngle > (ANGLE_BL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_TR &&  ((initialAngle > (ANGLE_TR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
-        if(!canGo_TL &&  ((initialAngle > (ANGLE_TL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false;}
+        // Test to see if we need to terminate that raycast before it even started based on walls directly next to the bomb.
+        if(!canGo_R &&  ((initialAngle > (6.28f-ANGLE_THRESHOLD)) || (initialAngle < (ANGLE_THRESHOLD))))           {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_U &&  ((initialAngle > (ANGLE_T-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_T+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_D &&  ((initialAngle > (ANGLE_B-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_B+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_L &&  ((initialAngle > (ANGLE_L-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_L+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+
+        if(!canGo_BR &&  ((initialAngle > (ANGLE_BR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_BL &&  ((initialAngle > (ANGLE_BL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_BL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_TR &&  ((initialAngle > (ANGLE_TR-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TR+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
+        if(!canGo_TL &&  ((initialAngle > (ANGLE_TL-ANGLE_THRESHOLD)) && (initialAngle < (ANGLE_TL+ANGLE_THRESHOLD)))) {rays[i].SetAsEnded(); cantGo=false; std::cout << "terminated";}
 
         initialAngle = initialAngle + GetRaycastAngleIncrement(explosiveForce);
-        //SetTerminalCursorPosition(60,i);
-        //std::cout << initialAngle << ":\t" << cantGo << std::endl;
     }
 }
 
@@ -151,15 +170,57 @@ bool PlacedBomb::CheckAllRaysForCollisions()
 {
     for(int i=0; i<rays.size(); i++)
     {
-        if(!rays[i].HasEnded())
-        {
-            Positions rayEnd = rays[i].GetEndPosition();
-            TileTypes tileThere = mapReference->GetTileDataAtPosition(rayEnd);
+        if(rays[i].HasEnded()) continue;
 
-            if(!TileIsWalkable(tileThere))
-            {
-                rays[i].SetAsEnded();
-            }
+        Positions rayEnd = rays[i].GetEndPosition();
+        TileTypes tileThere = mapReference->GetTileDataAtPosition(rayEnd);
+
+        if(!TileIsWalkable(tileThere))
+        {
+            rays[i].SetAsEnded();
+            continue;
+        }
+
+        // Get associated diagonals to avoid exploding through diagonal gaps
+        float angle = rays[i].Angle();
+        int genericDirection = GetAngleGenericDirection(angle);
+
+        Positions posA = Positions(0,0);
+        Positions posB = Positions(0,0);
+        switch(genericDirection)
+        {
+            case(1):
+                posA = Positions(rayEnd.X()+1, rayEnd.Y());
+                posB = Positions(rayEnd.X(), rayEnd.Y()-1);
+                break;
+            
+            case(3):
+                posA = Positions(rayEnd.X()-1, rayEnd.Y());
+                posB = Positions(rayEnd.X(), rayEnd.Y()-1);
+                break;
+
+            case(5):
+                posA = Positions(rayEnd.X()-1, rayEnd.Y());
+                posB = Positions(rayEnd.X(), rayEnd.Y()+1);
+                break;
+
+            case(7):
+                posA = Positions(rayEnd.X()+1, rayEnd.Y());
+                posB = Positions(rayEnd.X(), rayEnd.Y()+1);
+                break;
+
+            default:
+                continue;
+                break;
+        }
+
+        TileTypes tileA = mapReference->GetTileDataAtPosition(posA);
+        TileTypes tileB = mapReference->GetTileDataAtPosition(posB);
+
+        if(!TileIsWalkable(tileA) && !TileIsWalkable(tileB))
+        {
+            rays[i].SetAsEnded();
+            continue;
         }
     }
     return true;
@@ -187,6 +248,15 @@ bool PlacedBomb::AllRaysFinished()
 bool PlacedBomb::IsInsideExplosion(int x, int y)
 {
     // Ill just check if the player's wanted tile is a smoke tile for damage detection. Its a lot less ressource intensive.
+    Positions verified = Positions(x,y);
+    for(int r = 0; r<rays.size(); r++)
+    {
+        for(int l=0; l<=rays[r].GetLength(); l++)
+        {
+            Positions coordinate = rays[r].GetSpecificPosition(l);
+            if(verified == coordinate) return true;
+        }
+    }
     return false;
 }
 
@@ -200,7 +270,7 @@ bool PlacedBomb::Draw()
             mapReference->SetTileDataAtPosition(
                 coordinateInRay.X(),
                 coordinateInRay.Y(),
-                TileTypes::SMOKE
+                wantedTile
             );
         }
     }
@@ -209,6 +279,7 @@ bool PlacedBomb::Draw()
 
 bool PlacedBomb::Clear()
 {
+    if(!clearAtEnd) return false;
     for(int i=0; i<rays.size(); i++)
     {
         for(int l=0; l<=rays[i].GetLength(); l++)
@@ -216,7 +287,7 @@ bool PlacedBomb::Clear()
             Positions coordinateInRay = rays[i].GetSpecificPosition(l);
             TileTypes tileAtThatCoordinate = mapReference->GetTileDataAtPosition(coordinateInRay);
 
-            if(tileAtThatCoordinate == TileTypes::SMOKE)
+            if(tileAtThatCoordinate == wantedTile)
             {
                 mapReference->SetTileDataAtPosition(
                     coordinateInRay.X(),
@@ -227,4 +298,10 @@ bool PlacedBomb::Clear()
         }
     }
     return true;
+}
+
+int PlacedBomb::GetDamagePoints()
+{
+    if(!isExploding) return 0;
+    return damage;
 }
