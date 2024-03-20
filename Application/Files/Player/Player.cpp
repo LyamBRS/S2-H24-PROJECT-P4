@@ -270,12 +270,26 @@ bool Player::SetPlayerAsDeleted()
 
 PlacedBomb Player::GetABomb(Map* mapReference)
 {
+    TileTypes smokeToUse = TileTypes::BOMB; // That way the problem is immediately seen.
+    switch(bombDamage)
+    {
+        case(1): smokeToUse=TileTypes::SMOKE;  break;
+        case(2): smokeToUse=TileTypes::SMOKE1; break;
+        case(3): smokeToUse=TileTypes::SMOKE2; break;
+        case(4): smokeToUse=TileTypes::SMOKE3; break;
+        case(5): smokeToUse=TileTypes::SMOKE4; break;
+        case(6): smokeToUse=TileTypes::SMOKE5; break;
+    }
+
     return PlacedBomb(
         position.X(),
         position.Y(),
         bombRadius,
         PLAYER_DEFAULT_BOMB_FUSE,
-        mapReference
+        bombDamage,
+        mapReference,
+        true,
+        smokeToUse
     );
 }
 

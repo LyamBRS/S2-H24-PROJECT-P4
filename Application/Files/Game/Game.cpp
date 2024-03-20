@@ -89,6 +89,7 @@ bool Game::DrawInventories()
             int ID = currentSlot->getType();
 
             int backColor = GAME_WINDOW_FIELD_BG;
+            int frontColor = GAME_WINDOW_FIELD_FG;
             if(players[playerIndex].inventory.CurrentIndex() == i)
             {
                 backColor = colors::green;
@@ -733,6 +734,20 @@ bool Game::HandlePowerUp()
     {
         Positions powerUpPos = *itemsOnMap[i].GetCurrentCoordinates();
 
+        // Update the placedpowerup, to eventually automatically delete it after a set amount of time
+        itemsOnMap[i].Update();
+        if(itemsOnMap[i].ShouldBeDeleted())
+        {
+            itemsOnMap.erase(itemsOnMap.begin() + i);
+            map->SetTileDataAtPosition(
+                powerUpPos.X(),
+                powerUpPos.Y(),
+                TileTypes::EMPTY
+            );
+            needToRedrawMap = true;
+            continue;
+        }
+
         // Check if any players are on that power up.
         for(int p=0; p<players.size(); p++)
         {
@@ -780,10 +795,19 @@ bool Game::CheckForPlayerDamage()
         Positions playerCurrentPositions = *players[i].GetCurrentCoordinates();
         TileTypes tileUnderPlayer = map->GetTileDataAtPosition(playerCurrentPositions);
 
-        if(tileUnderPlayer == TileTypes::SMOKE) // Player is currently inside of a smoke tile
+        if(players[i].invulnurability.TimeLeftNoReset()==0)
         {
-            players[i].GiveDamage(GAME_DEFAULT_DAMAGE);
-            needToRedrawPlayerHealth = true;
+            for(int b=0; b<bombsOnMap.size(); b++)
+            {
+                if(bombsOnMap[b].IsInsideExplosion(playerCurrentPositions.X(), playerCurrentPositions.Y()))
+                {
+                    int damages = bombsOnMap[b].GetDamagePoints();
+                    players[i].GiveDamage(damages);
+                    players[i].invulnurability.Reset();
+                    needToRedrawPlayerHealth = true;
+                    break;
+                }
+            }
         }
     }
     return false;
@@ -797,7 +821,7 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
     // CHANGE THIS ONCE WE'VE GOT MUONS GOING
     std::random_device dev;
     std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,5); // distribution in range [1, 5]
+    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10); // distribution in range [1, 5]
 
     // - DESTROY BOX - //
     map->SetTileDataAtPosition(
@@ -1264,7 +1288,7 @@ int Game::GetWinningPlayerID()
         }
     }
 
-    if(amountOfPlayersAlive == 1) return lastPlayerID;
+    if(amountOfPlayersAlive == 1) return lastPlayerID+1;
     if(amountOfPlayersAlive == 0) return 0;
     return -1;
 }
