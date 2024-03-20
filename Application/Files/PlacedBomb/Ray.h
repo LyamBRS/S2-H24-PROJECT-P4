@@ -88,4 +88,11 @@ class Ray
          * @return false 
          */
         bool SetAsEnded();
+
+        /**
+         * @brief 
+         * Get/Set for the angle parameter.
+         * @return float 
+         */
+        float Angle();
 };

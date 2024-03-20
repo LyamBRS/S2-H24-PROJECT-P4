@@ -62,7 +62,7 @@ Positions Ray::GetSpecificPosition(int atThisLength)
     if(atThisLength < 0) return GetSpecificPosition(0);
 
     float x = (cosf(associatedAngle) * atThisLength) + (float(bombCenter.X()));
-    float y = (sinf(associatedAngle) * atThisLength) + (float(bombCenter.Y()));
+    float y = (sinf(-associatedAngle) * atThisLength) + (float(bombCenter.Y()));
 
     if(fmod(x,1) > 0.5f) {x = ceilf(x);} else {x = floorf(x);}
     if(fmod(y,1) > 0.5f) {y = ceilf(y);} else {y = floorf(y);}
@@ -119,4 +119,14 @@ bool Ray::SetAsEnded()
         return true;
     }
     return false;
+}
+
+/**
+ * @brief 
+ * Get/Set for the angle parameter.
+ * @return float 
+ */
+float Ray::Angle()
+{
+    return associatedAngle;
 }
