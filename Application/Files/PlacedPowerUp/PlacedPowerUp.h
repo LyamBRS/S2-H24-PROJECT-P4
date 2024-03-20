@@ -19,7 +19,7 @@
 #include "../SimpleTimer/SimpleTimer.h"
 #include "../PowerUp/PowerUp.h"
 // - DEFINES - //
-#define POWERUP_DESPAWN_TIMER_VALUE 10000
+#define POWERUP_DESPAWN_TIMER_VALUE 5000
 
 // - CLASS - //
 
