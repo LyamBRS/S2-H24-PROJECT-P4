@@ -85,6 +85,18 @@ std::string GetPowerUpName(int ID)
     return names[ID];
 }
 
+bool IsStorable(int ID)
+{
+    switch(ID)
+    {
+        case(PowerUpID::bombWall):
+        case(PowerUpID::deployableWall):
+        case(PowerUpID::health_increase):
+            return true;
+    }
+    return false;
+}
+
 //plus de dégat
 //plus rapide
 //la porter de l'explosion est plus grande

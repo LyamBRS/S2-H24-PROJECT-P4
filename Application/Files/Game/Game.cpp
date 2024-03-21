@@ -660,105 +660,7 @@ bool Game::HandlePlayers()
             PowerUp* selected = player->GetActivatedPowerUp();
             int ID = selected->getType();
 
-            std::string result = "Player ";
-            if(playerIndex<10) result.append("0");
-            result.append(std::to_string(playerIndex));
-            // result.append(GetPowerUpName(ID));
-
-            int previous = 0;
-            int current = 0;
-
-            bool success = false;
-            bool isntAnUpgrade = false;
-            switch(ID)
-            {
-                case(PowerUpID::damage_increase):
-                    result.append("'s damage ");
-                    previous = player->GetBombDamage();
-                    success = AffectPlayer_BombDamageBonus(player);
-                    current = player->GetBombDamage();
-                    break;
-
-                case(PowerUpID::explosion_radius_increase):
-                    result.append("'s radius ");
-                    previous = player->GetBombRadius();
-                    success = AffectPlayer_BombRadiusBonus(player);
-                    current = player->GetBombRadius();
-                    break;
-
-                case(PowerUpID::health_increase):
-                    result.append("'s health ");
-                    previous = player->Health();
-                    success = AffectPlayer_HealthBonus(player);
-                    needToRedrawPlayerHealth = true;
-                    current = player->Health();
-                    break;
-
-                case(PowerUpID::nb_bomb_increase):
-                    result.append("'s bombs ");
-                    previous = player->bombPlacement.GetDuration();
-                    success = AffectPlayer_BombPlacementSpeed(player);
-                    current = player->bombPlacement.GetDuration();
-                    break;
-
-                case(PowerUpID::speed_increase):
-                    result.append("'s speed ");
-                    previous = player->movementFrameDelay.GetDuration();
-                    success = AffectPlayer_SpeedBonus(player);
-                    current = player->movementFrameDelay.GetDuration();
-                    break;
-                
-                case(PowerUpID::deployableWall):
-                    isntAnUpgrade = true;
-                    result.append(" deployed a wall");
-                    map->SetTileDataAtPosition(
-                        player->GetOldCoordinates()->X(),
-                        player->GetOldCoordinates()->Y(),
-                        TileTypes::WALL
-                    );
-                    break;
-
-                case(PowerUpID::bombWall):
-                    isntAnUpgrade = true;
-                    result.append(" DEPLOYED A BOMB OF WALLS");
-
-                    bombsOnMap.push_back(
-                        PlacedBomb(
-                            player->GetCurrentCoordinates()->X(),
-                            player->GetCurrentCoordinates()->Y(),
-                            PLAYER_MAX_BOMB_RADIUS,
-                            PLAYER_BASE_BOMB_PLACEMENT_TIMER,
-                            0,
-                            map,
-                            false,
-                            TileTypes::WALL,
-                            true,
-                            false
-                        )
-                    );
-                    break;
-            }
-
-            if(isntAnUpgrade)
-            {
-
-            }
-            else
-            {
-                if(current != previous)
-                {
-                    result.append("went from ");
-                    result.append(std::to_string(previous));
-                    result.append(" to ");
-                    result.append(std::to_string(current));
-                }
-                else
-                {
-                    result.append(" is already maxed");    
-                }
-            }
-
-            SetGameMessage(result);
+            UsePowerUp(playerIndex, ID);
             player->UseSelected();
         }
 
@@ -805,30 +707,145 @@ bool Game::HandlePowerUp()
         }
 
         // Check if any players are on that power up.
-        for(int p=0; p<players.size(); p++)
+        for (int p = 0; p < players.size(); p++)
         {
             Positions playerPos = *players[p].GetCurrentCoordinates();
-            
-            if(!(playerPos == powerUpPos)) continue;       // Cant pick it up if you are not standing on it.
-            if(players[p].inventory.IsFull()) continue; // Cant pick it up if you got no space in yo inventory.
+
+            if (!(playerPos == powerUpPos)) continue;       // Cant pick it up if you are not standing on it.
 
             int ID = itemsOnMap[i].GetType();
             PowerUp createdPowerUp = PowerUp(ID, 1);
-            if(players[p].PickUpPowerUp(createdPowerUp))
-            {
-                
-                std::string result = "Player ";
-                if((p+1)<10) result.append("0");
-                result.append(std::to_string((p+1)));
-                result.append(" picked up a ");
-                result.append(GetPowerUpName(ID));
-                SetGameMessage(result);
 
+            if (IsStorable(createdPowerUp.getType()))
+            {
+                if (players[p].inventory.IsFull()) continue; // Cant pick it up if you got no space in yo inventory.
+                if (players[p].PickUpPowerUp(createdPowerUp))
+                {
+                    std::string result = "Player ";
+                    if ((p + 1) < 10) result.append("0");
+                    result.append(std::to_string((p + 1)));
+                    result.append(" picked up a ");
+                    result.append(GetPowerUpName(ID));
+                    SetGameMessage(result);
+
+                    needToRedrawInventories = true;
+                    itemsOnMap.erase(itemsOnMap.begin() + i);
+                }
+            }
+            else
+            {
+                UsePowerUp(p, ID);
                 needToRedrawInventories = true;
                 itemsOnMap.erase(itemsOnMap.begin() + i);
             }
         }
     }
+    return true;
+}
+
+bool Game::UsePowerUp(int playerID, int powerUpID)
+{
+    std::string result = "Player ";
+    if (playerID < 10) result.append("0");
+    result.append(std::to_string(playerID));
+    // result.append(GetPowerUpName(ID));
+
+    Player* player = &players[playerID];
+
+    int previous = 0;
+    int current = 0;
+
+    bool success = false;
+    bool isntAnUpgrade = false;
+    switch (powerUpID)
+    {
+    case(PowerUpID::damage_increase):
+        result.append("'s damage ");
+        previous = player->GetBombDamage();
+        success = AffectPlayer_BombDamageBonus(player);
+        current = player->GetBombDamage();
+        break;
+
+    case(PowerUpID::explosion_radius_increase):
+        result.append("'s radius ");
+        previous = player->GetBombRadius();
+        success = AffectPlayer_BombRadiusBonus(player);
+        current = player->GetBombRadius();
+        break;
+
+    case(PowerUpID::health_increase):
+        result.append("'s health ");
+        previous = player->Health();
+        success = AffectPlayer_HealthBonus(player);
+        needToRedrawPlayerHealth = true;
+        current = player->Health();
+        break;
+
+    case(PowerUpID::nb_bomb_increase):
+        result.append("'s bombs ");
+        previous = player->bombPlacement.GetDuration();
+        success = AffectPlayer_BombPlacementSpeed(player);
+        current = player->bombPlacement.GetDuration();
+        break;
+
+    case(PowerUpID::speed_increase):
+        result.append("'s speed ");
+        previous = player->movementFrameDelay.GetDuration();
+        success = AffectPlayer_SpeedBonus(player);
+        current = player->movementFrameDelay.GetDuration();
+        break;
+
+    case(PowerUpID::deployableWall):
+        isntAnUpgrade = true;
+        result.append(" deployed a wall");
+        map->SetTileDataAtPosition(
+            player->GetOldCoordinates()->X(),
+            player->GetOldCoordinates()->Y(),
+            TileTypes::WALL
+        );
+        break;
+
+    case(PowerUpID::bombWall):
+        isntAnUpgrade = true;
+        result.append(" DEPLOYED A BOMB OF WALLS");
+
+        bombsOnMap.push_back(
+            PlacedBomb(
+                player->GetCurrentCoordinates()->X(),
+                player->GetCurrentCoordinates()->Y(),
+                PLAYER_MAX_BOMB_RADIUS,
+                PLAYER_BASE_BOMB_PLACEMENT_TIMER,
+                0,
+                map,
+                false,
+                TileTypes::WALL,
+                true,
+                false
+            )
+        );
+        break;
+    }
+
+    if (isntAnUpgrade)
+    {
+
+    }
+    else
+    {
+        if (current != previous)
+        {
+            result.append("went from ");
+            result.append(std::to_string(previous));
+            result.append(" to ");
+            result.append(std::to_string(current));
+        }
+        else
+        {
+            result.append(" is already maxed");
+        }
+    }
+
+    SetGameMessage(result);
     return true;
 }
 

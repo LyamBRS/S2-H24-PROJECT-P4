@@ -582,4 +582,6 @@ class Game
         bool UnAssignPlayerController(int playerIndex);
 
         int GetWinningPlayerID();
+
+        bool UsePowerUp(int playerID, int powerUpID);
 };

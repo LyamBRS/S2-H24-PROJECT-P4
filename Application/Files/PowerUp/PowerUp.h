@@ -118,3 +118,5 @@ class PowerUp
 };
 
 std::string GetPowerUpName(int ID);
+
+bool IsStorable(int ID);
