@@ -77,7 +77,7 @@ bool Application::HandleMenuDrawings()
     if(appHandler.requiresNewDrawing)
     {
         appHandler.requiresNewDrawing = false;
-        return menus[appHandler.currentSelectedMenu]->Draw();
+        //return menus[appHandler.currentSelectedMenu]->Draw();
     }
     return true;
 }

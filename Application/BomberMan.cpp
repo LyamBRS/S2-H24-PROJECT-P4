@@ -10,8 +10,11 @@
  */
 
 #include <QApplication>
+#include <QMainWindow>
+#include <QTimer>
 #include <Windows.h>
 #include "Files/Application/Application.h"
+#include "Files/QMenus/QMainMenu.h"
 
 
 #include <iostream>
@@ -66,14 +69,44 @@ public:
     }
 };
 
+class RatApplicationPeriodicTimerHandler : public QObject
+{
+    QTimer* timer;
+    Application* appRef;
+
+private slots:
+    void Loop()
+    {
+        //appRef->TemporaryLoop();
+    }
+public:
+    RatApplicationPeriodicTimerHandler(Application* newAppRef) : QObject()
+    {
+        appRef = newAppRef;
+        timer = new QTimer();
+        connect(timer, &QTimer::timeout, this, &RatApplicationPeriodicTimerHandler::Loop);
+        timer->setInterval(1);
+        timer->start();
+    }
+};
+
 
 int main( int argc, char ** argv )
 {
-	//QApplication app(argc, argv);
+	QApplication app(argc, argv);
 	Application application = Application();
-//
-	application.TemporaryLoop();
 
-	//return app.exec();
-	return 0;
+    QMainWindow window;
+    window.setWindowTitle("Bomberman");
+    window.resize(800, 600);
+    window.show();
+
+    QMainMenu menu(&window);
+    menu.OnEnter();
+
+    // Set for periodic app updat
+
+    RatApplicationPeriodicTimerHandler thisHadToBeThisComplex = RatApplicationPeriodicTimerHandler(&application);
+
+	return app.exec();
 }

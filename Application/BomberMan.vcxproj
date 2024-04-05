@@ -154,6 +154,7 @@
     <ClCompile Include="Files\Menus\ExitMenu.cpp" />
     <ClCompile Include="Files\Game\Game.cpp" />
     <ClCompile Include="Files\Menus\GameMenu.cpp" />
+    <ClCompile Include="Files\QMenus\Handler.cpp" />
     <ClCompile Include="Files\Inventory\Inventory.cpp" />
     <ClCompile Include="Files\Menus\MainMenu.cpp" />
     <ClCompile Include="Files\Map\Map.cpp" />
@@ -161,12 +162,13 @@
     <ClCompile Include="Files\Menus\Menu.cpp" />
     <ClCompile Include="Files\Movements\Movements.cpp" />
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
-    <ClCompile Include="Files\PlacedBomb\Ray.cpp" />
     <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
     <ClCompile Include="Files\Player\Player.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
     <ClCompile Include="Files\Positions\Positions.cpp" />
     <ClCompile Include="Files\PowerUp\PowerUp.cpp" />
+    <ClCompile Include="Files\QMenus\QMainMenu.cpp" />
+    <ClCompile Include="Files\PlacedBomb\Ray.cpp" />
     <ClCompile Include="Files\ScreenAttributes\ScreenAttributes.cpp" />
     <ClCompile Include="Files\Serial\SerialPort.cpp" />
     <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp" />
@@ -193,9 +195,6 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Files\PlacedBomb\Ray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
