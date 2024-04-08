@@ -77,7 +77,7 @@ class RatApplicationPeriodicTimerHandler : public QObject
 private slots:
     void Loop()
     {
-        //appRef->TemporaryLoop();
+        appRef->TemporaryLoop();
     }
 public:
     RatApplicationPeriodicTimerHandler(Application* newAppRef) : QObject()
@@ -85,7 +85,7 @@ public:
         appRef = newAppRef;
         timer = new QTimer();
         connect(timer, &QTimer::timeout, this, &RatApplicationPeriodicTimerHandler::Loop);
-        timer->setInterval(1);
+        timer->setInterval(1000);
         timer->start();
     }
 };
