@@ -55,6 +55,7 @@ bool PlacedPowerUp::Update()
         shoulbedeleted=0;
         return shoulbedeleted;
     }
+   return false;
 }
 
 bool PlacedPowerUp::ShouldBeDeleted()

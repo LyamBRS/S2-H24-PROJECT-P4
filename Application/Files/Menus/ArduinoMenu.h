@@ -25,7 +25,7 @@
 #define APP_DISCONNECTING_MENU 4
 
 // - CLASS - //
-class ArduinoMenu : public Menu
+class cArduinoMenu : public cMenu
 {
     private:
         bool DrawArduinoMainMenu();
@@ -53,7 +53,7 @@ class ArduinoMenu : public Menu
         int selectedSubMenu = 0;
 
     public:
-        ArduinoMenu(AppHandler* currentAppHandler);
+        cArduinoMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Update();
         bool Draw();

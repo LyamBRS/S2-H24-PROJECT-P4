@@ -130,7 +130,7 @@ enum GameStatuses
 
 /**
  * @brief 
- * # Game
+ * # BomberManGame
  * @brief
  * The Game class allows you to create and start
  * a game based with X amount of players from a
@@ -140,7 +140,7 @@ enum GameStatuses
  * A game goes on until either a player leaves
  * or or there is only one left.
  */
-class Game
+class BomberManGame
 {
     private:
         /// @brief Holds the map loaded in the game.
@@ -352,7 +352,7 @@ class Game
          * @brief
          * # DO NOT USE THIS CONSTRUCTOR OUTSIDE OF CLASS MEMBER DEFINITIONS
          */
-        Game();
+        BomberManGame();
 
         /**
          * @brief 
@@ -371,7 +371,7 @@ class Game
          * JSON file as an object which corresponds to the loaded
          * map that will be played on.
          */
-        Game(AppHandler* newAppRef, Map* MapData);
+        BomberManGame(AppHandler* newAppRef, Map* MapData);
 
         /**
          * @brief 

@@ -29,12 +29,12 @@
 
 // - CLASS - //
 
-class MapMenu : public Menu
+class cMapMenu : public cMenu
 {
     private:
         int amountOfMaps = 0;
     public:
-        MapMenu(AppHandler* currentAppHandler);
+        cMapMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
         bool Update();

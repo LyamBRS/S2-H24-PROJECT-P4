@@ -20,7 +20,7 @@
  * @return true 
  * @return false 
  */
-bool Menu::Update()
+bool cMenu::Update()
 {
     return false;
 }
@@ -31,7 +31,7 @@ bool Menu::Update()
  * @return true 
  * @return false 
  */
-bool Menu::Draw()
+bool cMenu::Draw()
 {
     return false;
 }
@@ -44,9 +44,9 @@ bool Menu::Draw()
  * @return true 
  * @return false 
  */
-bool Menu::HandleKeyboard(int keyBoardKey)
+bool cMenu::HandleKeyboard(int keyBoardKey)
 {
-    return false;
+    return keyBoardKey==0;
 }
 
 /**
@@ -56,7 +56,7 @@ bool Menu::HandleKeyboard(int keyBoardKey)
  * @return true 
  * @return false 
  */
-bool Menu::RedrawNextFrame()
+bool cMenu::RedrawNextFrame()
 {
     return false;
 }
@@ -68,7 +68,7 @@ bool Menu::RedrawNextFrame()
  * @return true 
  * @return false 
  */
-bool Menu::OnEnter()
+bool cMenu::OnEnter()
 {
     return false;
 }
@@ -80,7 +80,7 @@ bool Menu::OnEnter()
  * @return true 
  * @return false 
  */
-bool Menu::OnExit()
+bool cMenu::OnExit()
 {
     return false;
 }

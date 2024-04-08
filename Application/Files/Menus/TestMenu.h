@@ -38,7 +38,7 @@
 // - CLASS - //
 //class Application;
 
-class TestMenu : public Menu
+class cTestMenu : public cMenu
 {
     private:
         bool DrawNoArduinoMenu();
@@ -63,7 +63,7 @@ class TestMenu : public Menu
         std::string bargraphMessage = "";
 
     public:
-        TestMenu(AppHandler* currentAppHandler);
+        cTestMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
         bool OnEnter();

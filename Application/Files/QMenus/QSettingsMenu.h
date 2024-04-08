@@ -18,6 +18,7 @@
 #include <QVBoxLayout>
 #include <QPixmap>
 #include <qmenubar.h>
+#include "../Application/AppHandler.h"
 
 // - DEFINES - //
 
@@ -28,11 +29,9 @@ class QSettingsMenu : public QObject
 private:
 
 	QMainWindow* winRef;
+	AppHandler* appRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
+	QPushButton* backButton;
 
 	QVBoxLayout* MainLayout;
 	QVBoxLayout* ButtonLayout;
@@ -40,10 +39,14 @@ private:
 	QWidget* MainMenu;
 
 public:
-	QSettingsMenu(QMainWindow* windowReference);
+	QSettingsMenu();
+	QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandler);
 
-	QMainWindow* GetWindow();
+	QWidget* GetMenu();
 
 	void OnEnter();
 	void OnLeave();
+
+public slots:
+	void GoToMainMenu();
 };

@@ -139,7 +139,7 @@ PowerUp Inventory::UseSelected()
 /**
  * @brief
  * Returns a reference to the selected @ref PowerUp allowing
- * the @ref Game to perform various actions and drawings based
+ * the @ref BomberManGame to perform various actions and drawings based
  * off the values stored in the @ref PowerUp without actually
  * using or affecting it in any ways at all.
  * @attention
@@ -154,7 +154,7 @@ PowerUp* Inventory::GetSelected()
 /**
  * @brief 
  * Gets a reference to a specific PowerUp at a specific index
- * allowing the @ref Game to perform various actions and drawings 
+ * allowing the @ref BomberManGame to perform various actions and drawings 
  * based off the values stored in the @ref PowerUp without actually
  * using or affecting it in any ways at all.
  * @attention

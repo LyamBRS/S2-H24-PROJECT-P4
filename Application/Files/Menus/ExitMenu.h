@@ -20,12 +20,12 @@
 // - CLASS - //
 //class Application;
 
-class ExitMenu : public Menu
+class cExitMenu : public cMenu
 {
     private:
         bool needsToBeRedrawn = false;
     public:
-        ExitMenu(AppHandler* currentAppHandler);
+        cExitMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Update();
         bool Draw();

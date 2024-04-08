@@ -16,29 +16,29 @@
 // - DEFINES - //
 
 // - CLASS - //
-MainMenu::MainMenu(AppHandler* currentAppHandler)
+cMainMenu::cMainMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
 
-bool MainMenu::Update()
+bool cMainMenu::Update()
 {
     return false;
 }
 
-bool MainMenu::OnEnter()
+bool cMainMenu::OnEnter()
 {
     oldSelection = -1;
     return true;
 }
 
-bool MainMenu::OnExit()
+bool cMainMenu::OnExit()
 {
     oldSelection = -1;
     return true;
 }
 
-bool MainMenu::HandleKeyboard(int keyBoardKey)
+bool cMainMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -65,7 +65,7 @@ bool MainMenu::HandleKeyboard(int keyBoardKey)
     return false;
 }
 
-bool MainMenu::Draw()
+bool cMainMenu::Draw()
 {
     if(oldSelection != appRef->currentSelectedMenu)
     {

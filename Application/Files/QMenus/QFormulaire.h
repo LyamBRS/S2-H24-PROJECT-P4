@@ -18,6 +18,7 @@
 #include <QVBoxLayout>
 #include <QPixmap>
 #include <qmenubar.h>
+#include "../Application/AppHandler.h"
 
 // - DEFINES - //
 
@@ -28,6 +29,7 @@ class QFormulaire : public QObject
 private:
 
 	QMainWindow* winRef;
+	AppHandler* appRef;
 
 	QPushButton* playButton;
 	QPushButton* settingsButton;
@@ -40,9 +42,10 @@ private:
 	QWidget* MainMenu;
 
 public:
-	QFormulaire(QMainWindow* windowReference);
+	QFormulaire();
+	QFormulaire(QMainWindow* windowReference, AppHandler* appHandler);
 
-	QMainWindow* GetWindow();
+	QWidget* GetMenu();
 
 	void OnEnter();
 	void OnLeave();

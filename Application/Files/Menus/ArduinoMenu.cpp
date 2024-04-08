@@ -18,7 +18,7 @@
 
 // - CLASS - //
 
-ArduinoMenu::ArduinoMenu(AppHandler* currentAppHandler)
+cArduinoMenu::cArduinoMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
@@ -31,7 +31,7 @@ ArduinoMenu::ArduinoMenu(AppHandler* currentAppHandler)
  * @return true 
  * @return false 
  */
-bool ArduinoMenu::DrawArduinoMainMenu()
+bool cArduinoMenu::DrawArduinoMainMenu()
 {
     ResizeTerminal(40, 8);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -211,7 +211,7 @@ bool ArduinoMenu::DrawArduinoMainMenu()
     return true;
 }
 
-bool ArduinoMenu::DrawBaudrateSelectionMenu()
+bool cArduinoMenu::DrawBaudrateSelectionMenu()
 {
     ResizeTerminal(40, 17);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -295,10 +295,10 @@ bool ArduinoMenu::DrawBaudrateSelectionMenu()
     return true;
 }
 
-bool ArduinoMenu::DrawComPortSelectionMenu()
+bool cArduinoMenu::DrawComPortSelectionMenu()
 {
     std::vector<std::wstring> ports = GetAvailableComPorts();
-    int amountOfSelections = ports.size();
+    int amountOfSelections = (int)ports.size();
 
     ResizeTerminal(36, 6+amountOfSelections);
     system("cls");
@@ -379,7 +379,7 @@ bool ArduinoMenu::DrawComPortSelectionMenu()
     return true;
 }
 
-bool ArduinoMenu::DrawConnectMenu()
+bool cArduinoMenu::DrawConnectMenu()
 {
     ResizeTerminal(36, 7);
 
@@ -466,7 +466,7 @@ bool ArduinoMenu::DrawConnectMenu()
     return true;
 }
 
-bool ArduinoMenu::DrawIsConnectingMenu()
+bool cArduinoMenu::DrawIsConnectingMenu()
 {
     system("cls");
     std::cout << "############################################" << std::endl;
@@ -559,7 +559,7 @@ bool ArduinoMenu::DrawIsConnectingMenu()
     return false;
 }
 
-bool ArduinoMenu::DrawDisconnectMenu()
+bool cArduinoMenu::DrawDisconnectMenu()
 {
     ResizeTerminal(36, 7);
 
@@ -658,7 +658,7 @@ bool ArduinoMenu::DrawDisconnectMenu()
 
 
 
-bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
 {
     // Avoid being able to change baudrate and port when its currently connected.
     if(selection < 3 && appRef->arduinoThread.GetArduino()->GetPortState())
@@ -715,7 +715,7 @@ bool ArduinoMenu::HandleKeyboardMainMenu(int keyBoardKey)
     return false;
 }
 
-bool ArduinoMenu::HandleKeyboardBaudrateMenu(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboardBaudrateMenu(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -761,9 +761,9 @@ bool ArduinoMenu::HandleKeyboardBaudrateMenu(int keyBoardKey)
     return false;
 }
 
-bool ArduinoMenu::HandleKeyboardComPortMenu(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboardComPortMenu(int keyBoardKey)
 {
-    int AmountOfAvailablePorts = GetAvailableComPorts().size();
+    int AmountOfAvailablePorts = (int)GetAvailableComPorts().size();
 
     switch (keyBoardKey)
     {    
@@ -800,7 +800,7 @@ bool ArduinoMenu::HandleKeyboardComPortMenu(int keyBoardKey)
     return false;
 }
 
-bool ArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -866,7 +866,7 @@ bool ArduinoMenu::HandleKeyboardConnectMenu(int keyBoardKey)
     return false;
 }
 
-bool ArduinoMenu::HandleKeyboardDisconnectMenu(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboardDisconnectMenu(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -928,7 +928,7 @@ bool ArduinoMenu::HandleKeyboardDisconnectMenu(int keyBoardKey)
 
 
 
-bool ArduinoMenu::HandleKeyboard(int keyBoardKey)
+bool cArduinoMenu::HandleKeyboard(int keyBoardKey)
 {
     switch(selectedSubMenu)
     {
@@ -941,7 +941,7 @@ bool ArduinoMenu::HandleKeyboard(int keyBoardKey)
     return false; 
 }
 
-bool ArduinoMenu::Draw()
+bool cArduinoMenu::Draw()
 {
     switch(selectedSubMenu)
     {
@@ -955,7 +955,7 @@ bool ArduinoMenu::Draw()
     return false;
 }
 
-bool ArduinoMenu::OnEnter()
+bool cArduinoMenu::OnEnter()
 {
     selectedSubMenu = 0;
     oldSelectedSubMenu = -1;
@@ -964,7 +964,7 @@ bool ArduinoMenu::OnEnter()
     return true;
 }
 
-bool ArduinoMenu::OnExit()
+bool cArduinoMenu::OnExit()
 {
     selectedSubMenu = 0;
     oldSelectedSubMenu = -1;
@@ -972,7 +972,7 @@ bool ArduinoMenu::OnExit()
     return true;
 }
 
-bool ArduinoMenu::Update()
+bool cArduinoMenu::Update()
 {
     return false;
 }

@@ -10,3 +10,47 @@
  * @date 2024-04-05
  * @copyright Copyright (c) 2024
  */
+
+#pragma once
+
+// - INCLUDES - //
+#include <QtWidgets>
+#include <QWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QAction>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QPixmap>
+#include <QApplication>
+#include <QTimer>
+#include <qmenubar.h>
+
+#include "QMainMenu.h"
+#include "QSettingsMenu.h"
+#include "QFormulaire.h"
+#include "../Application/AppHandler.h"
+
+// - DEFINES - //
+
+// - CLASS - //
+
+class QMenuHandler
+{
+    private:
+        QMainWindow* winRef;
+        AppHandler* appRef;
+
+        QMainMenu* mainMenu;
+        QFormulaire* formulaire;
+        QSettingsMenu* settings;
+        int currentMenu = 0;
+
+    public:
+
+    QMenuHandler(QMainWindow* windowReference, AppHandler* appHandler);
+
+    void GoToMenu(int menuIndex);
+    void LeaveCurrent();
+    void OnEnterCurrent();
+};

@@ -11,17 +11,20 @@
 #include "QSettingsMenu.h"
 
 // - CLASS - //
-QSettingsMenu::QSettingsMenu(QMainWindow* windowReference)
+QSettingsMenu::QSettingsMenu()
+{
+
+}
+
+QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandler)
 {
 	winRef = windowReference;
+	appRef = appHandler;
 
 	MainMenu = new QWidget();
 
-	playButton		= new QPushButton("Play");
-	settingsButton	= new QPushButton("Settings");
-	appButton		= new QPushButton("Formulaire");
-	leaveButton		= new QPushButton("Quit");
-
+	backButton		= new QPushButton("Back");
+	connect(backButton, &QPushButton::clicked, this, &QSettingsMenu::GoToMainMenu);
 	//playButton->setMaximumWidth(200);
 	//settingsButton->setMaximumWidth(200);
 	//appButton->setMaximumWidth(200);
@@ -31,27 +34,29 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference)
 	ButtonLayout	= new QVBoxLayout();
 	
 	ButtonLayout->setAlignment(Qt::AlignCenter);
-	ButtonLayout->addWidget(playButton);
-	ButtonLayout->addWidget(appButton);
-	ButtonLayout->addWidget(settingsButton);
-	ButtonLayout->addSpacing(100);
-	ButtonLayout->addWidget(leaveButton);
+	ButtonLayout->addWidget(backButton);
 
 	MainLayout->addLayout(ButtonLayout);
 	MainMenu->setLayout(MainLayout);
 }
 
-QMainWindow* QSettingsMenu::GetWindow()
+QWidget* QSettingsMenu::GetMenu()
 {
-	return winRef;
+	return MainMenu;
 }
 
 void QSettingsMenu::OnEnter()
 {
-	winRef->setCentralWidget(MainMenu);
+
 }
 
 void QSettingsMenu::OnLeave()
 {
 
+}
+
+
+void QSettingsMenu::GoToMainMenu()
+{
+	appRef->SetNewQMenu(QMenus::MainMenu);
 }

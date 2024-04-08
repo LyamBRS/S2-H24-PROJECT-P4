@@ -22,6 +22,8 @@
 #include "../Controller/Controller.h"
 #include "../Colour/Colour.h"
 #include <Windows.h>
+#include <functional>
+#include <iostream>
 
 // - DEFINES - //
 #define CONTROLLER_TYPE_ARDUINO_A 1
@@ -51,6 +53,21 @@
 #define CONTROLLER_KEYBOARD_B_DOWN  VK_NUMPAD8
 #define CONTROLLER_KEYBOARD_B_SELECT VK_MULTIPLY
 
+// - ENUM - //
+enum QMenus
+{
+    MainMenu,
+    MapSelection,
+    PlayerJoining,
+    Countdown,
+    Game,
+    PauseMenu,
+    ExitMenu,
+    Formulaire,
+    Settings,
+    Error
+};
+
 // - CLASS - //
 /**
  * @brief
@@ -68,6 +85,9 @@
 class AppHandler
 {
     public:
+        typedef std::function<void(int)> QMenuChangerFunction;
+        QMenuChangerFunction QSetMenu;
+        AppHandler(QMenuChangerFunction QmenuChangeFunction);
         AppHandler();
 
         ArduinoThreadManager arduinoThread;
@@ -90,14 +110,14 @@ class AppHandler
          * @brief
          * Global variable allowing any @ref Menu to
          * specify a wanted @ref Map index to use in
-         * the @ref Game which will be created when
-         * the @ref OnEnter method of @ref GameMenu
+         * the @ref BomberManGame which will be created when
+         * the @ref OnEnter method of @ref cGameMenu
          * is called, which is whenever a valid map is
          * selected.
          * @brief
          * That index is then verified and used to gather
          * the JSON of the required map directly inside
-         * of @ref GameMenu
+         * of @ref cGameMenu
          * @attention
          * Defaults to 0. May be a potential problem if
          * your selected maps is always the first one
@@ -117,4 +137,6 @@ class AppHandler
         int GetDetectedMuons();
         bool ResetDetectedMuons();
         bool SetMessage(std::string LCDmessage);
+
+        void SetNewQMenu(int newQMenuIndex);
 };

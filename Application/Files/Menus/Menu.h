@@ -42,14 +42,14 @@
 
 /**
  * @brief 
- * # Menu
+ * # cMenu
  * @brief
  * Abstract class used to define the standard
  * methods within a standard Menu. These menus
  * are then used in the Application for various
  * reasons and purposes.
  */
-class Menu 
+class cMenu 
 {
     public:
 

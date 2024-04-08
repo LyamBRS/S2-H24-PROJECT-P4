@@ -128,6 +128,8 @@ bool Player::UpdateFromController()
     int wantedDeltaX = 0;
     int wantedDeltaY = 0;
 
+    wantedDeltaX = wantedDeltaY;
+
     if (PLAYER_LOCAL_X_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
     if (PLAYER_LOCAL_X_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
 

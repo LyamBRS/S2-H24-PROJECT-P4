@@ -24,17 +24,18 @@
  * and setup your game. It handles basic terminal
  * menus as well.
  */
-Application::Application()
+Application::Application(QMainWindow* windowReference)
 {
-    AppHandler* appHandlerPtr = &appHandler;
+    auto lambda = [this](int newIndex) { this->SetNewQMenu(newIndex); };
+    appHandler = new AppHandler(lambda);
 
     // Creates all the menus.
-    Menu* exitMenu      = new ExitMenu(appHandlerPtr);
-    Menu* arduinoMenu   = new ArduinoMenu(appHandlerPtr);
-    Menu* mainMenu      = new MainMenu(appHandlerPtr);
-    Menu* mapMenu       = new MapMenu(appHandlerPtr);
-    Menu* testMenu      = new TestMenu(appHandlerPtr);
-    Menu* gameMenu      = new GameMenu(appHandlerPtr);
+    cMenu* exitMenu      = new cExitMenu(appHandler);
+    cMenu* arduinoMenu   = new cArduinoMenu(appHandler);
+    cMenu* mainMenu      = new cMainMenu(appHandler);
+    cMenu* mapMenu       = new cMapMenu(appHandler);
+    cMenu* testMenu      = new cTestMenu(appHandler);
+    cMenu* gameMenu      = new cGameMenu(appHandler);
 
     menus.push_back(mainMenu);
     menus.push_back(testMenu);
@@ -42,6 +43,8 @@ Application::Application()
     menus.push_back(mapMenu);
     menus.push_back(exitMenu);
     menus.push_back(gameMenu);
+
+    menuHandler = new QMenuHandler(windowReference, appHandler);
 }
 
 /**
@@ -59,8 +62,8 @@ bool Application::HandleKeyboardActions()
     if (kbhit())
     {
         int character = getch();
-        appHandler.requiresNewDrawing = appHandler.redrawOnKeyboardHits;
-        return menus[appHandler.currentSelectedMenu]->HandleKeyboard(character);
+        appHandler->requiresNewDrawing = appHandler->redrawOnKeyboardHits;
+        return menus[appHandler->currentSelectedMenu]->HandleKeyboard(character);
     }
     return true;
 }
@@ -74,9 +77,9 @@ bool Application::HandleKeyboardActions()
  */
 bool Application::HandleMenuDrawings()
 {
-    if(appHandler.requiresNewDrawing)
+    if(appHandler->requiresNewDrawing)
     {
-        appHandler.requiresNewDrawing = false;
+        appHandler->requiresNewDrawing = false;
         //return menus[appHandler.currentSelectedMenu]->Draw();
     }
     return true;
@@ -93,7 +96,7 @@ bool Application::HandleMenuDrawings()
  */
 bool Application::HandleMenuUpdates()
 {
-    return menus[appHandler.currentSelectedMenu]->Update();
+    return menus[appHandler->currentSelectedMenu]->Update();
 }
 
 /**
@@ -111,29 +114,29 @@ bool Application::Update()
     static int oldSelectedMenu = 0;
 
     // Allows you to immediately see if a COM port change occurs
-    if(appHandler.oldAmountOfComPorts != GetAvailableComPorts().size())
+    if(appHandler->oldAmountOfComPorts != GetAvailableComPorts().size())
     {
-       appHandler.oldAmountOfComPorts = GetAvailableComPorts().size();
-       appHandler.requiresNewDrawing = true;
+       appHandler->oldAmountOfComPorts = (int)GetAvailableComPorts().size();
+       appHandler->requiresNewDrawing = true;
     }
 
     HandleMenuDrawings();
     HandleKeyboardActions();
     HandleMenuUpdates();
 
-    if(oldSelectedMenu != appHandler.currentSelectedMenu)
+    if(oldSelectedMenu != appHandler->currentSelectedMenu)
     {
         menus[oldSelectedMenu]->OnExit();
-        menus[appHandler.currentSelectedMenu]->OnEnter();
-        oldSelectedMenu = appHandler.currentSelectedMenu;
+        menus[appHandler->currentSelectedMenu]->OnEnter();
+        oldSelectedMenu = appHandler->currentSelectedMenu;
     }
 
     //appHandler.arduinoThread.threadFunction(0);
-    appHandler.arduinoThread.GetArduino()->Update();
+    appHandler->arduinoThread.GetArduino()->Update();
 
-    if(appHandler.frameTimer.TimeLeft() == 0)
+    if(appHandler->frameTimer.TimeLeft() == 0)
     {
-        appHandler.UpdateKeyboardControllers();
+        appHandler->UpdateKeyboardControllers();
     }
 
     //if(!appHandler.arduinoThread.GetThreadStatus())
@@ -152,11 +155,21 @@ bool Application::Update()
  */
 void Application::TemporaryLoop()
 {
-    while(appHandler.wantedSelectedMenu != -1)
+    while(appHandler->wantedSelectedMenu != -1)
     {
         if(!Update())
         {
             return;
         }
     }
+}
+
+AppHandler* Application::GetHandler()
+{
+    return appHandler;
+}
+
+void Application::SetNewQMenu(int newMenu)
+{
+    menuHandler->GoToMenu(newMenu);
 }

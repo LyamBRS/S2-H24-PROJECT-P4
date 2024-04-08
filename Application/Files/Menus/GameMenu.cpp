@@ -16,12 +16,12 @@
 
 // - CLASS - //
 
-GameMenu::GameMenu(AppHandler* currentAppHandler)
+cGameMenu::cGameMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
 
-bool GameMenu::Update()
+bool cGameMenu::Update()
 {
     if(!gameIsValid) return false;
 
@@ -49,7 +49,7 @@ bool GameMenu::Update()
     return currentGame->Update();
 }
 
-bool GameMenu::HandleWaitingForPlayers()
+bool cGameMenu::HandleWaitingForPlayers()
 {
     // system("cls");
     for(int playerIndex = 0; playerIndex < currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
@@ -123,7 +123,7 @@ bool GameMenu::HandleWaitingForPlayers()
 }
 
 
-bool GameMenu::HandleKeyboard(int keyBoardKey)
+bool cGameMenu::HandleKeyboard(int keyBoardKey)
 {
     switch(currentGame->GetStatus())
     {
@@ -155,15 +155,16 @@ bool GameMenu::HandleKeyboard(int keyBoardKey)
             return KeyboardGame(keyBoardKey);
             break;
     }
+    return false;
 }
 
-bool GameMenu::OnEnter()
+bool cGameMenu::OnEnter()
 {
     needsToBeRedrawn = true;
 
     // Get all available maps
     std::vector<nlohmann::json> allMaps = GetAllMaps();
-    int amountOfMaps = allMaps.size();
+    int amountOfMaps = (int)allMaps.size();
 
     // Validate the given JSON of the specified index.
     if(appRef->wantedMapIndex < 0 || appRef->wantedMapIndex >= amountOfMaps)
@@ -183,7 +184,7 @@ bool GameMenu::OnEnter()
     }
 
     currentMap = new Map(allMaps[appRef->wantedMapIndex]);
-    currentGame = new Game(appRef, currentMap);
+    currentGame = new BomberManGame(appRef, currentMap);
 
     if(!currentGame->isValidated())
     {
@@ -205,7 +206,7 @@ bool GameMenu::OnEnter()
     return true;
 }
 
-bool GameMenu::OnExit()
+bool cGameMenu::OnExit()
 {
     needsToBeRedrawn = true;
     return true;
@@ -215,7 +216,7 @@ bool GameMenu::OnExit()
 
 
 
-bool GameMenu::Draw()
+bool cGameMenu::Draw()
 {
     static int oldStatus = 0;
 
@@ -259,9 +260,10 @@ bool GameMenu::Draw()
             return DrawGame();
             break;
     }
+    return false;
 }
 
-bool GameMenu::DrawInvalid()
+bool cGameMenu::DrawInvalid()
 {
     system("cls");
     SetTerminalCursorPosition(0,0);
@@ -276,7 +278,7 @@ bool GameMenu::DrawInvalid()
     return true;
 }
 
-bool GameMenu::DrawWaitingForStart()
+bool cGameMenu::DrawWaitingForStart()
 {
     ResizeTerminal(36, 7 + currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]);
 
@@ -441,7 +443,7 @@ bool GameMenu::DrawWaitingForStart()
     // To pull this off, we've got 42 characters of space to deal with.
     nlohmann::json mapJSON = currentGame->GetMap()->GetCurrentMap();
     std::string mapName = mapJSON["name"];
-    int seperationBetweenTextAndBorder = (42-mapName.length())/2;
+    int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
     rectangles(1, colors::black, false);
     rectangles(seperationBetweenTextAndBorder, BG, false);
@@ -477,13 +479,13 @@ bool GameMenu::DrawWaitingForStart()
     return false;
 }
 
-bool GameMenu::DrawWaitingForConnection()
+bool cGameMenu::DrawWaitingForConnection()
 {
     std::cout << "DrawWaitingForConnection" << std::endl;
     return false;
 }
 
-bool GameMenu::DrawPaused()
+bool cGameMenu::DrawPaused()
 {
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
@@ -496,7 +498,7 @@ bool GameMenu::DrawPaused()
     // Draw the name of the map dead center. Because why not.
     // To pull this off, we've got 42 characters of space to deal with.
     std::string mapName = currentGame->GetMap()->GetName();
-    int seperationBetweenTextAndBorder = (42-mapName.length())/2;
+    int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
     rectangles(1, colors::black, false);
     rectangles(seperationBetweenTextAndBorder, BG, false);
@@ -536,13 +538,13 @@ bool GameMenu::DrawPaused()
     return true;
 }
 
-bool GameMenu::DrawGame()
+bool cGameMenu::DrawGame()
 {
     currentGame->Draw();
     return true;
 }
 
-bool GameMenu::DrawStart()
+bool cGameMenu::DrawStart()
 {
     ResizeTerminal(36, 14);
     auto rectangles = [](int amount, int color, bool lineEnd)
@@ -616,7 +618,7 @@ bool GameMenu::DrawStart()
     return true;
 }
 
-bool GameMenu::DrawEnd()
+bool cGameMenu::DrawEnd()
 {
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
@@ -629,7 +631,7 @@ bool GameMenu::DrawEnd()
     // Draw the name of the map dead center. Because why not.
     // To pull this off, we've got 42 characters of space to deal with.
     std::string mapName = currentGame->GetMap()->GetName();
-    int seperationBetweenTextAndBorder = (42-mapName.length())/2;
+    int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
     rectangles(1, colors::black, false);
     rectangles(seperationBetweenTextAndBorder, BG, false);
@@ -703,13 +705,14 @@ bool GameMenu::DrawEnd()
 
 
 
-bool GameMenu::KeyboardInvalid(int keyBoardKey)
+bool cGameMenu::KeyboardInvalid(int keyBoardKey)
 {
     appRef->currentSelectedMenu = APP_MAP_MENU;
-    return true;
+    keyBoardKey = 1;
+    return keyBoardKey;
 }
 
-bool GameMenu::KeyboardWaitingForStart(int keyBoardKey)
+bool cGameMenu::KeyboardWaitingForStart(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -729,7 +732,7 @@ bool GameMenu::KeyboardWaitingForStart(int keyBoardKey)
     return false;
 }
 
-bool GameMenu::KeyboardWaitingForConnection(int keyBoardKey)
+bool cGameMenu::KeyboardWaitingForConnection(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -745,7 +748,7 @@ bool GameMenu::KeyboardWaitingForConnection(int keyBoardKey)
     return false;
 }
 
-bool GameMenu::KeyboardPaused(int keyBoardKey)
+bool cGameMenu::KeyboardPaused(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -773,7 +776,7 @@ bool GameMenu::KeyboardPaused(int keyBoardKey)
     return false;
 }
 
-bool GameMenu::KeyboardGame(int keyBoardKey)
+bool cGameMenu::KeyboardGame(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -793,7 +796,7 @@ bool GameMenu::KeyboardGame(int keyBoardKey)
     return false;
 }
 
-bool GameMenu::KeyboardStart(int keyBoardKey)
+bool cGameMenu::KeyboardStart(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -809,7 +812,7 @@ bool GameMenu::KeyboardStart(int keyBoardKey)
     return false;
 }
 
-bool GameMenu::KeyboardEnd(int keyBoardKey)
+bool cGameMenu::KeyboardEnd(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    

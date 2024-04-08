@@ -16,17 +16,17 @@
 
 // - CLASS - //
 
-ExitMenu::ExitMenu(AppHandler* currentAppHandler)
+cExitMenu::cExitMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
 
-bool ExitMenu::Update()
+bool cExitMenu::Update()
 {
     return false;
 }
 
-bool ExitMenu::HandleKeyboard(int keyBoardKey)
+bool cExitMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -49,19 +49,19 @@ bool ExitMenu::HandleKeyboard(int keyBoardKey)
     return false;
 }
 
-bool ExitMenu::OnEnter()
+bool cExitMenu::OnEnter()
 {
     needsToBeRedrawn = true;
     return true;
 }
 
-bool ExitMenu::OnExit()
+bool cExitMenu::OnExit()
 {
     needsToBeRedrawn = true;
     return true;
 }
 
-bool ExitMenu::Draw()
+bool cExitMenu::Draw()
 {
     ResizeTerminal(36, 9);
     if(needsToBeRedrawn)

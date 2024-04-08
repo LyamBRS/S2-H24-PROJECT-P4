@@ -19,12 +19,12 @@
 
 // - CLASS - //
 
-MapMenu::MapMenu(AppHandler* currentAppHandler)
+cMapMenu::cMapMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
 
-bool MapMenu::HandleKeyboard(int keyBoardKey)
+bool cMapMenu::HandleKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -49,10 +49,10 @@ bool MapMenu::HandleKeyboard(int keyBoardKey)
     return false;
 }
 
-bool MapMenu::Draw()
+bool cMapMenu::Draw()
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
-    amountOfMaps = allMaps.size();
+    amountOfMaps = (int)allMaps.size();
     
     ResizeTerminal(100, 100);
     system("cls");
@@ -201,20 +201,20 @@ bool MapMenu::Draw()
     return true;
 }
 
-bool MapMenu::OnEnter()
+bool cMapMenu::OnEnter()
 {
     appRef->wantedMapIndex = 0;
     setSelection(0);
     return true;
 }
 
-bool MapMenu::OnExit()
+bool cMapMenu::OnExit()
 {
     setSelection(0);
     return true;
 }
 
-bool MapMenu::OnMapSelect() 
+bool cMapMenu::OnMapSelect() 
 {
     std::vector<nlohmann::json> allMaps = GetAllMaps();
 
@@ -228,23 +228,23 @@ bool MapMenu::OnMapSelect()
     return true;
 }
 
-bool MapMenu::Update()
+bool cMapMenu::Update()
 {
     return false;
 }
 
-void MapMenu::setSelection(int selected) {
+void cMapMenu::setSelection(int selected) {
     selection = selected;
     OnMapSelect();
 }
 
-void MapMenu::SelectionNext() {
+void cMapMenu::SelectionNext() {
     selection++;
     if (selection > amountOfMaps - 1) selection = 0;
     OnMapSelect();
 }
 
-void MapMenu::SelectionPrevious() {
+void cMapMenu::SelectionPrevious() {
     selection--;
     if (selection < 0) selection = amountOfMaps - 1;
     if (selection < 0) selection = 0;

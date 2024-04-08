@@ -13,6 +13,18 @@
 #pragma once
 
 // - INCLUDES - //
+#include <QtWidgets>
+#include <QWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QAction>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QPixmap>
+#include <QApplication>
+#include <QTimer>
+#include <qmenubar.h>
+
 #include "../Arduino/Arduino.h"
 #include "../Game/Game.h"
 #include "../Colour/Colour.h"
@@ -26,6 +38,12 @@
 #include "../Menus/MapMenu.h"
 #include "../Menus/TestMenu.h"
 #include "../Menus/GameMenu.h"
+
+#include "../QMenus/Handler.h"
+#include "../QMenus/QFormulaire.h"
+#include "../QMenus/QSettingsMenu.h"
+#include "../QMenus/QMainMenu.h"
+
 #include <conio.h>
 #include <vector>
 
@@ -77,10 +95,13 @@ class Application
          */
         bool HandleMenuUpdates();
 
-        std::vector<Menu*> menus;
+        QMenuHandler* menuHandler;
+
+        std::vector<cMenu*> menus;
+
     public:
 
-        AppHandler appHandler;
+        AppHandler* appHandler;
 
         /**
          * @brief
@@ -91,7 +112,7 @@ class Application
          * and setup your game. It handles basic terminal
          * menus as well.
          */
-        Application();
+        Application(QMainWindow* windowReference);
 
         /**
          * @brief 
@@ -111,4 +132,8 @@ class Application
          * application wants to close.
          */
         void TemporaryLoop();
+
+        AppHandler* GetHandler();
+
+        void SetNewQMenu(int newMenu);
 };

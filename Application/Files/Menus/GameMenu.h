@@ -14,7 +14,6 @@
 #include "Menu.h"
 #include "../Application/AppHandler.h"
 #include "../Colour/Colour.h"
-#include "../Game/Game.h"
 #include "../Map/Map.h"
 #include "../Map/Utils.hpp"
 #include "../JSON/json.hpp"
@@ -25,6 +24,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include "../Game/Game.h"
 
 // - DEFINES - //
 #define BC colors::darkpurple  // Border color
@@ -37,12 +37,12 @@
 
 // - GLOBALS - //
 
-class GameMenu : public Menu
+class cGameMenu : public cMenu
 {
     private:
         bool needsToBeRedrawn = false;
         bool gameIsValid = false;
-        Game* currentGame;
+        BomberManGame* currentGame;
         Map* currentMap;
 
         SimpleTimer frameDelay = SimpleTimer(30);
@@ -53,7 +53,7 @@ class GameMenu : public Menu
         bool HandleWaitingForPlayers();
 
     public:
-        GameMenu(AppHandler* currentAppHandler);
+        cGameMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Update();
         bool Draw();

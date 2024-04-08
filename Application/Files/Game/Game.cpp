@@ -27,7 +27,7 @@
  * @return false:
  * Failed the test 
  */
-bool Game::SelfCheck()
+bool BomberManGame::SelfCheck()
 {
     // Check if there is any maps in the Game object
     if(map == nullptr)
@@ -60,18 +60,18 @@ bool Game::SelfCheck()
  * @return false:
  * Whatever hapenned, there was an error.
  */
-bool Game::DrawMap()
+bool BomberManGame::DrawMap()
 {
     SetTerminalCursorPosition(0, GAME_CURSOR_MAP_Y);
     return map->Draw();
 }
 
-bool Game::DrawGameHeader()
+bool BomberManGame::DrawGameHeader()
 {
     return false;
 }
 
-bool Game::DrawInventories()
+bool BomberManGame::DrawInventories()
 {
     int offset = -1;
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
@@ -89,7 +89,7 @@ bool Game::DrawInventories()
             int ID = currentSlot->getType();
 
             int backColor = GAME_WINDOW_FIELD_BG;
-            int frontColor = GAME_WINDOW_FIELD_FG;
+            //int frontColor = GAME_WINDOW_FIELD_FG;
             if(players[playerIndex].inventory.CurrentIndex() == i)
             {
                 backColor = colors::green;
@@ -112,7 +112,7 @@ bool Game::DrawInventories()
     return true;
 }
 
-bool Game::DrawHealths()
+bool BomberManGame::DrawHealths()
 {
     int offset = 0;
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
@@ -157,12 +157,12 @@ bool Game::DrawHealths()
     return true;
 }
 
-bool Game::DrawPlayerStatus()
+bool BomberManGame::DrawPlayerStatus()
 {
     int offset = 0;
     for(int playerIndex=0; playerIndex<players.size(); playerIndex++)
     {
-        int hasMovementCooldown = players[playerIndex].movementFrameDelay.TimeLeftNoReset();
+        int hasMovementCooldown = (int)players[playerIndex].movementFrameDelay.TimeLeftNoReset();
 
         if(players[playerIndex].GetController()->controllerID != 0)
         {
@@ -208,7 +208,7 @@ bool Game::DrawPlayerStatus()
     return true;
 }
 
-bool Game::DrawTimers()
+bool BomberManGame::DrawTimers()
 {
     SetTerminalCursorPosition(gameTimerCursorX, GAME_CURSOR_GAMETIMER_Y);
 
@@ -251,12 +251,12 @@ bool Game::DrawTimers()
     return true;
 }
 
-bool Game::DrawCooldowns()
+bool BomberManGame::DrawCooldowns()
 {
     return false;
 }
 
-bool Game::DrawMessages()
+bool BomberManGame::DrawMessages()
 {
     std::string result = gameMessage;
 
@@ -296,7 +296,7 @@ bool Game::DrawMessages()
  * @return false:
  * Failed to update the movements. 
  */
-bool Game::HandleNextMouvements()
+bool BomberManGame::HandleNextMouvements()
 {
     int mapX = map->GetCurrentMap()["sizeX"];
     int mapY = map->GetCurrentMap()["sizeY"];
@@ -375,7 +375,7 @@ bool Game::HandleNextMouvements()
  * @return false:
  * Failed to put objects on the map.
  */
-bool Game::PutObjectsInMap()
+bool BomberManGame::PutObjectsInMap()
 {
     if(flipDrawingOrder)
     {
@@ -393,7 +393,7 @@ bool Game::PutObjectsInMap()
     return true;
 }
 
-bool Game::PutPlayersInMap()
+bool BomberManGame::PutPlayersInMap()
 {
     // Place players on the map.
     for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
@@ -461,7 +461,7 @@ bool Game::PutPlayersInMap()
     return true;
 }
 
-bool Game::PutBombsInMap()
+bool BomberManGame::PutBombsInMap()
 {
     for (int bombIndex = 0; bombIndex<bombsOnMap.size(); bombIndex++)
     {
@@ -485,7 +485,7 @@ bool Game::PutBombsInMap()
     return true;
 }
 
-bool Game::PutPowerUpsInMap()
+bool BomberManGame::PutPowerUpsInMap()
 {
     for(int i=0; i<itemsOnMap.size(); i++)
     {
@@ -515,7 +515,7 @@ bool Game::PutPowerUpsInMap()
  * @return false:
  * Error occured while handling bombs. BOOM.
  */
-bool Game::HandleBombs()
+bool BomberManGame::HandleBombs()
 {
     // Handle placement of new bombs on the map.
     for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
@@ -598,7 +598,7 @@ bool Game::HandleBombs()
  * @return false:
  * Failed to handle players.
  */
-bool Game::HandlePlayers()
+bool BomberManGame::HandlePlayers()
 {
     // Update all controllers of the players.
     for (int playerIndex = 0; playerIndex < players.size(); playerIndex++)
@@ -686,7 +686,7 @@ bool Game::HandlePlayers()
  * @return false:
  * Roh oh, failed to handle powerups.
  */
-bool Game::HandlePowerUp()
+bool BomberManGame::HandlePowerUp()
 {
     for(int i=0; i<itemsOnMap.size(); i++)
     {
@@ -743,7 +743,7 @@ bool Game::HandlePowerUp()
     return true;
 }
 
-bool Game::UsePowerUp(int playerID, int powerUpID)
+bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
 {
     std::string result = "Player ";
     if (playerID < 10) result.append("0");
@@ -861,12 +861,12 @@ bool Game::UsePowerUp(int playerID, int powerUpID)
  * @return false:
  * Huh, I guess it failed to do as advertised.
  */
-bool Game::CheckForPlayerDamage()
+bool BomberManGame::CheckForPlayerDamage()
 {
     for(int i=0; i<players.size(); i++)
     {
         Positions playerCurrentPositions = *players[i].GetCurrentCoordinates();
-        TileTypes tileUnderPlayer = map->GetTileDataAtPosition(playerCurrentPositions);
+        //TileTypes tileUnderPlayer = map->GetTileDataAtPosition(playerCurrentPositions);
 
         if(players[i].invulnurability.TimeLeftNoReset()==0)
         {
@@ -886,10 +886,10 @@ bool Game::CheckForPlayerDamage()
     return false;
 }
 
-bool Game::HandleBoxDestruction(Positions boxPosition)
+bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
 {
     // MUON STUFF HERE.
-    int detectedMuons = appRef->GetDetectedMuons();
+    //int detectedMuons = appRef->GetDetectedMuons();
 
     // CHANGE THIS ONCE WE'VE GOT MUONS GOING
     std::random_device dev;
@@ -924,7 +924,7 @@ bool Game::HandleBoxDestruction(Positions boxPosition)
  * @brief
  * # DO NOT USE THIS CONSTRUCTOR TERSIDE OF CLASS MEMBER DEFINITIONS
  */
-Game::Game()
+BomberManGame::BomberManGame()
 {
     canBeUsed = false;
     gameStatus = GameStatuses::invalid;
@@ -932,7 +932,7 @@ Game::Game()
 
 /**
  * @brief 
- * # Game
+ * # BomberManGame
  * @brief
  * The Game class allows you to create and start
  * a game based with X amount of players from a
@@ -947,7 +947,7 @@ Game::Game()
  * JSON file as an object which corresponds to the loaded
  * map that will be played on.
  */
-Game::Game(AppHandler* newAppRef, Map* MapData)
+BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
 {
     map = MapData;
     appRef = newAppRef;
@@ -1033,7 +1033,7 @@ Game::Game(AppHandler* newAppRef, Map* MapData)
  * @return false:
  * Failed to update the game.
  */
-bool Game::Update()
+bool BomberManGame::Update()
 {
     static int oldGameStatus = GameStatuses::invalid;
     static uint8_t oldSeconds = 0;
@@ -1120,7 +1120,7 @@ bool Game::Update()
  * @return false:
  * Failed to start the game. Path problem?
  */
-bool Game::Start()
+bool BomberManGame::Start()
 {
     startTimer.Reset();
     gameStatus = GameStatuses::countdown;
@@ -1137,7 +1137,7 @@ bool Game::Start()
  * @return false:
  * Game is not started / already paused / invalid. 
  */
-bool Game::Pause()
+bool BomberManGame::Pause()
 {
     if(gameStatus != GameStatuses::playing) return false;
     gameStatus = GameStatuses::paused;
@@ -1158,7 +1158,7 @@ bool Game::Pause()
  * @return false:
  * Game is not paused / already going / invalid. 
  */
-bool Game::Resume()
+bool BomberManGame::Resume()
 {
     if((gameStatus != GameStatuses::paused) || (gameStatus == GameStatuses::awaitingConnection)) return false;
     SetTerminalCursorPosition(0,0);
@@ -1194,7 +1194,7 @@ bool Game::Resume()
  * - 6: Waiting for player to reconnect
  * @return int 
  */
-int Game::GetStatus()
+int BomberManGame::GetStatus()
 {
     return gameStatus;
 }
@@ -1217,11 +1217,11 @@ int Game::GetStatus()
  * - 4: 3 seconds
  * @return int 
  */
-int Game::GetCountdownValue()
+int BomberManGame::GetCountdownValue()
 {
     if(!canBeUsed) return 0;
 
-    int timeLeft = startTimer.TimeLeftNoReset();
+    uint64_t timeLeft = startTimer.TimeLeftNoReset();
 
     if(gameStatus != GameStatuses::countdown)
     {
@@ -1269,10 +1269,10 @@ int Game::GetCountdownValue()
  * @return false:
  * Failed to put the controller into the player.
  */
-bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
+bool BomberManGame::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associatedPlayer)
 {
     HandleNextMouvements();
-    return false;
+    return associatedPlayer==10;
 }
 
 /**
@@ -1283,7 +1283,7 @@ bool Game::UpdateControllerAndPlayer(Controller* controllerToUpdate, int associa
  * Its that simple.
  * @return Map* 
  */
-Map* Game::GetMap()
+Map* BomberManGame::GetMap()
 {
     return map;
 }
@@ -1296,14 +1296,14 @@ Map* Game::GetMap()
  * @return true 
  * @return false 
  */
-bool Game::isValidated()
+bool BomberManGame::isValidated()
 {
     return canBeUsed;
 }
 
 
 
-Controller* Game::GetPlayerController(int playerIndex)
+Controller* BomberManGame::GetPlayerController(int playerIndex)
 {
     if(!canBeUsed)
     {
@@ -1322,7 +1322,7 @@ Controller* Game::GetPlayerController(int playerIndex)
     return players[playerIndex].GetController();
 }
 
-bool Game::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
+bool BomberManGame::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
 {
     if(!canBeUsed) {std::cout << "GAME CONSTRUCTOR ERROR: AssignControllerToPlayer: NO PLAYERS IN VECTOR" << std::endl; return false;}
 
@@ -1335,7 +1335,7 @@ bool Game::AssignControllerToPlayer(int playerIndex, Controller* controllerRef)
     return players[playerIndex].LinkController(controllerRef);
 }
 
-bool Game::UnAssignPlayerController(int playerIndex)
+bool BomberManGame::UnAssignPlayerController(int playerIndex)
 {
     players[playerIndex].UnlinkController();
 
@@ -1348,7 +1348,7 @@ bool Game::UnAssignPlayerController(int playerIndex)
     return true;
 }
 
-int Game::GetWinningPlayerID()
+int BomberManGame::GetWinningPlayerID()
 {
     int amountOfPlayersAlive = 0;
     int lastPlayerID = 0;
@@ -1366,7 +1366,7 @@ int Game::GetWinningPlayerID()
     return -1;
 }
 
-bool Game::SetGameMessage(std::string newMessage)
+bool BomberManGame::SetGameMessage(std::string newMessage)
 {
     gameMessage = newMessage;
     needToRedrawMessage = true;
@@ -1396,7 +1396,7 @@ bool Game::SetGameMessage(std::string newMessage)
  * @return false:
  * The @ref Game has not changed, no drawing is needed.
  */
-bool Game::NeedsRedrawing()
+bool BomberManGame::NeedsRedrawing()
 {
     if(!canBeUsed) return false;
     return needToRedrawInventories || needToRedrawMap || needToRedrawPlayerStatus || needToRedrawTimers || needToRedrawPlayerHealth || needToRedrawMessage;
@@ -1421,7 +1421,7 @@ bool Game::NeedsRedrawing()
  * @return false:
  * Failed to draw in std::cout / No drawing were necessary.
  */
-bool Game::Draw()
+bool BomberManGame::Draw()
 {
     if(!canBeUsed) return false;
 
@@ -1493,7 +1493,7 @@ bool Game::Draw()
  * @return false:
  * Failed to print to std::cout / Game is not instanciated properly.
  */
-bool Game::FreshDraw()
+bool BomberManGame::FreshDraw()
 {
     ResizeTerminal(gameWidth-1, gameHeight-1);
     if(!canBeUsed) return false;
@@ -1554,7 +1554,7 @@ bool Game::FreshDraw()
     nlohmann::json mapJSON = map->GetCurrentMap();
     std::string mapName = mapJSON["name"];
 
-    int seperationBetweenTextAndBorder = ((gameWidth-2)-mapName.length())/2;
+    int seperationBetweenTextAndBorder = ((gameWidth-2)-((int)(mapName.length())))/2;
     // Cant really center a name that isnt odd can you
     if(mapName.length()%2 != 0)
     {

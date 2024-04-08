@@ -127,7 +127,7 @@ bool ArduinoThreadManager::WaitTillFunctionExecuted()
  */
 bool ArduinoThreadManager::FunctionShouldBeExecuted()
 {
-    int timeLeft = waitForExecutionTimer.TimeLeft();
+    uint64_t timeLeft = waitForExecutionTimer.TimeLeft();
 
     if(timeLeft==0)
     {

@@ -16,7 +16,7 @@
 
 // - CLASS - //
 
-bool TestMenu::DrawNoArduinoMenu()
+bool cTestMenu::DrawNoArduinoMenu()
 {
     ResizeTerminal(36, 6);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -36,7 +36,7 @@ bool TestMenu::DrawNoArduinoMenu()
     return true;
 }
 
-bool TestMenu::DrawMainTestMenu()
+bool cTestMenu::DrawMainTestMenu()
 {
     ResizeTerminal(36, 9);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -53,6 +53,7 @@ bool TestMenu::DrawMainTestMenu()
 
     auto drawASelection = [](int selection, std::string name, bool isSelected)
     {
+        selection = 0;
         if(isSelected)
         {
             PrintInColour(std::cout, "-> ", colors::aqua, colors::black);
@@ -83,7 +84,7 @@ bool TestMenu::DrawMainTestMenu()
     return true;
 }
 
-bool TestMenu::DrawLCDTestMenu()
+bool cTestMenu::DrawLCDTestMenu()
 {
     ResizeTerminal(36, 10);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -139,7 +140,7 @@ bool TestMenu::DrawLCDTestMenu()
     return true;
 }
 
-bool TestMenu::DrawBarGraphTestMenu()
+bool cTestMenu::DrawBarGraphTestMenu()
 {
     ResizeTerminal(36, 13);
     auto drawABarGraph = [](int bargraphBits)
@@ -267,7 +268,7 @@ bool TestMenu::DrawBarGraphTestMenu()
     return true;
 }
 
-bool TestMenu::DrawReceivedMessageMenuKeyboard()
+bool cTestMenu::DrawReceivedMessageMenuKeyboard()
 {
     ResizeTerminal(80, 40);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -285,7 +286,7 @@ bool TestMenu::DrawReceivedMessageMenuKeyboard()
     return true;
 }
 
-bool TestMenu::DrawControllerMenu()
+bool cTestMenu::DrawControllerMenu()
 {
     ResizeTerminal(36, 200);
     if(oldSelectedSubMenu != selectedSubMenu)
@@ -514,13 +515,13 @@ bool TestMenu::DrawControllerMenu()
 
 
 
-bool TestMenu::HandleNoArduinoMenu(int keyBoardKey)
+bool cTestMenu::HandleNoArduinoMenu(int keyBoardKey)
 {
     appRef->currentSelectedMenu = APP_MAIN_MENU;
-    return false;
+    return keyBoardKey==0;
 }
 
-bool TestMenu::HandleMainTestMenuKeyboard(int keyBoardKey)
+bool cTestMenu::HandleMainTestMenuKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -554,7 +555,7 @@ bool TestMenu::HandleMainTestMenuKeyboard(int keyBoardKey)
     return false;
 }
 
-bool TestMenu::HandleLCDTestMenuKeyboard(int keyBoardKey)
+bool cTestMenu::HandleLCDTestMenuKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {
@@ -611,7 +612,7 @@ bool TestMenu::HandleLCDTestMenuKeyboard(int keyBoardKey)
     return false;
 }
 
-bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
+bool cTestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -716,7 +717,7 @@ bool TestMenu::HandleBarGraphTestMenuKeyboard(int keyBoardKey)
     return false;
 }
 
-bool TestMenu::HandleReceivedMessageMenuKeyboard(int keyBoardKey)
+bool cTestMenu::HandleReceivedMessageMenuKeyboard(int keyBoardKey)
 {
     switch (keyBoardKey)
     {    
@@ -729,7 +730,7 @@ bool TestMenu::HandleReceivedMessageMenuKeyboard(int keyBoardKey)
     return false;
 }
 
-bool TestMenu::HandleControllerMenuKeyboard(int keyBoardKey)
+bool cTestMenu::HandleControllerMenuKeyboard(int keyBoardKey)
 {
     if(keyBoardKey == KB_ESCAPE)
     {
@@ -750,12 +751,12 @@ bool TestMenu::HandleControllerMenuKeyboard(int keyBoardKey)
 
 
 
-TestMenu::TestMenu(AppHandler* currentAppHandler)
+cTestMenu::cTestMenu(AppHandler* currentAppHandler)
 {
     appRef = currentAppHandler;
 }
 
-bool TestMenu::HandleKeyboard(int keyBoardKey)
+bool cTestMenu::HandleKeyboard(int keyBoardKey)
 {
     switch(selectedSubMenu)
     {
@@ -769,7 +770,7 @@ bool TestMenu::HandleKeyboard(int keyBoardKey)
     return false;
 }
 
-bool TestMenu::Draw()
+bool cTestMenu::Draw()
 {
     switch(selectedSubMenu)
     {
@@ -783,21 +784,21 @@ bool TestMenu::Draw()
     return false;
 }
 
-bool TestMenu::OnEnter()
+bool cTestMenu::OnEnter()
 {
     oldSelectedSubMenu = -1;
     selection = 0;
     return false;
 }
 
-bool TestMenu::OnExit()
+bool cTestMenu::OnExit()
 {
     selection = 0;
     oldSelectedSubMenu = -1;
     return false;
 }
 
-bool TestMenu::Update()
+bool cTestMenu::Update()
 {
     static std::string currentMessage = "";
     static std::string oldMessage = "";
@@ -827,7 +828,7 @@ bool TestMenu::Update()
         if(selectedSubMenu == APP_RECEIVED_MESSAGE)
         {
             std::string messageToShow = currentMessage;
-            int difference = oldMessage.size() - currentMessage.size();
+            int difference = int(oldMessage.size() - currentMessage.size());
             if(difference>0)
             {
                 for(int i=0; i<=difference; i++)

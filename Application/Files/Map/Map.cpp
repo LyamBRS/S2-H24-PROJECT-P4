@@ -218,6 +218,7 @@ TileTypes Map::GetPlayerTypeFromId(int playerId)
 	default:
 		break;
 	}
+	return TileTypes::EMPTY;
 }
 
 nlohmann::json Map::GetCurrentMap()

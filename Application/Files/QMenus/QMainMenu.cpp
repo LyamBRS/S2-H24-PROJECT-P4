@@ -8,15 +8,19 @@
  */
 
 // - INCLUDES - //
-#include <QApplication>
-#include <QMainWindow>
-#include <QTimer>
 #include "QMainMenu.h"
 
 // - CLASS - //
-QMainMenu::QMainMenu(QMainWindow* windowReference)
+QMainMenu::QMainMenu()
+{
+
+}
+
+
+QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 {
 	winRef = windowReference;
+	appRef = appHandler;
 
 	MainMenu = new QWidget();
 
@@ -25,7 +29,7 @@ QMainMenu::QMainMenu(QMainWindow* windowReference)
 	appButton		= new QPushButton("Formulaire");
 	leaveButton		= new QPushButton("Quit");
 
-	connect(playButton, SIGNAL(clicked()), this, SLOT(GoToSettings()));
+	connect(settingsButton, &QPushButton::clicked, this, &QMainMenu::GoToSettings);
 	//connect(saveAction, SIGNAL(triggered()), this, SLOT(SaveWrite()));
 	//connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 
@@ -48,14 +52,14 @@ QMainMenu::QMainMenu(QMainWindow* windowReference)
 	MainMenu->setLayout(MainLayout);
 }
 
-QMainWindow* QMainMenu::GetWindow()
+QWidget* QMainMenu::GetMenu()
 {
-	return winRef;
+	return MainMenu;
 }
 
 void QMainMenu::OnEnter()
 {
-	winRef->setCentralWidget(MainMenu);
+
 }
 
 void QMainMenu::OnLeave()
@@ -65,5 +69,6 @@ void QMainMenu::OnLeave()
 
 void QMainMenu::GoToSettings()
 {
-
+	std::cout << "GO TO SETTINGS" << std::endl;
+	appRef->SetNewQMenu(QMenus::Settings);
 }

@@ -26,12 +26,12 @@
 // - CLASS - //
 //class Application;
 
-class MainMenu : public Menu
+class cMainMenu : public cMenu
 {
     private:
         int oldSelection = 0;
     public:
-        MainMenu(AppHandler* currentAppHandler);
+        cMainMenu(AppHandler* currentAppHandler);
         bool HandleKeyboard(int keyBoardKey);
         bool Draw();
         bool Update();

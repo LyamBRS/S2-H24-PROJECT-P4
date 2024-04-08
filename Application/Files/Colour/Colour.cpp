@@ -39,6 +39,7 @@ void ResizeTerminal(int row, int column)
     //column = (column*16) + 100 + 8;
     //RECT rect = { 100, 100, row, column };
     //MoveWindow(hwnd, rect.left, rect.top, rect.right, rect.bottom, false);
+    row = column;
 }
 
 void PrintInColour(std::ostream & os, std::string toBePrinted, int foregroundColour, int backgroundColour)

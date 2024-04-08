@@ -46,6 +46,16 @@ int AppHandler::UpdateKeyboardControllers()
     return 1;
 }
 
+AppHandler::AppHandler(QMenuChangerFunction QmenuChangeFunction)
+{
+    QSetMenu = QmenuChangeFunction;
+}
+
+void AppHandler::SetNewQMenu(int newQMenuIndex)
+{
+    QSetMenu(newQMenuIndex);
+}
+
 AppHandler::AppHandler()
 {
 

@@ -11,16 +11,22 @@
 #include "QFormulaire.h"
 
 // - CLASS - //
-QFormulaire::QFormulaire(QMainWindow* windowReference)
+QFormulaire::QFormulaire()
+{
+
+}
+
+QFormulaire::QFormulaire(QMainWindow* windowReference, AppHandler* appHandler)
 {
 	winRef = windowReference;
+	appRef = appHandler;
 
 	MainMenu = new QWidget();
 
-	playButton		= new QPushButton("Play");
-	settingsButton	= new QPushButton("Settings");
+	playButton		= new QPushButton("lll");
+	settingsButton	= new QPushButton("lll");
 	appButton		= new QPushButton("Formulaire");
-	leaveButton		= new QPushButton("Quit");
+	leaveButton		= new QPushButton("lll");
 
 	//playButton->setMaximumWidth(200);
 	//settingsButton->setMaximumWidth(200);
@@ -41,14 +47,14 @@ QFormulaire::QFormulaire(QMainWindow* windowReference)
 	MainMenu->setLayout(MainLayout);
 }
 
-QMainWindow* QFormulaire::GetWindow()
+QWidget* QFormulaire::GetMenu()
 {
-	return winRef;
+	return MainMenu;
 }
 
 void QFormulaire::OnEnter()
 {
-	winRef->setCentralWidget(MainMenu);
+
 }
 
 void QFormulaire::OnLeave()

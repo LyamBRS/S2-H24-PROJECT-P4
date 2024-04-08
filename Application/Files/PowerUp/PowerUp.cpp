@@ -9,7 +9,7 @@ PowerUp::PowerUp(int powerUpID, int amountOfUses)
 // Function to get the power-up value based on type
 unsigned int PowerUp::getPowerUpValue(int type) 
 {
-    PowerUpID powerUpID;
+    //PowerUpID powerUpID;
 
     switch (type) {
         case PowerUpID::speed_increase:

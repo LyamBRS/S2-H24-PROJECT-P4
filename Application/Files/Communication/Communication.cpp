@@ -159,7 +159,7 @@ bool Communication::SendToSerial(nlohmann::json j_msg)
 
     // CODE FROM LIB EXAMPLE
     std::string msg = j_msg.dump();
-    bool result = serialPort->writeSerialPort(msg.c_str(), msg.length());
+    bool result = serialPort->writeSerialPort(msg.c_str(), (int)msg.length());
     return result;
 }
 
