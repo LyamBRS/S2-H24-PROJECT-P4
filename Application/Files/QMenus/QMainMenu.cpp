@@ -8,6 +8,9 @@
  */
 
 // - INCLUDES - //
+#include <QApplication>
+#include <QMainWindow>
+#include <QTimer>
 #include "QMainMenu.h"
 
 // - CLASS - //
@@ -21,6 +24,10 @@ QMainMenu::QMainMenu(QMainWindow* windowReference)
 	settingsButton	= new QPushButton("Settings");
 	appButton		= new QPushButton("Formulaire");
 	leaveButton		= new QPushButton("Quit");
+
+	connect(playButton, SIGNAL(clicked()), this, SLOT(GoToSettings()));
+	//connect(saveAction, SIGNAL(triggered()), this, SLOT(SaveWrite()));
+	//connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
 
 	//playButton->setMaximumWidth(200);
 	//settingsButton->setMaximumWidth(200);
@@ -52,6 +59,11 @@ void QMainMenu::OnEnter()
 }
 
 void QMainMenu::OnLeave()
+{
+
+}
+
+void QMainMenu::GoToSettings()
 {
 
 }

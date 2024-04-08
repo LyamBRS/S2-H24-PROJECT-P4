@@ -23,7 +23,7 @@
 
 // - CLASS - //
 
-class QSettingsMenu
+class QSettingsMenu : public QObject
 {
 private:
 

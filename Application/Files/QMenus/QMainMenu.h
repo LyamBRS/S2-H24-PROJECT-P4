@@ -10,6 +10,7 @@
 #pragma once
 
  // - INCLUDES - //
+#include <QtWidgets>
 #include <QWidget>
 #include <QMainWindow>
 #include <QMenu>
@@ -19,11 +20,12 @@
 #include <QPixmap>
 #include <qmenubar.h>
 
+
 // - DEFINES - //
 
 // - CLASS - //
 
-class QMainMenu
+class QMainMenu : public QObject
 {
 private:
 
@@ -38,6 +40,9 @@ private:
 	QVBoxLayout* ButtonLayout;
 
 	QWidget* MainMenu;
+
+private slots:
+	void GoToSettings();
 
 public:
 	QMainMenu(QMainWindow* windowReference);

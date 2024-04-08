@@ -164,6 +164,7 @@
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
     <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
     <ClCompile Include="Files\Player\Player.cpp" />
+    <ClCompile Include="Files\QMenus\QFormulaire.cpp" />
     <ClCompile Include="Files\QMenus\QSettingsMenu.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
     <ClCompile Include="Files\Positions\Positions.cpp" />
@@ -198,6 +199,7 @@
     </CustomBuild>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Files\QMenus\QFormulaire.h" />
     <ClInclude Include="Files\QMenus\QSettingsMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -127,6 +127,9 @@
     <ClCompile Include="Files\QMenus\QSettingsMenu.cpp">
       <Filter>Generated Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QMenus\QFormulaire.cpp">
+      <Filter>Generated Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -138,6 +141,9 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\QMenus\QSettingsMenu.h">
+      <Filter>Generated Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Files\QMenus\QFormulaire.h">
       <Filter>Generated Files</Filter>
     </ClInclude>
   </ItemGroup>

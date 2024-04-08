@@ -23,7 +23,7 @@
 
 // - CLASS - //
 
-class QFormulaire
+class QFormulaire : public QObject
 {
 private:
 
