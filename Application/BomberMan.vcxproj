@@ -164,6 +164,12 @@
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
     <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
     <ClCompile Include="Files\Player\Player.cpp" />
+    <ClCompile Include="Files\QMenus\QCountDownMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QExitMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QGameMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QMapSelectionMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QPauseMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
     <ClCompile Include="Files\Positions\Positions.cpp" />
     <ClCompile Include="Files\PowerUp\PowerUp.cpp" />
@@ -197,6 +203,17 @@
       <Message Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Generate moc_predefs.h</Message>
       <Outputs Condition="'$(Configuration)|$(Platform)'=='Release|x64'">release\moc_predefs.h;%(Outputs)</Outputs>
     </CustomBuild>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Files\QMenus\QCountDownMenu.h" />
+    <ClInclude Include="Files\QMenus\QExitMenu.h" />
+    <ClInclude Include="Files\QMenus\QFormulaire.h" />
+    <ClInclude Include="Files\QMenus\QGameMenu.h" />
+    <ClInclude Include="Files\QMenus\QMainMenu.h" />
+    <ClInclude Include="Files\QMenus\QMapSelectionMenu.h" />
+    <ClInclude Include="Files\QMenus\QPauseMenu.h" />
+    <ClInclude Include="Files\QMenus\QPlayerJoiningMenu.h" />
+    <ClInclude Include="Files\QMenus\QSettingsMenu.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />

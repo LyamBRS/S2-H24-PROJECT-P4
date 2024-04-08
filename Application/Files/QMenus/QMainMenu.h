@@ -41,6 +41,9 @@ public:
 
 public slots:
 	void GoToSettings();
+	void GoToMapSelection();
+	void GoToFormulaire();
+	void GoToExit();
 
 private:
 

@@ -29,6 +29,12 @@
 #include "QMainMenu.h"
 #include "QSettingsMenu.h"
 #include "QFormulaire.h"
+#include "QCountDownMenu.h"
+#include "QPauseMenu.h"
+#include "QGameMenu.h"
+#include "QMapSelectionMenu.h"
+#include "QPlayerJoiningMenu.h"
+#include "QExitMenu.h"
 #include "../Application/AppHandler.h"
 
 // - DEFINES - //
@@ -44,6 +50,14 @@ class QMenuHandler
         QMainMenu* mainMenu;
         QFormulaire* formulaire;
         QSettingsMenu* settings;
+
+        QCountDownMenu* countDownMenu;
+        QPauseMenu* pauseMenu;
+        QGameMenu* gameMenu;
+        QMapSelectionMenu* mapSelectionMenu;
+        QPlayerJoiningMenu* playerJoiningMenu;
+        QExitMenu* exitMenu;
+
         int currentMenu = 0;
 
     public:

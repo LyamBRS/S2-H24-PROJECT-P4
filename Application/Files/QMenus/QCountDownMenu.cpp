@@ -1,5 +1,5 @@
 /**
- * @file MainMenu.cpp
+ * @file QCountDownMenu.cpp
  * @author LyamBRS
  * @brief 
  * @version 0.1
@@ -8,16 +8,16 @@
  */
 
 // - INCLUDES - //
-#include "QMainMenu.h"
+#include "QCountDownMenu.h"
 
 // - CLASS - //
-QMainMenu::QMainMenu()
+QCountDownMenu::QCountDownMenu()
 {
 
 }
 
 
-QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
+QCountDownMenu::QCountDownMenu(QMainWindow* windowReference, AppHandler* appHandler)
 {
 	winRef = windowReference;
 	appRef = appHandler;
@@ -28,15 +28,6 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	settingsButton	= new QPushButton("Settings");
 	appButton		= new QPushButton("Formulaire");
 	leaveButton		= new QPushButton("Quit");
-
-	connect(settingsButton, &QPushButton::clicked, this, &QMainMenu::GoToSettings);
-	//connect(saveAction, SIGNAL(triggered()), this, SLOT(SaveWrite()));
-	//connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-
-	//playButton->setMaximumWidth(200);
-	//settingsButton->setMaximumWidth(200);
-	//appButton->setMaximumWidth(200);
-	//leaveButton->setMaximumWidth(200);
 
 	MainLayout		= new QVBoxLayout();
 	ButtonLayout	= new QVBoxLayout();
@@ -52,22 +43,22 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	MainMenu->setLayout(MainLayout);
 }
 
-QWidget* QMainMenu::GetMenu()
+QWidget* QCountDownMenu::GetMenu()
 {
 	return MainMenu;
 }
 
-void QMainMenu::OnEnter()
+void QCountDownMenu::OnEnter()
 {
 
 }
 
-void QMainMenu::OnLeave()
+void QCountDownMenu::OnLeave()
 {
 
 }
 
-void QMainMenu::GoToSettings()
+void QCountDownMenu::GoToSettings()
 {
 	std::cout << "GO TO SETTINGS" << std::endl;
 	appRef->SetNewQMenu(QMenus::Settings);

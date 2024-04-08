@@ -1,5 +1,5 @@
 /**
- * @file QMainMenu.h
+ * @file QMapSelectionMenu.h
  * @author LyamBRS
  * @brief
  * @version 0.1
@@ -27,12 +27,12 @@
 
 // - CLASS - //
 
-class QMainMenu : public QObject
+class QMapSelectionMenu : public QObject
 {
 
 public:
-	QMainMenu();
-	QMainMenu(QMainWindow* windowReference, AppHandler* appHandler);
+	QMapSelectionMenu();
+	QMapSelectionMenu(QMainWindow* windowReference, AppHandler* appHandler);
 
 	QWidget* GetMenu();
 

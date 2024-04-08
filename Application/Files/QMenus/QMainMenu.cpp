@@ -29,14 +29,10 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	appButton		= new QPushButton("Formulaire");
 	leaveButton		= new QPushButton("Quit");
 
+	connect(playButton,		&QPushButton::clicked, this, &QMainMenu::GoToMapSelection);
 	connect(settingsButton, &QPushButton::clicked, this, &QMainMenu::GoToSettings);
-	//connect(saveAction, SIGNAL(triggered()), this, SLOT(SaveWrite()));
-	//connect(exitAction, SIGNAL(triggered()), qApp, SLOT(quit()));
-
-	//playButton->setMaximumWidth(200);
-	//settingsButton->setMaximumWidth(200);
-	//appButton->setMaximumWidth(200);
-	//leaveButton->setMaximumWidth(200);
+	connect(appButton,		&QPushButton::clicked, this, &QMainMenu::GoToFormulaire);
+	connect(leaveButton,	&QPushButton::clicked, this, &QMainMenu::GoToExit);
 
 	MainLayout		= new QVBoxLayout();
 	ButtonLayout	= new QVBoxLayout();
@@ -67,8 +63,24 @@ void QMainMenu::OnLeave()
 
 }
 
+
+
 void QMainMenu::GoToSettings()
 {
-	std::cout << "GO TO SETTINGS" << std::endl;
 	appRef->SetNewQMenu(QMenus::Settings);
+}
+
+void QMainMenu::GoToMapSelection()
+{
+	appRef->SetNewQMenu(QMenus::MapSelection);
+}
+
+void QMainMenu::GoToFormulaire()
+{
+	appRef->SetNewQMenu(QMenus::Formulaire);
+}
+
+void QMainMenu::GoToExit()
+{
+	appRef->SetNewQMenu(QMenus::ExitMenu);
 }
