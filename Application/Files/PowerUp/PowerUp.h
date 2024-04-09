@@ -89,7 +89,7 @@ class PowerUp
          * Construct a new Power Up object.
          * A Power Up allows @ref Players to use special
          * habilities whenever they want during the
-         * @ref Game. Power ups are created from Power
+         * @ref BomberManGame. Power ups are created from Power
          * ups that lays around on the @ref Map which are
          * ready to be picked up, @ref PlacedPowerUp.
          * @param powerUpToPickUp
