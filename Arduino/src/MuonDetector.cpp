@@ -14,6 +14,7 @@
 
 // - INCLUDES - //
 #include "MuonDetector.h"
+#include <Arduino.h>
 
 // - PROGRAM - //
 
@@ -34,6 +35,7 @@ MuonDetector::MuonDetector(int pin)
         canBeUsed = false;
         return;
     }
+    arduinoPin=pin;
     canBeUsed = true;
 }
 
@@ -46,8 +48,7 @@ MuonDetector::MuonDetector(int pin)
  */
 int MuonDetector::GetTotal()
 {
-    if(!canBeUsed) return 0;
-    return 0;
+    return totalCounted;
 }
 
 /**
@@ -61,8 +62,7 @@ int MuonDetector::GetTotal()
  */
 bool MuonDetector::ResetCount()
 {
-    if(!canBeUsed) return false;
-    return false;
+    totalCounted = 0;
 }
 
 /**
@@ -76,7 +76,9 @@ bool MuonDetector::ResetCount()
  */
 bool MuonDetector::Update()
 {
-    if(!canBeUsed) return false;
-    return false;
+    if(analogRead(arduinoPin)>=330){
+        totalCounted+=1;
+    }
+    return true;
 }
 
