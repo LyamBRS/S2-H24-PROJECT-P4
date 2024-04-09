@@ -1,0 +1,197 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<!--
+***************************************************************************************************
+ Copyright (C) 2023 The Qt Company Ltd.
+ SPDX-License-Identifier: LicenseRef-Qt-Commercial OR LGPL-3.0-only OR GPL-2.0-only OR GPL-3.0-only
+***************************************************************************************************
+-->
+<Project DefaultTargets="Build" ToolsVersion="16.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}</ProjectGuid>
+    <Keyword>QtVS_v304</Keyword>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">10.0.22621.0</WindowsTargetPlatformVersion>
+    <QtMsBuild Condition="'$(QtMsBuild)'=='' OR !Exists('$(QtMsBuild)\qt.targets')">$(MSBuildProjectDirectory)\QtMsBuild</QtMsBuild>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <PlatformToolset>v142</PlatformToolset>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt_defaults.props')">
+    <Import Project="$(QtMsBuild)\qt_defaults.props" />
+  </ImportGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
+    <QtInstall>6.7.0_msvc2019_64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>debug</QtBuildConfig>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="QtSettings">
+    <QtInstall>6.7.0_msvc2019_64</QtInstall>
+    <QtModules>core;gui;widgets</QtModules>
+    <QtBuildConfig>release</QtBuildConfig>
+  </PropertyGroup>
+  <Target Name="QtMsBuildNotFound" BeforeTargets="CustomBuild;ClCompile" Condition="!Exists('$(QtMsBuild)\qt.targets') or !Exists('$(QtMsBuild)\qt.props')">
+    <Message Importance="High" Text="QtMsBuild: could not locate qt.targets, qt.props; project may not build correctly." />
+  </Target>
+  <ImportGroup Label="ExtensionSettings" />
+  <ImportGroup Label="Shared" />
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+    <Import Project="$(QtMsBuild)\Qt.props" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <Optimization>Disabled</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'" Label="Configuration">
+    <ClCompile>
+      <TreatWChar_tAsBuiltInType>true</TreatWChar_tAsBuiltInType>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <DebugInformationFormat>None</DebugInformationFormat>
+      <Optimization>MaxSpeed</Optimization>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>false</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <QtRcc Include="BomberMan.qrc" />
+    <QtUic Include="BomberMan.ui" />
+    <QtMoc Include="BomberMan.h" />
+    <ClCompile Include="BomberMan.cpp" />
+    <ClCompile Include="Files\Application\AppHandler.cpp" />
+    <ClCompile Include="Files\Application\Application.cpp" />
+    <ClCompile Include="Files\Arduino\Arduino.cpp" />
+    <ClCompile Include="Files\Arduino\ThreadManager.cpp" />
+    <ClCompile Include="Files\BaseObject\BaseObject.cpp" />
+    <ClCompile Include="Files\Colour\Colour.cpp" />
+    <ClCompile Include="Files\Communication\Communication.cpp" />
+    <ClCompile Include="Files\Controller\Controller.cpp" />
+    <ClCompile Include="Files\Game\Game.cpp" />
+    <ClCompile Include="Files\Inventory\Inventory.cpp" />
+    <ClCompile Include="Files\Map\Map.cpp" />
+    <ClCompile Include="Files\Map\Utils.cpp" />
+    <ClCompile Include="Files\Menus\ArduinoMenu.cpp" />
+    <ClCompile Include="Files\Menus\ExitMenu.cpp" />
+    <ClCompile Include="Files\Menus\GameMenu.cpp" />
+    <ClCompile Include="Files\Menus\MainMenu.cpp" />
+    <ClCompile Include="Files\Menus\MapMenu.cpp" />
+    <ClCompile Include="Files\Menus\Menu.cpp" />
+    <ClCompile Include="Files\Menus\TestMenu.cpp" />
+    <ClCompile Include="Files\Movements\Movements.cpp" />
+    <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
+    <ClCompile Include="Files\PlacedBomb\Ray.cpp" />
+    <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
+    <ClCompile Include="Files\Player\Player.cpp" />
+    <ClCompile Include="Files\Positions\Positions.cpp" />
+    <ClCompile Include="Files\PowerUp\PowerUp.cpp" />
+    <ClCompile Include="Files\QMenus\Handler.cpp" />
+    <ClCompile Include="Files\QMenus\QAppWindow.cpp" />
+    <ClCompile Include="Files\QMenus\QCountDownMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QDisconnectMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QExitMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QFormulaire.cpp" />
+    <ClCompile Include="Files\QMenus\QGameMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QMainMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QMapSelectionMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QPauseMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp" />
+    <ClCompile Include="Files\QMenus\QSettingsMenu.cpp" />
+    <ClCompile Include="Files\QObjects\QCountDown.cpp" />
+    <ClCompile Include="Files\QObjects\QPlayerStats.cpp" />
+    <ClCompile Include="Files\ScreenAttributes\ScreenAttributes.cpp" />
+    <ClCompile Include="Files\Serial\PortDetector.cpp" />
+    <ClCompile Include="Files\Serial\SerialPort.cpp" />
+    <ClCompile Include="Files\SimpleTimer\SimpleChrono.cpp" />
+    <ClCompile Include="Files\SimpleTimer\SimpleTimer.cpp" />
+    <ClCompile Include="main.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Files\Application\AppHandler.h" />
+    <ClInclude Include="Files\Application\Application.h" />
+    <ClInclude Include="Files\Arduino\Arduino.h" />
+    <ClInclude Include="Files\Arduino\ThreadManager.hpp" />
+    <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
+    <ClInclude Include="Files\Colour\Colour.h" />
+    <ClInclude Include="Files\Communication\Communication.h" />
+    <ClInclude Include="Files\Controller\Controller.h" />
+    <ClInclude Include="Files\Game\Game.h" />
+    <ClInclude Include="Files\Inventory\Inventory.h" />
+    <ClInclude Include="Files\JSON\json.hpp" />
+    <ClInclude Include="Files\Map\Map.h" />
+    <ClInclude Include="Files\Map\Utils.hpp" />
+    <ClInclude Include="Files\Menus\ArduinoMenu.h" />
+    <ClInclude Include="Files\Menus\ExitMenu.h" />
+    <ClInclude Include="Files\Menus\GameMenu.h" />
+    <ClInclude Include="Files\Menus\MainMenu.h" />
+    <ClInclude Include="Files\Menus\MapMenu.h" />
+    <ClInclude Include="Files\Menus\Menu.h" />
+    <ClInclude Include="Files\Menus\TestMenu.h" />
+    <ClInclude Include="Files\Movements\Movements.h" />
+    <ClInclude Include="Files\PlacedBomb\PlacedBomb.h" />
+    <ClInclude Include="Files\PlacedBomb\Ray.h" />
+    <ClInclude Include="Files\PlacedPowerUp\PlacedPowerUp.h" />
+    <ClInclude Include="Files\Player\Player.h" />
+    <ClInclude Include="Files\Positions\Positions.h" />
+    <ClInclude Include="Files\PowerUp\PowerUp.h" />
+    <ClInclude Include="Files\QMenus\Handler.h" />
+    <ClInclude Include="Files\QMenus\QAppWindow.h" />
+    <ClInclude Include="Files\QMenus\QCountDownMenu.h" />
+    <ClInclude Include="Files\QMenus\QDisconnectMenu.h" />
+    <ClInclude Include="Files\QMenus\QExitMenu.h" />
+    <ClInclude Include="Files\QMenus\QFormulaire.h" />
+    <ClInclude Include="Files\QMenus\QGameMenu.h" />
+    <ClInclude Include="Files\QMenus\QMainMenu.h" />
+    <ClInclude Include="Files\QMenus\QMapSelectionMenu.h" />
+    <ClInclude Include="Files\QMenus\QPauseMenu.h" />
+    <ClInclude Include="Files\QMenus\QPlayerJoiningMenu.h" />
+    <ClInclude Include="Files\QMenus\QSettingsMenu.h" />
+    <ClInclude Include="Files\QObjects\QCountDown.h" />
+    <ClInclude Include="Files\QObjects\QPlayerStats.h" />
+    <ClInclude Include="Files\ScreenAttributes\ScreenAttributes.h" />
+    <ClInclude Include="Files\Serial\PortDetector.h" />
+    <ClInclude Include="Files\Serial\SerialPort.hpp" />
+    <ClInclude Include="Files\SimpleTimer\SimpleChrono.h" />
+    <ClInclude Include="Files\SimpleTimer\SimpleTimer.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Condition="Exists('$(QtMsBuild)\qt.targets')">
+    <Import Project="$(QtMsBuild)\qt.targets" />
+  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>
