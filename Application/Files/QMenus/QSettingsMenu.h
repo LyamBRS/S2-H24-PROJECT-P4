@@ -118,6 +118,12 @@ public:
 	int GetCurrentBaudRateIndex();
 	int ComPortIndex();
 
+	void CreateTimers();
+	void CreateWidgets();
+	void CreateLayouts();
+	void ConnectWidgets();
+	void CreateMenu();
+
 public slots:
 	void GoToMainMenu();
 	void ConnectClicked();
