@@ -78,6 +78,7 @@ void QMainMenu::GoToMapSelection()
 void QMainMenu::GoToFormulaire()
 {
 	appRef->SetNewQMenu(QMenus::Formulaire);
+	
 }
 
 void QMainMenu::GoToExit()
