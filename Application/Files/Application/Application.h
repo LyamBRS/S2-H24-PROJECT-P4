@@ -13,17 +13,7 @@
 #pragma once
 
 // - INCLUDES - //
-#include <QtWidgets>
-#include <QWidget>
-#include <QMainWindow>
-#include <QMenu>
-#include <QAction>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QPixmap>
-#include <QApplication>
-#include <QTimer>
-#include <qmenubar.h>
+#include <QObject>
 
 #include "../Arduino/Arduino.h"
 #include "../Game/Game.h"
@@ -60,8 +50,9 @@
  * and setup your game. It handles basic terminal
  * menus as well.
  */
-class Application
+class Application : public QObject
 {
+
     private:
         /**
          * @brief 
@@ -99,6 +90,8 @@ class Application
 
         std::vector<cMenu*> menus;
 
+        SimpleTimer MiscUpdateTimer = SimpleTimer(500);
+
     public:
 
         AppHandler* appHandler;
@@ -113,6 +106,7 @@ class Application
          * menus as well.
          */
         Application(QMainWindow* windowReference);
+        Application();
 
         /**
          * @brief 

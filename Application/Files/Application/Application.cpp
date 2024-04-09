@@ -47,6 +47,11 @@ Application::Application(QMainWindow* windowReference)
     menuHandler = new QMenuHandler(windowReference, appHandler);
 }
 
+Application::Application()
+{
+
+}
+
 /**
  * @brief 
  * Simple function which handles the arrow keys
@@ -80,7 +85,7 @@ bool Application::HandleMenuDrawings()
     if(appHandler->requiresNewDrawing)
     {
         appHandler->requiresNewDrawing = false;
-        //return menus[appHandler.currentSelectedMenu]->Draw();
+        return menus[appHandler->currentSelectedMenu]->Draw();
     }
     return true;
 }
@@ -112,6 +117,7 @@ bool Application::HandleMenuUpdates()
 bool Application::Update()
 {
     static int oldSelectedMenu = 0;
+    static int oldAmountOfComPort = 0;
 
     // Allows you to immediately see if a COM port change occurs
     if(appHandler->oldAmountOfComPorts != GetAvailableComPorts().size())
@@ -137,6 +143,16 @@ bool Application::Update()
     if(appHandler->frameTimer.TimeLeft() == 0)
     {
         appHandler->UpdateKeyboardControllers();
+    }
+
+    if (MiscUpdateTimer.TimeLeft() == 0)
+    {
+        appHandler->amountOfAvailablePorts = (int)GetAvailableComPorts().size();
+
+        if (oldAmountOfComPort != appHandler->amountOfAvailablePorts)
+        {
+            oldAmountOfComPort = appHandler->amountOfAvailablePorts;
+        }
     }
 
     //if(!appHandler.arduinoThread.GetThreadStatus())
