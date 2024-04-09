@@ -49,4 +49,7 @@ public:
 
 	void OnEnter();
 	void OnLeave();
+
+public slots:
+	void GoToMainMenu();
 };

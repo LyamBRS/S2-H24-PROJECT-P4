@@ -26,7 +26,9 @@ QFormulaire::QFormulaire(QMainWindow* windowReference, AppHandler* appHandler)
 	playButton		= new QPushButton("lll");
 	settingsButton	= new QPushButton("lll");
 	appButton		= new QPushButton("Formulaire");
-	leaveButton		= new QPushButton("lll");
+	leaveButton		= new QPushButton("Back");
+
+	connect(leaveButton, &QPushButton::clicked, this, &QFormulaire::GoToMainMenu);
 
 	//playButton->setMaximumWidth(200);
 	//settingsButton->setMaximumWidth(200);
@@ -60,4 +62,12 @@ void QFormulaire::OnEnter()
 void QFormulaire::OnLeave()
 {
 
+}
+
+
+
+
+void QFormulaire::GoToMainMenu()
+{
+	appRef->SetNewQMenu(QMenus::MainMenu);
 }

@@ -66,7 +66,6 @@ protected:
 
 class QSettingsMenu : public QObject
 {
-
 private:
 
 	QMainWindow* winRef;
