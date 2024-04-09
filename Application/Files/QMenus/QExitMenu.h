@@ -11,9 +11,6 @@
 
  // - INCLUDES - //
 #include <QtWidgets>
-#include <QWidget>
-#include <QPushButton>
-#include <QVBoxLayout>
 #include <QApplication>
 #include "../Application/AppHandler.h"
 
