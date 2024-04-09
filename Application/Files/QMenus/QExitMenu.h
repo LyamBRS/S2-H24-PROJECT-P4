@@ -12,15 +12,9 @@
  // - INCLUDES - //
 #include <QtWidgets>
 #include <QWidget>
-#include <QMainWindow>
-#include <QMenu>
-#include <QAction>
 #include <QPushButton>
 #include <QVBoxLayout>
-#include <QPixmap>
 #include <QApplication>
-#include <QTimer>
-#include <qmenubar.h>
 #include "../Application/AppHandler.h"
 
 // - DEFINES - //
@@ -40,20 +34,23 @@ public:
 	void OnLeave();
 
 public slots:
-	void GoToSettings();
+	void GoToMainMenu();
+	void LeaveApp();
 
 private:
+
+	void CreateWidgets();
+	void ConnectWidgets();
+	void CreateMenu();
 
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
+	QPushButton* LeaveAppButton;
+	QPushButton* GoBackButton;
+	QLabel* AreYouSureLabel;
 
-	QVBoxLayout* MainLayout;
-	QVBoxLayout* ButtonLayout;
+	QGridLayout* MainLayout;
 
 	QWidget* MainMenu;
 };

@@ -22,26 +22,53 @@ QExitMenu::QExitMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	winRef = windowReference;
 	appRef = appHandler;
 
-	MainMenu = new QWidget();
+	CreateWidgets();
+	ConnectWidgets();
+	CreateMenu();
+}
 
-	playButton		= new QPushButton("Play");
-	settingsButton	= new QPushButton("Settings");
-	appButton		= new QPushButton("Formulaire");
-	leaveButton		= new QPushButton("Quit");
+void QExitMenu::CreateWidgets()
+{
+	MainMenu		= new QWidget();
+	LeaveAppButton	= new QPushButton("Quit application");
+	GoBackButton	= new QPushButton("Cancel");
+	AreYouSureLabel = new QLabel("Are you sure you want to quit this application?");
 
-	MainLayout		= new QVBoxLayout();
-	ButtonLayout	= new QVBoxLayout();
-	
-	ButtonLayout->setAlignment(Qt::AlignCenter);
-	ButtonLayout->addWidget(playButton);
-	ButtonLayout->addWidget(appButton);
-	ButtonLayout->addWidget(settingsButton);
-	ButtonLayout->addSpacing(100);
-	ButtonLayout->addWidget(leaveButton);
+	MainLayout = new QGridLayout();
+}
 
-	MainLayout->addLayout(ButtonLayout);
+void QExitMenu::ConnectWidgets()
+{
+	connect(LeaveAppButton, &QPushButton::clicked, this, &QExitMenu::LeaveApp);
+	connect(GoBackButton, &QPushButton::clicked, this, &QExitMenu::GoToMainMenu);
+}
+
+void QExitMenu::CreateMenu()
+{
+	MainLayout->addWidget(AreYouSureLabel, 0, 0, 2, 1);
+	MainLayout->addWidget(GoBackButton, 1, 0, 1, 1);
+	MainLayout->addWidget(LeaveAppButton, 1, 1, 1, 1);
+
 	MainMenu->setLayout(MainLayout);
 }
+
+
+
+
+
+void QExitMenu::GoToMainMenu()
+{
+	appRef->SetNewQMenu(QMenus::MainMenu);
+}
+
+void QExitMenu::LeaveApp()
+{
+
+}
+
+
+
+
 
 QWidget* QExitMenu::GetMenu()
 {
@@ -56,10 +83,4 @@ void QExitMenu::OnEnter()
 void QExitMenu::OnLeave()
 {
 
-}
-
-void QExitMenu::GoToSettings()
-{
-	std::cout << "GO TO SETTINGS" << std::endl;
-	appRef->SetNewQMenu(QMenus::Settings);
 }
