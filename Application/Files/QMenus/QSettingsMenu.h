@@ -29,6 +29,8 @@
 #include <qstyleditemdelegate.h>
 #include <qpainter.h>
 #include <qtimer.h>
+#include <qprogressbar.h>
+#include <qgridlayout.h>
 #include "../Application/AppHandler.h"
 
 // - DEFINES - //
@@ -64,7 +66,6 @@ protected:
 
 class QSettingsMenu : public QObject
 {
-	Q_OBJECT
 
 private:
 
@@ -90,14 +91,20 @@ private:
 	QVBoxLayout* buttonLayout;
 	QVBoxLayout* leftLayout;
 	QVBoxLayout* rawReceivedMessageLayout;
-	QHBoxLayout* mainLayout;
+	QGridLayout* mainLayout;
 
 	QHBoxLayout* baudrateLayout;
 	QHBoxLayout* comPortLayout;
 
+	QProgressBar* connectionProgress;
+
 	QWidget* MainMenu;
 
 	QTimer* amountOfComPortChecks;
+	QTimer* connectingProgress;
+
+	QWidget* leftArea;
+	QWidget* rightArea;
 
 public:
 	QSettingsMenu();
@@ -118,4 +125,5 @@ public slots:
 	void SelectedComPortChanged(int index);
 
 	void ComPortChanged();
+	void CheckOnConnectionStatus();
 };

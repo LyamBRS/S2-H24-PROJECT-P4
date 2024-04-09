@@ -29,13 +29,22 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	amountOfComPortChecks = new QTimer();
 	amountOfComPortChecks->setInterval(500);
 
+	connectingProgress = new QTimer();
+	connectingProgress->setInterval(100);
+
 	MainMenu = new QWidget();
+	leftArea = new QWidget();
+	rightArea = new QWidget();
 
 	backButton		= new QPushButton("Back");
 	connectButton = new QPushButton("Connect");
 
 	baudratesBox = new QComboBox();
 	comPortBox = new CustomComboBox();
+
+	connectionProgress = new QProgressBar();
+	connectionProgress->setRange(0, 100);
+	connectionProgress->setEnabled(false);
 
 	baudRateText = new QLabel("Baudrate:");
 	comPortText  = new QLabel("Port:");
@@ -50,13 +59,14 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	comPortLayout = new QHBoxLayout();
 
 	rawReceivedMessageLayout = new QVBoxLayout();
-	mainLayout = new QHBoxLayout();
+	mainLayout = new QGridLayout();
 	leftLayout = new QVBoxLayout();
 
 	// - LABEL SETUPS - //
 	helperText->setAlignment(Qt::AlignJustify);
 	portStatus->setAlignment(Qt::AlignJustify);
 	rawReceivedMessageText->setStyleSheet("border: 1px solid black;");
+	rawReceivedMessageText->setWordWrap(true);
 
 	// - LAYOUT SETUPS - //
 
@@ -86,10 +96,12 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	connect(comPortBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QSettingsMenu::SelectedComPortChanged);
 
 	connect(amountOfComPortChecks, &QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
+	connect(connectingProgress, &QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
 
 	// - LAYOUT MAKING AND WIDGET ARRANGEMENTS - //
 	buttonLayout->addWidget(connectButton);
 	buttonLayout->addWidget(backButton);
+	buttonLayout->addWidget(connectionProgress);
 
 	rawReceivedMessageLayout->addWidget(rawReceivedMessageText);
 
@@ -107,11 +119,22 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	leftLayout->addLayout(comboxBoxLayout);
 	leftLayout->addLayout(buttonLayout);
 
-	mainLayout->addLayout(leftLayout);
-	mainLayout->addLayout(rawReceivedMessageLayout);
+	leftArea->setLayout(leftLayout);
+	rightArea->setLayout(rawReceivedMessageLayout);
+
+	mainLayout->addWidget(leftArea, 0, 0, 50,50);
+	mainLayout->addWidget(rightArea, 0, 51, 50,50);
 	MainMenu->setLayout(mainLayout);
 
 	amountOfComPortChecks->start();
+
+	// - SET WANTED LOOKS FOR STUFF - //
+	if (appRef->arduinoThread.GetArduino()->GetPortState())
+	{
+		connectButton->setText("Disconnect");
+		baudratesBox->setEnabled(false);
+		comPortBox->setEnabled(false);
+	}
 }
 
 QWidget* QSettingsMenu::GetMenu()
@@ -122,16 +145,17 @@ QWidget* QSettingsMenu::GetMenu()
 void QSettingsMenu::OnEnter()
 {
 	// Boi, you're already connected to a com port. We're taking u to the disconnect screen fr.
-	if (appRef->arduinoThread.GetArduino()->GetPortState())
-	{
-		appRef->SetNewQMenu(QMenus::Disconnect);
-		return;
-	}
+	//if (appRef->arduinoThread.GetArduino()->GetPortState())
+	//{
+	//	appRef->SetNewQMenu(QMenus::Disconnect);
+	//	return;
+	//}
 }
 
 void QSettingsMenu::OnLeave()
 {
-
+	amountOfComPortChecks->stop();
+	connectingProgress->stop();
 }
 
 
@@ -173,11 +197,12 @@ QStringList GetBaudRates()
 int QSettingsMenu::GetCurrentBaudRateIndex()
 {
 	int baudRateIndex = 0;
+	std::cout << "Baudrate is: " << appRef->arduinoThread.GetArduino()->GetBaudRate() << std::endl;
 	for (int baudRate = ArduinoBaudRates::_300; baudRate <= ArduinoBaudRates::_115200; baudRate += 100)
 	{
 		if (VerifyBaudRate(baudRate))
 		{
-			if (appRef->arduinoThread.GetArduino()->GetBaudRate() == baudRateIndex)
+			if (appRef->arduinoThread.GetArduino()->GetBaudRate() == baudRate)
 			{
 				std::cout << "Current baudrate is: " << baudRate << std::endl;
 				return baudRateIndex;
@@ -213,7 +238,50 @@ void QSettingsMenu::GoToMainMenu()
 
 void QSettingsMenu::ConnectClicked()
 {
+	if (appRef->arduinoThread.GetArduino()->GetPortState())
+	{
+		appRef->arduinoThread.GetArduino()->Disconnect();
+		connectButton->setText("Connect");
+		baudratesBox->setEnabled(true);
+		comPortBox->setEnabled(true);
+		helperText->setText("Successfully disconnected");
+		return;
+	}
+	connectingProgress->stop();
+	connectingProgress->start();
+	connectButton->setEnabled(false);
+	connectionProgress->setEnabled(true);
+	connectionProgress->setValue(0);
+	appRef->arduinoThread.GetArduino()->Connect();
+	helperText->setText("Connecting...");
+}
 
+void QSettingsMenu::CheckOnConnectionStatus()
+{
+	int newValue = connectionProgress->value() + 10;
+	if (newValue > connectionProgress->maximum()) {
+		
+		// Connection failure
+		connectButton->setEnabled(true);
+		connectionProgress->setEnabled(false);
+		helperText->setText("Failed to connect with specified parameters");
+		connectingProgress->stop();
+		return;
+	}
+	connectionProgress->setValue(newValue);
+
+	if (appRef->arduinoThread.GetArduino()->GetPortState())
+	{
+		helperText->setText("Successfully connected!");
+		connectionProgress->setEnabled(false);
+
+		connectButton->setText("Disconnect");
+		connectButton->setEnabled(true);
+		baudratesBox->setEnabled(false);
+		comPortBox->setEnabled(false);
+		connectingProgress->stop();
+		connectionProgress->setValue(100);
+	}
 }
 
 void QSettingsMenu::BaudRateChanged(int index)
@@ -266,4 +334,12 @@ void QSettingsMenu::ComPortChanged()
 			comPortBox->setCurrentIndex(selectedPort);
 		}
 	}
+
+	std::string rawMessage = appRef->arduinoThread.GetArduino()->GetLastRawMessage();
+	QString result = QString::fromStdString(rawMessage);
+	rawReceivedMessageText->setText(result);
+
+	if (!appRef->arduinoThread.GetArduino()->GetPortState()) portStatus->setText("No arduino connected to the PC");
+	if (appRef->arduinoThread.GetArduino()->GetPortState() && !appRef->arduinoThread.GetArduino()->Verify()) portStatus->setText("Connected devices not answering requests");
+	if (appRef->arduinoThread.GetArduino()->GetPortState() && appRef->arduinoThread.GetArduino()->Verify())  portStatus->setText("Connected arduino is operational");
 }
