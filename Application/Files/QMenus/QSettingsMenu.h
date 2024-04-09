@@ -64,6 +64,7 @@ protected:
 	}
 };
 
+
 class QSettingsMenu : public QObject
 {
 private:
