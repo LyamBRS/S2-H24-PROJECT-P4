@@ -1,3 +1,8 @@
 ﻿  BomberMan.cpp
+  Application.cpp
+  Handler.cpp
+  QAppWindow.cpp
+  QMapSelectionMenu.cpp
+  main.cpp
   moc_BomberMan.cpp
-  BomberMan.vcxproj -> C:\Users\Lyam\Desktop\Important\School\University\S2\Projet\RealRepository\S2-H24-PROJECT-P4\Application2\BomberMan\x64\Debug\BomberMan.exe
+  BomberMan.vcxproj -> C:\Users\zacla\Documents\GitHub\S2-H24-PROJECT-P4\Application2\BomberMan\x64\Debug\BomberMan.exe

@@ -262,7 +262,14 @@ class Map
         /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
         nlohmann::json storedMapData;
         std::string special = " ";
-        std::map<TileTypes, std::string> tileChar = 
+       
+
+    public:              
+        int GetSizeX();
+        int GetSizeY();
+        int GetAmountOfPlayer();
+        std::string GetName();
+        std::map<TileTypes, std::string> tileChar =
         {
             { TileTypes::EMPTY, " . "},
             { TileTypes::PERMAWALL, "   "},
@@ -286,13 +293,7 @@ class Map
             { TileTypes::POWER_BOMB_OF_WALLS, "#\x05#"},
             { TileTypes::POWER_DEPLOYABLE_WALL, ">#<"},
             { TileTypes::BOMB, special + STRING_CLUB + " "},
-        };   
-
-    public:              
-        int GetSizeX();
-        int GetSizeY();
-        int GetAmountOfPlayer();
-        std::string GetName();
+        };
 
         /**
          * @brief Construct a new Map object.
