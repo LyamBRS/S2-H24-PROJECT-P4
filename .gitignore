@@ -41,6 +41,7 @@ Makefile*
 *.opendb
 *.suo
 /Application2/BomberMan/x64
+*.vcxproj.user
 
 # Qt unit tests
 target_wrapper.*
