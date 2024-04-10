@@ -32,6 +32,8 @@ Makefile*
 *.qm
 *.prl
 
+*.obj
+
 # Visual Studio Output
 /Application/debug
 *.ipch
