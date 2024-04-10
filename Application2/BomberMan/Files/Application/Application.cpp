@@ -29,6 +29,14 @@ Application::Application(QMainWindow* windowReference)
     auto lambda = [this](int newIndex) { this->SetNewQMenu(newIndex); };
     appHandler = new AppHandler(lambda);
 
+    appHandler->currentGame = new BomberManGame();
+
+    appHandler->colorPlayerA = new QColor("#4a4aed");
+    appHandler->colorPlayerB = new QColor("#eb3d3d");
+    appHandler->colorPlayerC = new QColor("c2be4a");
+    appHandler->colorPlayerD = new QColor("41d146");
+    appHandler->colorPlayerE = new QColor("8000FF");
+
     // Creates all the menus.
     cMenu* exitMenu      = new cExitMenu(appHandler);
     cMenu* arduinoMenu   = new cArduinoMenu(appHandler);
@@ -129,6 +137,8 @@ bool Application::Update()
     HandleMenuDrawings();
     HandleKeyboardActions();
     HandleMenuUpdates();
+
+    appHandler->currentGame->Update();
 
     if(oldSelectedMenu != appHandler->currentSelectedMenu)
     {

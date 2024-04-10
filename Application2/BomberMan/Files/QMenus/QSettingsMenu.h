@@ -132,4 +132,5 @@ public slots:
 
 	void ComPortChanged();
 	void CheckOnConnectionStatus();
+	void ComStateChanged(bool newState);
 };

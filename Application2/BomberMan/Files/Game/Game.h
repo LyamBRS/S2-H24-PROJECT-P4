@@ -144,6 +144,7 @@ enum GameStatuses
  */
 class BomberManGame : public QObject
 {
+    Q_OBJECT
     private:
         /// @brief Holds the map loaded in the game.
         Map* map;
@@ -186,6 +187,8 @@ class BomberManGame : public QObject
         int mapCursorY = 0;
 
         int gameTimerCursorX = 0;
+
+        int maxPlayerCount = 0;
 
         /// @brief Is set to true if the Game object is structurally ready to be used.
         bool canBeUsed = false;
@@ -347,6 +350,8 @@ class BomberManGame : public QObject
         bool SelfCheck();
 
         bool SetGameMessage(std::string newMessage);
+
+        bool HandlePlayerConnecting();
 
     public:
 
@@ -586,4 +591,16 @@ class BomberManGame : public QObject
         int GetWinningPlayerID();
 
         bool UsePowerUp(int playerID, int powerUpID);
+
+        int GetMaxPlayerCount();
+
+    signals:
+        void AmountOfConnectedPlayersChanged(int newPlayerCount);
+        void PlayerConnected(int playerID, int realWorldControllerID);
+        void PlayerDisconnected(int playerID);
+
+        void CountDownChanged();
+        void GameTimerChanged(int newHours, int newMinutes, int newSeconds);
+        void StatusChanged();
+        void PlayerDeath(int playerID);
 };

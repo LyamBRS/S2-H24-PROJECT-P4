@@ -39,6 +39,12 @@ public:
 	void OnEnter();
 	void OnLeave();
 
+	void CreateTimers();
+	void CreateWidgets();
+	void CreateLayouts();
+	void ConnectWidgets();
+	void PutWidgetsInMenu();
+
 public slots:
 	void GoToSettings();
 	void GoToMapSelection();

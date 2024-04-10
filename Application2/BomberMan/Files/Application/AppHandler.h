@@ -153,6 +153,12 @@ class AppHandler : public QObject
         int amountOfAvailablePorts = 0;
 
         BomberManGame* currentGame;
+
+        QColor* colorPlayerA;
+        QColor* colorPlayerB;
+        QColor* colorPlayerC;
+        QColor* colorPlayerD;
+        QColor* colorPlayerE;
 };
 
 #include "../Game/Game.h"
