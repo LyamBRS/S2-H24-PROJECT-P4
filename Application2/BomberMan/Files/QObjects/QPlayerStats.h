@@ -11,28 +11,19 @@
 
  // - INCLUDES - //
 #include <QtWidgets>
-#include <QWidget>
-#include <QMainWindow>
-#include <QMenu>
-#include <QAction>
-#include <QPushButton>
-#include <QVBoxLayout>
-#include <QPixmap>
-#include <QApplication>
-#include <QTimer>
-#include <qmenubar.h>
 #include "../Application/AppHandler.h"
+#include "../Player/Player.h"
 
 // - DEFINES - //
 
 // - CLASS - //
 
-class QCountDownMenu : public QObject
+class QPlayerStats : public QObject
 {
-
+	Q_OBJECT
+	
 public:
-	QCountDownMenu();
-	QCountDownMenu(QMainWindow* windowReference, AppHandler* appHandler);
+	QPlayerStats();
 
 	QWidget* GetMenu();
 
@@ -40,20 +31,12 @@ public:
 	void OnLeave();
 
 public slots:
-	void GoToSettings();
+	void HealthEvent();
+	void InventoryEvent();
 
 private:
-
-	QMainWindow* winRef;
 	AppHandler* appRef;
+	Player* playerRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
-
-	QVBoxLayout* MainLayout;
-	QVBoxLayout* ButtonLayout;
-
-	QWidget* MainMenu;
+	QWidget* MainWidget;
 };

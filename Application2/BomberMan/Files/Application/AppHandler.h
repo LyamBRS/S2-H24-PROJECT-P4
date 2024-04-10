@@ -21,6 +21,8 @@
 #include "../Arduino/ThreadManager.hpp"
 #include "../Controller/Controller.h"
 #include "../Colour/Colour.h"
+
+
 #include <Windows.h>
 #include <functional>
 #include <iostream>
@@ -63,6 +65,7 @@ enum QMenus
     PlayerJoining,
     Countdown,
     Game,
+    PlayingGame,
     PauseMenu,
     ExitMenu,
     Formulaire,
@@ -72,6 +75,9 @@ enum QMenus
 };
 
 // - CLASS - //
+
+class BomberManGame;
+
 /**
  * @brief
  * # AppHandler
@@ -145,4 +151,8 @@ class AppHandler : public QObject
         void SetNewQMenu(int newQMenuIndex);
 
         int amountOfAvailablePorts = 0;
+
+        BomberManGame* currentGame;
 };
+
+#include "../Game/Game.h"

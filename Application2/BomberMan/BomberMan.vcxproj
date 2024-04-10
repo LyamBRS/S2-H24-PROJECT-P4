@@ -132,6 +132,12 @@
     <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp" />
     <ClCompile Include="Files\QMenus\QSettingsMenu.cpp" />
     <ClCompile Include="Files\QObjects\QCountDown.cpp" />
+    <ClCompile Include="Files\QObjects\QJoinedPlayersList.cpp">
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
+      <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
+      <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
+    </ClCompile>
     <ClCompile Include="Files\QObjects\QPlayerStats.cpp" />
     <ClCompile Include="Files\ScreenAttributes\ScreenAttributes.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
@@ -181,6 +187,7 @@
     <ClInclude Include="Files\QMenus\QPlayerJoiningMenu.h" />
     <ClInclude Include="Files\QMenus\QSettingsMenu.h" />
     <ClInclude Include="Files\QObjects\QCountDown.h" />
+    <QtMoc Include="Files\QObjects\QJoinedPlayersList.h" />
     <ClInclude Include="Files\QObjects\QPlayerStats.h" />
     <ClInclude Include="Files\ScreenAttributes\ScreenAttributes.h" />
     <ClInclude Include="Files\Serial\PortDetector.h" />

@@ -29,6 +29,8 @@
 #include "../PlacedBomb/PlacedBomb.h"
 #include <random>
 
+#include <QObject>
+
 // - DEFINES - //
 #define EM_GAME_WRONG_AMOUNT_OF_PLAYERS "invalid specified amount of players"
 #define EM_GAME_MAP_VALUE_WRONG_TYPE    "A map value is of the wrong type"
@@ -140,7 +142,7 @@ enum GameStatuses
  * A game goes on until either a player leaves
  * or or there is only one left.
  */
-class BomberManGame
+class BomberManGame : public QObject
 {
     private:
         /// @brief Holds the map loaded in the game.

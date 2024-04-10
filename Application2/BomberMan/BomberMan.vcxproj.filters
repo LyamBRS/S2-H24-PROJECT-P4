@@ -175,6 +175,9 @@
     <ClCompile Include="Files\SimpleTimer\SimpleTimer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QObjects\QJoinedPlayersList.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\Application\AppHandler.h">
@@ -315,5 +318,10 @@
     <ClInclude Include="Files\SimpleTimer\SimpleTimer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <QtMoc Include="Files\QObjects\QJoinedPlayersList.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
   </ItemGroup>
 </Project>
