@@ -243,6 +243,7 @@ enum class TileTypes
     POWER_BOMB_OF_WALLS
 };
 
+std::string GetSvg(std::string name);
 
 class Map
 {
@@ -262,7 +263,14 @@ class Map
         /// @brief Simply stores the map data that was used to create the map / loaded into the map. Used by @ref GetCurrentMap
         nlohmann::json storedMapData;
         std::string special = " ";
-        std::map<TileTypes, std::string> tileChar = 
+       
+
+    public:              
+        int GetSizeX();
+        int GetSizeY();
+        int GetAmountOfPlayer();
+        std::string GetName();
+        std::map<TileTypes, std::string> tileChar =
         {
             { TileTypes::EMPTY, " . "},
             { TileTypes::PERMAWALL, "   "},
@@ -274,10 +282,10 @@ class Map
             { TileTypes::SMOKE3, "&%&"},
             { TileTypes::SMOKE4, "&%&"},
             { TileTypes::SMOKE5, "&%&"},
-            { TileTypes::POWER_HEART, special + STRING_HEARTH + " "},
-            { TileTypes::POWER_DMG, special + STRING_SPADE + " "},
-            { TileTypes::POWER_MOREBOMB, " + "},
-            { TileTypes::POWER_REACH, "<->"},
+            { TileTypes::POWER_HEART, special + STRING_HEARTH + " "}, // done
+            { TileTypes::POWER_DMG, special + STRING_SPADE + " "}, // done
+            { TileTypes::POWER_MOREBOMB, " + "}, //done
+            { TileTypes::POWER_REACH, "<->"}, //done
             { TileTypes::POWER_SPEED, ">>>"},
             { TileTypes::PLAYER1, " @ "},
             { TileTypes::PLAYER2, " @ "},
@@ -286,13 +294,33 @@ class Map
             { TileTypes::POWER_BOMB_OF_WALLS, "#\x05#"},
             { TileTypes::POWER_DEPLOYABLE_WALL, ">#<"},
             { TileTypes::BOMB, special + STRING_CLUB + " "},
-        };   
+        };
 
-    public:              
-        int GetSizeX();
-        int GetSizeY();
-        int GetAmountOfPlayer();
-        std::string GetName();
+        std::map<TileTypes, std::string> tileSvg =
+        {
+            { TileTypes::EMPTY, GetSvg("Empty")},
+            { TileTypes::PERMAWALL, GetSvg("PermaWall")},
+            { TileTypes::WALL, GetSvg("Wall")},
+            { TileTypes::PLAYERSPAWN, GetSvg("PlayerMale")},
+            { TileTypes::SMOKE, GetSvg("Smoke")},
+            { TileTypes::SMOKE1, GetSvg("Smoke")},
+            { TileTypes::SMOKE2, GetSvg("Smoke")},
+            { TileTypes::SMOKE3, GetSvg("Smoke")},
+            { TileTypes::SMOKE4, GetSvg("Smoke")},
+            { TileTypes::SMOKE5, GetSvg("Smoke")},
+            { TileTypes::POWER_HEART, GetSvg("PowerLife")},
+            { TileTypes::POWER_DMG, GetSvg("PowerDmg")}, 
+            { TileTypes::POWER_MOREBOMB, GetSvg("PowerBomb")},
+            { TileTypes::POWER_REACH, GetSvg("PowerReach")}, 
+            { TileTypes::POWER_SPEED, GetSvg("PowerSpeed")},
+            { TileTypes::PLAYER1, GetSvg("PlayerMale")},
+            { TileTypes::PLAYER2, GetSvg("PlayerFemale")},
+            { TileTypes::PLAYER3, GetSvg("PlayerMale")},
+            { TileTypes::PLAYER4, GetSvg("PlayerMale")},
+            { TileTypes::POWER_BOMB_OF_WALLS, GetSvg("PowerWall")},
+            { TileTypes::POWER_DEPLOYABLE_WALL, GetSvg("PowerWall")},
+            { TileTypes::BOMB, GetSvg("Bomb")},
+        };
 
         /**
          * @brief Construct a new Map object.
@@ -339,7 +367,7 @@ class Map
          * @param x
          * The X coordinate where the wanted tile is located.
          * @param y
-         * The Y coordinate where the wanted tile is located.
+         * The Y coordinate where the wanted tile is located.w
          * @return TileType 
          */
         TileTypes GetTileDataAtPosition(int x, int y);
@@ -449,3 +477,5 @@ class Map
 
         TileTypes GetPlayerTypeFromId(int playerId);
 };
+
+#include "Utils.hpp"

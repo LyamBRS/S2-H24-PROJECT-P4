@@ -22,6 +22,9 @@
 #include <QTimer>
 #include <qmenubar.h>
 #include "../Application/AppHandler.h"
+#include "../Map/Utils.hpp"
+#include "../Map/Map.h"
+#include "../JSON/json.hpp"
 
 // - DEFINES - //
 
@@ -38,22 +41,46 @@ public:
 
 	void OnEnter();
 	void OnLeave();
+	
+	Map* map;
+
+	
+	bool Draw();// ned to def
 
 public slots:
 	void GoToSettings();
+	void GoBack();
+	void SelectionNext();
+	void SelectionPrevious();
+	void Play();
 
 private:
+	void DrawSelectedMap();
+	void ClearMapGrid();
+	void SelectMap(int selected);
+	bool OnMapSelect();
 
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
+	QPushButton* btnPlay;
+	QPushButton* btnSelectionRight;
+	QPushButton* btnSelectionLeft;
+	QPushButton* btnLeave;
 
-	QVBoxLayout* MainLayout;
-	QVBoxLayout* ButtonLayout;
+	QLabel* lblNbPlayer;
+	QLabel* lblMapName;
+	QLabel* lblMapSize;
+
+	QGridLayout* layMapGrid;
+	QVBoxLayout* layMain;
+	QHBoxLayout* layButton;
+	QHBoxLayout* layLabels;
 
 	QWidget* MainMenu;
+	QVector<QVector<QLabel*>> gridContent;
+
+
+	int amountOfMaps = 0;
+
 };

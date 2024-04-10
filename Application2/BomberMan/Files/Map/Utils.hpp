@@ -100,4 +100,5 @@ int GetPowerUpFromTile(TileTypes tile);
 TileTypes GetTileFromPowerUp(int powerUpID);
 
 std::vector<nlohmann::json> GetAllMaps();
+std::string GetSvg(std::string name);
 nlohmann::json GetMapJson(std::string path);
