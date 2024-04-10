@@ -1,7 +1,7 @@
 {
       "name" : "chipi chipi chapa chapa",
-      "sizeX" : -90,
-      "sizeY" : -8,
+      "sizeX" : 10,
+      "sizeY" : 10,
       "amountOfPlayers" : 43,
       "map" : [
         [0,0,0,0,0,0,0,0,0,0],

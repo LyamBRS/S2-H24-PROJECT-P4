@@ -1,7 +1,7 @@
 {
       "name" : "this is fr a very very very long ass map name bruh",
-      "sizeX" : 239462356786559256739657828,
-      "sizeY" : 239462356786559256739657828,
+      "sizeX" : 10,
+      "sizeY" : 10,
       "amountOfPlayers" : 69,
       "map" : [
         [0,0,0,0,0,0,0,0,0,0],

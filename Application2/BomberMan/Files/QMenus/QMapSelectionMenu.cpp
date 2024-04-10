@@ -57,8 +57,6 @@ QMapSelectionMenu::QMapSelectionMenu(QMainWindow* windowReference, AppHandler* a
 
 	layMapGrid->setVerticalSpacing(2);
 	layMapGrid->setHorizontalSpacing(2);
-
-	
 	
 	layMain->addLayout(layLabels);
 	layMain->addLayout(layMapGrid);
@@ -76,6 +74,7 @@ QWidget* QMapSelectionMenu::GetMenu()
 
 void QMapSelectionMenu::OnEnter()
 {
+	ClearMapGrid();
 	SelectMap(0);
 }
 
@@ -102,39 +101,30 @@ bool QMapSelectionMenu::OnMapSelect()
 
 void QMapSelectionMenu::DrawSelectedMap() 
 {
-
 	int sizeX = map->GetSizeX();
 	int sizeY = map->GetSizeY();
 	lblMapName->setText(QString("Name: %1").arg(QString::fromStdString(map->GetName())));
 	lblNbPlayer->setText(QString("Number of player: %1").arg(map->GetAmountOfPlayer()));
 	lblMapSize->setText(QString("Size of the map: %1 by %2").arg(sizeX).arg(sizeY));
 
-	for (int j = 0; j < sizeY; ++j) {
-		QVector<QLabel*> temp;
-		for (int i = 0; i < sizeX; ++i) {
-			
-
-			lblMapCell = new QLabel("X");
-			lblMapCell->setText(QString::fromStdString(map->tileChar[map->GetTileDataAtPosition(i, j)]));
+	for (int i = 0; i < sizeX; ++i) {
+		for (int j = 0; j < sizeY; ++j) {
+			lblMapCell = new QLabel();
+			QString displayText = QString::fromStdString(map->tileChar[map->GetTileDataAtPosition(i, j)]);
+			lblMapCell->setText(displayText);
 			layMapGrid->addWidget(lblMapCell, i, j);
-			temp.append(lblMapCell);
 		}
-		gridContent.append(temp);
 	}
 }
 
 void QMapSelectionMenu::ClearMapGrid() 
 {
-	int sizeX = map->GetSizeX();
-	int sizeY = map->GetSizeY();
-	for (int j = 0; j < sizeY; ++j) 
+	while (QLayoutItem* item = layMapGrid->takeAt(0))
 	{
-		for (int i = 0; i < sizeX; ++i) 
-		{
-			layMapGrid->removeWidget(gridContent[i][j]);
-		}
-	}
-	gridContent.clear();
+		if (QWidget* widget = item->widget())
+			widget->deleteLater();
+		delete item;
+	}	
 }
 
 void QMapSelectionMenu::Play() 
