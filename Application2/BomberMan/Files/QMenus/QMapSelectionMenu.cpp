@@ -57,6 +57,7 @@ QMapSelectionMenu::QMapSelectionMenu(QMainWindow* windowReference, AppHandler* a
 
 	layMapGrid->setVerticalSpacing(2);
 	layMapGrid->setHorizontalSpacing(2);
+	layMapGrid->setAlignment(Qt::AlignCenter);
 	
 	layMain->addLayout(layLabels);
 	layMain->addLayout(layMapGrid);
@@ -109,11 +110,11 @@ void QMapSelectionMenu::DrawSelectedMap()
 
 	for (int i = 0; i < sizeX; ++i) {
 		for (int j = 0; j < sizeY; ++j) {
-			lblMapCell = new QLabel();
-			QString displayText = QString::fromStdString(map->tileChar[map->GetTileDataAtPosition(i, j)]);
-			lblMapCell->setText(displayText);
-			lblMapCell->setAlignment(Qt::AlignCenter);
-			layMapGrid->addWidget(lblMapCell, i, j);
+			QLabel* lblMapCell = new QLabel;
+			QPixmap pm(QString::fromStdString(map->tileSvg[map->GetTileDataAtPosition(i, j)]));
+			auto newPixmap = pm.scaled(50, 50);
+			lblMapCell->setPixmap(newPixmap);
+			layMapGrid->addWidget(lblMapCell, j, i);
 		}
 	}
 }

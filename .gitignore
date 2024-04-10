@@ -40,6 +40,7 @@ Makefile*
 *.db-wal
 *.opendb
 *.suo
+/Application2/x64
 
 # Qt unit tests
 target_wrapper.*

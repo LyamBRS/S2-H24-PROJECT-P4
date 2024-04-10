@@ -53,6 +53,25 @@ std::vector<nlohmann::json> GetAllMaps()
     return allFoundMaps;
 }
 
+std::string GetSvg(std::string name)
+{
+    // Get the path to this application.
+    std::string applicationPath = ExePath();
+
+    // Adds the Maps directory to the end of the current path.
+    applicationPath.append("\\Media\\");
+    // Check if directory exists
+    if (!std::filesystem::exists(applicationPath))
+    {
+        return "error";
+    }
+
+    // Iterate through all files found in that directory
+    applicationPath.append(name);
+    applicationPath.append(".svg");
+    return applicationPath;
+}
+
 bool VerifyMap(std::string path)
 {
     // Check if the file exists.

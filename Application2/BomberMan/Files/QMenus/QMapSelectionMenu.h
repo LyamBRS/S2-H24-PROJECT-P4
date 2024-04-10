@@ -71,7 +71,6 @@ private:
 	QLabel* lblNbPlayer;
 	QLabel* lblMapName;
 	QLabel* lblMapSize;
-	QLabel* lblMapCell;
 
 	QGridLayout* layMapGrid;
 	QVBoxLayout* layMain;
