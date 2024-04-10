@@ -35,6 +35,7 @@
 #include "QMapSelectionMenu.h"
 #include "QPlayerJoiningMenu.h"
 #include "QExitMenu.h"
+#include "QDisconnectMenu.h"
 #include "../Application/AppHandler.h"
 
 // - DEFINES - //
@@ -57,6 +58,8 @@ class QMenuHandler
         QMapSelectionMenu* mapSelectionMenu;
         QPlayerJoiningMenu* playerJoiningMenu;
         QExitMenu* exitMenu;
+        QDisconnectMenu* disconnectMenu;
+        
 
         int currentMenu = 0;
 

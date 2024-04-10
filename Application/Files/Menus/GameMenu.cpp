@@ -280,7 +280,8 @@ bool cGameMenu::DrawInvalid()
 
 bool cGameMenu::DrawWaitingForStart()
 {
-    ResizeTerminal(36, 7 + currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]);
+    //ResizeTerminal(36, 7 + currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]);
+    ResizeTerminal(36, 100);
 
     auto rectangles = [](int amount, int color, bool lineEnd)
     {

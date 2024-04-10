@@ -94,10 +94,31 @@
     <ClCompile Include="Files\PowerUp\PowerUp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QMenus\QCountDownMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QMenus\QDisconnectMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QMenus\QExitMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Files\QMenus\QFormulaire.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QMenus\QGameMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Files\QMenus\QMainMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QMenus\QMapSelectionMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QMenus\QPauseMenu.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Files\QMenus\QSettingsMenu.cpp">
@@ -130,24 +151,6 @@
     <ClCompile Include="Files\Map\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Files\QMenus\QCountDownMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\QMenus\QExitMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\QMenus\QGameMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\QMenus\QMapSelectionMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\QMenus\QPauseMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -156,34 +159,5 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Files\QMenus\QCountDownMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QExitMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QFormulaire.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QGameMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QMainMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QMapSelectionMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QPauseMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QPlayerJoiningMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\QMenus\QSettingsMenu.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

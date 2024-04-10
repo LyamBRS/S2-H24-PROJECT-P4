@@ -21,6 +21,8 @@
 #include <thread>
 #include <mutex>
 
+Application* application;
+
 class SharedClass {
 public:
     int sharedData;
@@ -69,27 +71,14 @@ public:
     }
 };
 
-class RatApplicationPeriodicTimerHandler : public QObject
-{
-    QTimer* timer;
-    Application* appRef;
-
-private slots:
-    void Loop()
-    {
-        //appRef->TemporaryLoop();
-    }
+class ApplicationThread : public QThread {
 public:
-    RatApplicationPeriodicTimerHandler(Application* newAppRef) : QObject()
+    void run() override
     {
-        appRef = newAppRef;
-        timer = new QTimer();
-        connect(timer, &QTimer::timeout, this, &RatApplicationPeriodicTimerHandler::Loop);
-        timer->setInterval(1000);
-        timer->start();
+        //met ton code a excuter ici
+        application->TemporaryLoop();
     }
 };
-
 
 int main( int argc, char ** argv )
 {
@@ -100,11 +89,12 @@ int main( int argc, char ** argv )
     window.resize(800, 600);
     window.show();
 
-	Application application = Application(&window);
-    QMenuHandler menuHandler = QMenuHandler(&window, application.GetHandler());
+    //QMainWindow::connect(&window, &QMainWindow::, &window, &exit);
 
-    // Set for periodic app updat
-    RatApplicationPeriodicTimerHandler thisHadToBeThisComplex = RatApplicationPeriodicTimerHandler(&application);
+	application = new Application(&window);
+    QMenuHandler menuHandler = QMenuHandler(&window, application->GetHandler());
 
+    ApplicationThread thread;
+    thread.start();
 	return app.exec();
 }

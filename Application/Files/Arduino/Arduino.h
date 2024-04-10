@@ -13,6 +13,17 @@
 #pragma once
 
 // - INCLUDES - //
+#include <QtWidgets>
+#include <QWidget>
+#include <QMainWindow>
+#include <QMenu>
+#include <QAction>
+#include <QPushButton>
+#include <QVBoxLayout>
+#include <QPixmap>
+#include <QApplication>
+#include <QTimer>
+#include <qmenubar.h>
 #include <iostream>
 #include <mutex>
 #include "../Controller/Controller.h"
@@ -103,7 +114,7 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
      * The PC is the one to initate the handshake with the
      * arduino.
      */
-    class Arduino
+    class Arduino : public QObject
     {
         private:
             /// @brief Handles the serial port and JSON objects

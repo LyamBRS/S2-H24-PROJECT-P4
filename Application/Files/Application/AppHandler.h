@@ -25,6 +25,8 @@
 #include <functional>
 #include <iostream>
 
+#include <QObject>
+
 // - DEFINES - //
 #define CONTROLLER_TYPE_ARDUINO_A 1
 #define CONTROLLER_TYPE_ARDUINO_B 2
@@ -65,6 +67,7 @@ enum QMenus
     ExitMenu,
     Formulaire,
     Settings,
+    Disconnect,
     Error
 };
 
@@ -82,8 +85,9 @@ enum QMenus
  * accessing the actual application.
  * Its an interface basically.
  */
-class AppHandler
+class AppHandler : public QObject
 {
+
     public:
         typedef std::function<void(int)> QMenuChangerFunction;
         QMenuChangerFunction QSetMenu;
@@ -139,4 +143,6 @@ class AppHandler
         bool SetMessage(std::string LCDmessage);
 
         void SetNewQMenu(int newQMenuIndex);
+
+        int amountOfAvailablePorts = 0;
 };

@@ -75,6 +75,11 @@ void QMenuHandler::GoToMenu(int menuIndex)
             winRef->setCentralWidget(settings->GetMenu());
             break;
 
+        case(QMenus::Disconnect):
+            disconnectMenu = new QDisconnectMenu(winRef, appRef);
+            winRef->setCentralWidget(disconnectMenu->GetMenu());
+            break;
+
         case(QMenus::Error):
             break;
     }
@@ -121,6 +126,10 @@ void QMenuHandler::LeaveCurrent()
             settings->OnLeave();
             return;
 
+        case(QMenus::Disconnect):
+            disconnectMenu->OnLeave();
+            return;
+
         case(QMenus::Error):
             return;
     }
@@ -164,6 +173,10 @@ void QMenuHandler::OnEnterCurrent()
 
         case(QMenus::Settings):
             settings->OnEnter();
+            return;
+
+        case(QMenus::Disconnect):
+            disconnectMenu->OnEnter();
             return;
 
         case(QMenus::Error):
