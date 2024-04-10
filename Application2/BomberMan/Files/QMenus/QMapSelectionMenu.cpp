@@ -112,6 +112,7 @@ void QMapSelectionMenu::DrawSelectedMap()
 			lblMapCell = new QLabel();
 			QString displayText = QString::fromStdString(map->tileChar[map->GetTileDataAtPosition(i, j)]);
 			lblMapCell->setText(displayText);
+			lblMapCell->setAlignment(Qt::AlignCenter);
 			layMapGrid->addWidget(lblMapCell, i, j);
 		}
 	}
