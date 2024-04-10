@@ -371,7 +371,15 @@ bool Arduino::HandleMessageReception()
 bool Arduino::Update()
 {
     static bool shouldSend = true;
+    static bool oldConnectionStatus = false;
     static int counterBeforeGivingUp = 0;
+
+    bool connectionStatus = serialHandler.ConnectionStatus();
+    if (connectionStatus != oldConnectionStatus)
+    {
+        oldConnectionStatus = connectionStatus;
+        emit ComPortStateChanged(connectionStatus);
+    }
 
     if(serialHandler.ConnectionStatus())
     {

@@ -49,7 +49,7 @@ private:
 	void CreateWidgets();
 	void CreateLayouts();
 	void ConnectWidgets();
-	void CreateMenu();
+	void PutWidgetsInMenu();
 
 	QMainWindow* winRef;
 	AppHandler* appRef;

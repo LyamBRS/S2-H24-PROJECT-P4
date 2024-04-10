@@ -18,25 +18,26 @@
 // - DEFINES - //
 
 // - CLASS - //
-class QJoinedPlayersSlot : public QObject
+class QJoinedPlayersSlot : public QWidget
 {
 	Q_OBJECT
 public:
 	QJoinedPlayersSlot(int slotID);
 	QWidget* GetWidget();
 
-	void Set(bool used, int realWorldControllerID);
+	void Set(bool used, int realWorldControllerID, QColor associatedColour);
 
-private:
 	QWidget* MainWidget;
 	QHBoxLayout* MainLayout;
 	QLabel* PlayerID;
 	QLabel* TypeOfController;
 	QLabel* PlayerIcon;
+
+	int playerID;
 };
 
 
-class QJoinedPlayersList : public QObject
+class QJoinedPlayersList : public QWidget
 {
 	Q_OBJECT
 	
@@ -45,15 +46,12 @@ public:
 
 	QWidget* GetWidget();
 
+	void SetSlot(int slotIndex, bool used, int controllerType, QColor associatedColour);
+
+	QVBoxLayout* MainLayout;
+	QVector<QJoinedPlayersSlot*> playerSlots;
+	QWidget* MainWidget;
+
 public slots:
 	void EventUpdateSlot(int slotIndex, int realWorldControllerID);
-
-private:
-
-	QPushButton* backgroundButton;
-	QVBoxLayout* MainLayout;
-
-	std::vector<QJoinedPlayersSlot> playerSlots;
-
-	QWidget* MainWidget;
 };

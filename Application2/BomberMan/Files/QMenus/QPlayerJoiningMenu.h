@@ -23,6 +23,8 @@
 #include <qmenubar.h>
 #include "../Application/AppHandler.h"
 
+#include "../QObjects/QJoinedPlayersList.h"
+
 // - DEFINES - //
 
 // - CLASS - //
@@ -39,15 +41,35 @@ public:
 	void OnEnter();
 	void OnLeave();
 
-//public slots:
-//	void GoToSettings();
+	void CreateTimers();
+	void CreateWidgets();
+	void CreateLayouts();
+	void ConnectWidgets();
+	void CreateMenu();
+	void CreateGame();
+
+public slots:
+	void CancelPressed();
+	void StartGamePressed();
+	void PlayerCountChanged(int newPlayerCount);
+
+	void PlayerConnected(int playerID, int realWorldControllerID);
+	void PlayerDisconnected(int playerID);
 
 private:
 
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
-	QVBoxLayout* MainLayout;
+	QGridLayout* MainLayout;
+
+	QLabel* WaitingForPlayersToJoinLabel;
+	QProgressBar* JoinedPlayersProgress;
+
+	QJoinedPlayersList* JoinedPlayersList;
+
+	QPushButton* CancelButton;
+	QPushButton* StartGameButton;
 
 	QWidget* MainMenu;
 };

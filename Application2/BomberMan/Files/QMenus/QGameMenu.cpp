@@ -67,7 +67,7 @@ void QGameMenu::ConnectWidgets()
 
 }
 
-void QGameMenu::CreateMenu()
+void QGameMenu::PutWidgetsInMenu()
 {
 
 }
@@ -96,34 +96,34 @@ QWidget* QGameMenu::GetMenu()
 void QGameMenu::OnEnter()
 {
 	// Check if the current game's status is that of the playing game.
-	//switch (appRef->currentGame->GetStatus())
-	//{
-	//	case(GameStatuses::awaitingConnection):
-	//		break;
-	//
-	//	case(GameStatuses::awaitingPlayers):
-	//		appRef->SetNewQMenu(QMenus::PlayerJoining);
-	//		break;
-	//
-	//	case(GameStatuses::ended):
-	//		break;
-	//
-	//	case(GameStatuses::countdown):
-	//		appRef->SetNewQMenu(QMenus::Countdown);
-	//		break;
-	//
-	//	case(GameStatuses::invalid):
-	//		appRef->SetNewQMenu(QMenus::Error);
-	//		break;
-	//
-	//	case(GameStatuses::paused):
-	//		appRef->SetNewQMenu(QMenus::PauseMenu);
-	//		break;
-	//
-	//	case(GameStatuses::playing):
-	//		// We're good!
-	//		break;
-	//}
+	switch (appRef->currentGame->GetStatus())
+	{
+		case(GameStatuses::awaitingConnection):
+			break;
+	
+		case(GameStatuses::awaitingPlayers):
+			appRef->SetNewQMenu(QMenus::PlayerJoining);
+			break;
+	
+		case(GameStatuses::ended):
+			break;
+	
+		case(GameStatuses::countdown):
+			appRef->SetNewQMenu(QMenus::Countdown);
+			break;
+	
+		case(GameStatuses::invalid):
+			appRef->SetNewQMenu(QMenus::Error);
+			break;
+	
+		case(GameStatuses::paused):
+			appRef->SetNewQMenu(QMenus::PauseMenu);
+			break;
+	
+		case(GameStatuses::playing):
+			// We're good!
+			break;
+	}
 }
 
 void QGameMenu::OnLeave()

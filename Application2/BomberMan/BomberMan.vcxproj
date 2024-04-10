@@ -149,13 +149,13 @@
   <ItemGroup>
     <ClInclude Include="Files\Application\AppHandler.h" />
     <ClInclude Include="Files\Application\Application.h" />
-    <ClInclude Include="Files\Arduino\Arduino.h" />
+    <QtMoc Include="Files\Arduino\Arduino.h" />
     <ClInclude Include="Files\Arduino\ThreadManager.hpp" />
     <ClInclude Include="Files\BaseObject\BaseObject.hpp" />
     <ClInclude Include="Files\Colour\Colour.h" />
     <ClInclude Include="Files\Communication\Communication.h" />
     <ClInclude Include="Files\Controller\Controller.h" />
-    <ClInclude Include="Files\Game\Game.h" />
+    <QtMoc Include="Files\Game\Game.h" />
     <ClInclude Include="Files\Inventory\Inventory.h" />
     <ClInclude Include="Files\JSON\json.hpp" />
     <ClInclude Include="Files\Map\Map.h" />

@@ -46,6 +46,12 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 
 	MainLayout->addLayout(ButtonLayout);
 	MainMenu->setLayout(MainLayout);
+
+	if (GetAllMaps().size() == 0)
+	{
+		playButton->setEnabled(false);
+		playButton->setText("NO MAPS FOUND");
+	}
 }
 
 QWidget* QMainMenu::GetMenu()
@@ -72,7 +78,7 @@ void QMainMenu::GoToSettings()
 
 void QMainMenu::GoToMapSelection()
 {
-	appRef->SetNewQMenu(QMenus::MapSelection);
+	appRef->SetNewQMenu(QMenus::PlayerJoining);
 }
 
 void QMainMenu::GoToFormulaire()

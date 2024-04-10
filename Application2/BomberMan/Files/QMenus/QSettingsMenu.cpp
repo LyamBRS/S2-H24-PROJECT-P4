@@ -134,6 +134,8 @@ void QSettingsMenu::ConnectWidgets()
 
 	connect(amountOfComPortChecks,	&QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
 	connect(connectingProgress,		&QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
+
+	connect(appRef->arduinoThread.GetArduino(), &Arduino::ComPortStateChanged, this, &QSettingsMenu::ComStateChanged);
 }
 
 void QSettingsMenu::CreateMenu()
@@ -375,4 +377,29 @@ void QSettingsMenu::ComPortChanged()
 	if (!appRef->arduinoThread.GetArduino()->GetPortState()) portStatus->setText("No arduino connected to the PC");
 	if (appRef->arduinoThread.GetArduino()->GetPortState() && !appRef->arduinoThread.GetArduino()->Verify()) portStatus->setText("Connected devices not answering requests");
 	if (appRef->arduinoThread.GetArduino()->GetPortState() && appRef->arduinoThread.GetArduino()->Verify())  portStatus->setText("Connected arduino is operational");
+}
+
+void QSettingsMenu::ComStateChanged(bool newState)
+{
+	if (newState)
+	{
+		connectingProgress->stop();
+		connectButton->setText("Disconnect");
+		connectButton->setEnabled(true);
+		baudratesBox->setEnabled(false);
+		comPortBox->setEnabled(false);
+		helperText->setText("Connected");
+		connectionProgress->setValue(100);
+	}
+	else
+	{
+		connectingProgress->stop();
+		connectButton->setEnabled(true);
+		connectionProgress->setEnabled(true);
+		baudratesBox->setEnabled(true);
+		comPortBox->setEnabled(true);
+		connectionProgress->setValue(0);
+		connectButton->setText("Connect");
+		helperText->setText("Arduino was disconnected");
+	}
 }

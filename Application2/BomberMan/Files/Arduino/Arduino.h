@@ -116,6 +116,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
      */
     class Arduino : public QObject
     {
+        Q_OBJECT
+
         private:
             /// @brief Handles the serial port and JSON objects
             Communication serialHandler;
@@ -380,4 +382,7 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              * No message was appended.
              */
             bool HandleMessageReception();
+
+        signals:
+            void ComPortStateChanged(bool newState);
     };

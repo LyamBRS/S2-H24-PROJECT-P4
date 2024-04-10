@@ -743,6 +743,78 @@ bool BomberManGame::HandlePowerUp()
     return true;
 }
 
+bool BomberManGame::HandlePlayerConnecting()
+{
+    // system("cls");
+    for (int playerIndex = 0; playerIndex < GetMaxPlayerCount(); playerIndex++)
+    {
+        // std::cout << "p: " << playerIndex;
+        Controller* currentController = GetPlayerController(playerIndex);
+
+        // std::cout << " b: " << currentController->topButton;
+
+        // This is to remove the potential flaw which would allow you to connect a controller, select a player, disconnect, reconnect, select, and control 2 players.
+        if (!currentController->isConnected)
+        {
+            if (currentController->controllerID != 0) currentController->controllerID = 0;
+        }
+
+        if (currentController->bottomButton) // Remove that controller from the list.
+        {
+            // std::cout << " LE ";
+            UnAssignPlayerController(playerIndex);
+            currentController->controllerID = 0;
+        }
+
+        if (currentController->controllerID == 0)
+        {
+            // Check if any real hardware controller is available.
+            for (int selectedID = 1; selectedID <= CONTROLLER_TYPE_AMOUNT; selectedID++)
+            {
+                Controller* realWorldController = appRef->GetHardwareController(selectedID);
+                if (!realWorldController->isConnected) realWorldController->controllerID = 0;
+
+                // std::cout << "\t" << selectedID << " IF(" << realWorldController->isConnected << "," << (realWorldController->controllerID==0) << "," << realWorldController->PLAYER_KEY_SELECT;
+
+                // unused controller, currently selecting to be a player, found.
+                if (realWorldController->isConnected && realWorldController->controllerID == 0 && realWorldController->PLAYER_KEY_SELECT)
+                {
+                    // std::cout << std::endl;
+                    // Sleep(1000);
+                    realWorldController->controllerID = selectedID;
+                    AssignControllerToPlayer(playerIndex, realWorldController);
+
+                    // std::cout << "placed ID: " << currentGame->GetPlayerController(playerIndex)->controllerID << " in player " << playerIndex << std::endl;
+
+                    // Verify that no other players have that controllerID
+                    for (int playerIndexV = 0; playerIndexV < GetMaxPlayerCount(); playerIndexV++)
+                    {
+                        Controller* playerController = GetPlayerController(playerIndexV);
+                        // std::cout << playerIndexV << " " << playerIndex << std::endl;
+                        if (playerIndexV != playerIndex)
+                        {
+                            if (playerController->controllerID == selectedID)
+                            {
+                                // std::cout << "removed ID: " << selectedID << " from player " << playerIndexV << std::endl;
+                                // Sleep(1000);
+                                playerController->controllerID = 0;
+                            }
+                        }
+                    }
+                    return true;
+                }
+            }
+            // std::cout << std::endl;
+        }
+        // else
+        // {
+            // std::cout << " USED " << std::endl;;
+        // }
+        // Sleep(100);
+    }
+    return false;
+}
+
 bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
 {
     std::string result = "Player ";
@@ -967,6 +1039,7 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
     int mapSizeX = map->GetCurrentMap()["sizeX"];
     int mapSizeY = map->GetCurrentMap()["sizeY"];
     int amountOfPlayers = map->GetCurrentMap()["amountOfPlayers"];
+    maxPlayerCount = amountOfPlayers;
     gameWidth = mapSizeX*3;
 
     if(gameWidth < GAME_MIN_WIDTH)  gameWidth = GAME_MIN_WIDTH;
@@ -1037,12 +1110,14 @@ bool BomberManGame::Update()
 {
     static int oldGameStatus = GameStatuses::invalid;
     static uint8_t oldSeconds = 0;
+    static int oldPlayerCount = 0;
 
     /////////////////////////////////////////
     // Handling game status changes
     /////////////////////////////////////////
     if(gameStatus != oldGameStatus)
     {
+        emit StatusChanged();
         statusChanged = true;
         // Game actually started! This is the first update frame.
         if(oldGameStatus==GameStatuses::countdown && gameStatus==GameStatuses::playing)
@@ -1101,6 +1176,26 @@ bool BomberManGame::Update()
         result.append(std::to_string(GetCountdownValue()));
         result.append("      -");
         appRef->SetMessage(result);
+    }
+
+    int count = 0;
+    for (int playerIndex = 0; playerIndex < GetMaxPlayerCount(); playerIndex++)
+    {
+        if (players[playerIndex].GetController()->controllerID != 0)
+        {
+            count++;
+        }
+    }
+
+    if (count != oldPlayerCount)
+    {
+        oldPlayerCount = count;
+        emit AmountOfConnectedPlayersChanged(count);
+    }
+
+    if (gameStatus == GameStatuses::awaitingPlayers)
+    {
+        HandlePlayerConnecting();
     }
 
     return true;
@@ -1301,6 +1396,11 @@ bool BomberManGame::isValidated()
     return canBeUsed;
 }
 
+int BomberManGame::GetMaxPlayerCount()
+{
+    return maxPlayerCount;
+}
+
 
 
 Controller* BomberManGame::GetPlayerController(int playerIndex)
@@ -1332,6 +1432,8 @@ bool BomberManGame::AssignControllerToPlayer(int playerIndex, Controller* contro
     result.append(" joined");
     appRef->SetMessage(result);
 
+    emit PlayerConnected(playerIndex, controllerRef->controllerID);
+
     return players[playerIndex].LinkController(controllerRef);
 }
 
@@ -1344,6 +1446,8 @@ bool BomberManGame::UnAssignPlayerController(int playerIndex)
     result.append(std::to_string((playerIndex+1)));
     result.append(" left  ");
     appRef->SetMessage(result);
+
+    emit PlayerDisconnected(playerIndex);
 
     return true;
 }
