@@ -78,7 +78,7 @@ void QMainMenu::GoToSettings()
 
 void QMainMenu::GoToMapSelection()
 {
-	appRef->SetNewQMenu(QMenus::PlayerJoining);
+	appRef->SetNewQMenu(QMenus::MapSelection);
 }
 
 void QMainMenu::GoToFormulaire()
