@@ -39,21 +39,15 @@ public:
 	void OnEnter();
 	void OnLeave();
 
-public slots:
-	void GoToSettings();
+//public slots:
+//	void GoToSettings();
 
 private:
 
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
-
 	QVBoxLayout* MainLayout;
-	QVBoxLayout* ButtonLayout;
 
 	QWidget* MainMenu;
 };

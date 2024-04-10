@@ -22,6 +22,7 @@
 #include <QTimer>
 #include <qmenubar.h>
 #include "../Application/AppHandler.h"
+#include "../Game/Game.h"
 
 // - DEFINES - //
 
@@ -44,16 +45,16 @@ public slots:
 
 private:
 
+	void CreateTimers();
+	void CreateWidgets();
+	void CreateLayouts();
+	void ConnectWidgets();
+	void CreateMenu();
+
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
-	QPushButton* playButton;
-	QPushButton* settingsButton;
-	QPushButton* appButton;
-	QPushButton* leaveButton;
-
 	QVBoxLayout* MainLayout;
-	QVBoxLayout* ButtonLayout;
 
 	QWidget* MainMenu;
 };
