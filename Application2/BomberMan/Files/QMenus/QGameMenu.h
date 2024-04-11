@@ -49,7 +49,7 @@ public slots:
 	void MapTileChanged(int x, int y, TileTypes newTile);
 	void GameTimerChanged(uint64_t newTime);
 	void CountDownValueChanged(int newValue);
-
+	
 	void PlayerHealthChanged(int playerID, int newHealth);
 	void PlayerDied(int playerID);
 	void PlayerSelectedNewInventorySlot(int playerID, int slotNumber);
@@ -58,6 +58,7 @@ public slots:
 
 	void GameStatusChanged(int newStatus);
 	void PauseResumeButtonPressed();
+	void GameMessageChanged(std::string);
 
 private:
 

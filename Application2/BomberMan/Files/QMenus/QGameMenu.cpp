@@ -84,6 +84,7 @@ void QGameMenu::ConnectWidgets()
 	connect(appRef->currentGame, &BomberManGame::InventoryChanged, PlayersStats, &QPlayerStatsList::InventoryEvent);
 
 	connect(appRef->currentGame, &BomberManGame::StatusChanged, this, &QGameMenu::GameStatusChanged);
+	connect(appRef->currentGame, &BomberManGame::GameMessageChanged, GameHeader, &QGameHeader::GameMessageChanged);
 }
 
 void QGameMenu::PutWidgetsInMenu()
@@ -96,6 +97,11 @@ void QGameMenu::PutWidgetsInMenu()
 	MainLayout->addLayout(BottomLayout);
 
 	MainMenu->setLayout(MainLayout);
+}
+
+void QGameMenu::GameMessageChanged(std::string)
+{
+
 }
 
 void QGameMenu::SetAsPaused()
