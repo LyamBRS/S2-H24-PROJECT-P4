@@ -35,7 +35,7 @@ std::vector<nlohmann::json> GetAllMaps()
 
     // Adds the Maps directory to the end of the current path.
 #ifndef NDEBUG
-    applicationPath.erase(applicationPath.length() - 9, 9);
+    applicationPath.erase(applicationPath.length() - 10, 10);
 #else
     applicationPath.erase(applicationPath.length() - 11, 11);
 #endif
@@ -65,7 +65,7 @@ std::string GetSvg(std::string name)
 
     // Adds the Maps directory to the end of the current path.
 #ifndef NDEBUG
-    applicationPath.erase(applicationPath.length() - 9, 9);
+    applicationPath.erase(applicationPath.length() - 10, 10);
 #else
     applicationPath.erase(applicationPath.length() - 11, 11);
 #endif

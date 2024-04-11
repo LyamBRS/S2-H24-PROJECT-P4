@@ -56,6 +56,10 @@ private:
 	QMainWindow* winRef;
 	AppHandler* appRef;
 
+	QLabel* lblTeam;
+	QLabel* lblProjName;
+	QLabel* lblLogo;
+
 	QPushButton* playButton;
 	QPushButton* settingsButton;
 	QPushButton* appButton;
@@ -63,6 +67,8 @@ private:
 
 	QVBoxLayout* MainLayout;
 	QVBoxLayout* ButtonLayout;
+	QHBoxLayout* layTitle;
+	QHBoxLayout* ButtonLogoLayout;
 
 	QWidget* MainMenu;
 };
