@@ -1006,7 +1006,7 @@ bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
         std::random_device dev;
         std::mt19937 rng(dev());
         std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 10); // distribution in range [1, 5]
-        int randomNumber = dist6(rng);
+        randomNumber = dist6(rng);
     }
 
     // - DESTROY BOX - //
