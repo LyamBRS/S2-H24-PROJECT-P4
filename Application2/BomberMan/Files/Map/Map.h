@@ -277,6 +277,7 @@ class Map : public QObject
         int sizeY = 0;
         /// @brief The actual map. IS DESTROYED WHEN LOADED AND RE-CREATED.
         TileTypes map[30][30] = {};
+        TileTypes changes[30][30] = {};
         /// @brief Reprensent the map as a string so it can be saved in a file.
         std::string mapAsString = "";
         /// @brief The map's name. Defaults to UNTITLED
@@ -499,6 +500,8 @@ class Map : public QObject
         bool GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY);
 
         TileTypes GetPlayerTypeFromId(int playerId);
+
+        void EmitChanges();
 
     signals:
         void TileDataChanged(int x, int y, TileTypes);

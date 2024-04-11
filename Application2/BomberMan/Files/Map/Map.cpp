@@ -38,6 +38,7 @@ Map::Map(nlohmann::json MapData)
 	for (int i = 0; i < sizeY; ++i) {
 		for (int j = 0; j < sizeX; ++j) {
 			map[j][i] = MapData["map"][i][j];
+			changes[j][i] = MapData["map"][i][j];;
 		}
 	}
 }
@@ -150,18 +151,25 @@ bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 		for (int i = 0; i < sizeX; ++i) {
 			if (i == x && j == y)
 			{
-
-				if (wantedTile != GetTileDataAtPosition(x, y))
-				{
-					emit TileDataChanged(x, y, wantedTile);
-				}
-
 				map[i][j] = wantedTile;
 				return true;
 			}
 		}
 	}
 	return false;
+}
+
+void Map::EmitChanges()
+{
+	for (int j = 0; j < sizeY; ++j) {
+		for (int i = 0; i < sizeX; ++i) {
+			if (changes[i][j] != GetTileDataAtPosition(i,j))
+			{
+				changes[i][j] = GetTileDataAtPosition(i, j);
+				emit TileDataChanged(i, j, GetTileDataAtPosition(i, j));
+			}
+		}
+	}
 }
 
 bool Map::LoadMap(nlohmann::json mapAsJSON)

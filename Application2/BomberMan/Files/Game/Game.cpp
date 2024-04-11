@@ -1141,6 +1141,7 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
  */
 bool BomberManGame::Update()
 {
+    if (!canBeUsed) return false;
     static int oldGameStatus = GameStatuses::invalid;
     static uint8_t oldSeconds = 10;
     static int oldPlayerCount = 0;
@@ -1258,6 +1259,8 @@ bool BomberManGame::Update()
     {
         emit InventoryChanged();
     }
+
+    map->EmitChanges();
 
     return true;
 }

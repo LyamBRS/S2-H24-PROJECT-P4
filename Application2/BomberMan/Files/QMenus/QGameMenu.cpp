@@ -133,7 +133,7 @@ void QGameMenu::SetAsEnded()
 	int playerID = appRef->currentGame->GetWinningPlayerID();
 	QString result = "The game has ended! The winning player is: Player ";
 	if ((playerID + 1) < 10) result.append("0");
-	result.append(std::to_string((playerID + 1)));
+	result.append(std::to_string((playerID)));
 
 	QMessageBox msgBox;
 	msgBox.setWindowTitle("Game ended");
