@@ -163,12 +163,12 @@ void QFormulaire::GoToPlayMenu()
 
 void QFormulaire::GoToSettingsMenu()
 {
-	appRef->SetNewQMenu(QMenus::MainMenu);
+	appRef->SetNewQMenu(QMenus::Settings);
 }
 
 void QFormulaire::GoToLeaveMenu()
 {
-	appRef->SetNewQMenu(QMenus::MainMenu);
+	appRef->SetNewQMenu(QMenus::ExitMenu);
 }
 
 void QFormulaire::SetPlayerNames() {

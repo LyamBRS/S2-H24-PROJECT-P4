@@ -94,6 +94,9 @@
     <ClCompile Include="Files\PowerUp\PowerUp.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QMenus\QAppWindow.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="Files\QMenus\QCountDownMenu.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -151,9 +154,6 @@
     <ClCompile Include="Files\Map\Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="Files\QMenus\QAppWindow.cpp">
-      <Filter>Generated Files</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <CustomBuild Include="debug\moc_predefs.h.cbt">
@@ -162,10 +162,5 @@
     <CustomBuild Include="release\moc_predefs.h.cbt">
       <Filter>Generated Files</Filter>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Files\QMenus\QAppWindow.h">
-      <Filter>Generated Files</Filter>
-    </ClInclude>
   </ItemGroup>
 </Project>

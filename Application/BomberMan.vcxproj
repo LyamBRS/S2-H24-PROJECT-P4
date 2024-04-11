@@ -163,10 +163,10 @@
     <ClCompile Include="Files\PlacedBomb\PlacedBomb.cpp" />
     <ClCompile Include="Files\PlacedPowerUp\PlacedPowerUp.cpp" />
     <ClCompile Include="Files\Player\Player.cpp" />
-    <ClCompile Include="Files\QMenus\QAppWindow.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
     <ClCompile Include="Files\Positions\Positions.cpp" />
     <ClCompile Include="Files\PowerUp\PowerUp.cpp" />
+    <ClCompile Include="Files\QMenus\QAppWindow.cpp" />
     <ClCompile Include="Files\QMenus\QCountDownMenu.cpp" />
     <ClCompile Include="Files\QMenus\QDisconnectMenu.cpp" />
     <ClCompile Include="Files\QMenus\QExitMenu.cpp" />
@@ -204,9 +204,6 @@
       <Message Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">Generate moc_predefs.h</Message>
       <Outputs Condition="&apos;$(Configuration)|$(Platform)&apos;==&apos;Release|x64&apos;">release\moc_predefs.h;%(Outputs)</Outputs>
     </CustomBuild>
-  </ItemGroup>
-  <ItemGroup>
-    <ClInclude Include="Files\QMenus\QAppWindow.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets" />
