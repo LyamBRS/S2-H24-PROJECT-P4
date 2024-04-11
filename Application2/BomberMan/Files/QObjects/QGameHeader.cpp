@@ -134,6 +134,11 @@ void QGameHeader::SetAsCountDown()
 	PlayerLeftProgressBar->setValue(maxPlayerCount);
 }
 
+void QGameHeader::GameMessageChanged(std::string newMessage)
+{
+	GameMessageLabel->setText(QString::fromStdString(newMessage));
+}
+
 // - SLOTS - //
 void QGameHeader::PausePressed()
 {
@@ -183,6 +188,7 @@ void QGameHeader::CreateWidgets()
 	PauseResumeButton		= new QPushButton(PLAYING_TEXT);
 	MapNameLabel			= new QLabel("None");
 	ChronoLabel				= new QLabel("0");
+	GameMessageLabel		= new QLabel("Game was created");
 
 	MapNameLabel->setAlignment(Qt::AlignCenter);
 
@@ -196,7 +202,11 @@ void QGameHeader::CreateWidgets()
 	ChronoLabel->setFont(font);
 	ChronoLabel->setStyleSheet(chronoStyleSheet);
 
-
+	GameMessageLabel->setAlignment(Qt::AlignCenter);
+	font = GameMessageLabel->font();
+	font.setPointSize(font.pointSize() * 2);
+	GameMessageLabel->setFont(font);
+	GameMessageLabel->setStyleSheet(chronoStyleSheet);
 
 	ChronoLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
 	ChronoLabel->setSizePolicy(QSizePolicy::Preferred, QSizePolicy::Preferred);
@@ -221,5 +231,6 @@ void QGameHeader::BuildWidget()
 	MainLayout->addWidget(MapNameLabel,				0, 3, 1, 7);
 	MainLayout->addWidget(PauseResumeButton,		1, 3, 1, 2);
 	MainLayout->addWidget(PlayerLeftProgressBar,	1, 5, 1, 6);
+	MainLayout->addWidget(GameMessageLabel,			2, 0, 1, 10);
 	setLayout(MainLayout);
 }

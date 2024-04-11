@@ -50,6 +50,7 @@ public slots:
 
 private slots:
 	void PausePressed();
+	void GameMessageChanged(std::string newMessage);
 
 signals:
 	void PauseButtonPressed();
@@ -68,6 +69,7 @@ private:
 	QProgressBar* PlayerLeftProgressBar;
 	QLabel* MapNameLabel;
 	QLabel* ChronoLabel;
+	QLabel* GameMessageLabel;
 
 	SimpleChrono* chronoRef;
 };
