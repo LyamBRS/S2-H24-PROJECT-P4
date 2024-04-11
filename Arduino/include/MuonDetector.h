@@ -34,6 +34,8 @@ class MuonDetector
 
         bool canBeUsed = false;
 
+        int defaultValue = 0;
+
     public:
 
         MuonDetector();
@@ -76,5 +78,5 @@ class MuonDetector
          */
         bool Update();
 
-        int GetAnalog(int arduinoPin);
+        int GetAnalog();
 };

@@ -36,6 +36,9 @@ MuonDetector::MuonDetector(int pin)
         return;
     }
     arduinoPin=pin;
+
+    defaultValue = GetAnalog();
+    defaultValue = defaultValue + 20;
     canBeUsed = true;
 }
 
@@ -76,13 +79,13 @@ bool MuonDetector::ResetCount()
  */
 bool MuonDetector::Update()
 {
-    if(analogRead(arduinoPin)>=520){
+    if(analogRead(arduinoPin)>=defaultValue){
         totalCounted+=1;
     }
     return true;
 }
 
-int MuonDetector::GetAnalog(int arduinoPin)
+int MuonDetector::GetAnalog()
 {
     return analogRead(arduinoPin);
 }
