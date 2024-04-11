@@ -194,10 +194,13 @@ bool Player::UpdateFromController()
 
         if(PLAYER_LOCAL_DISCARD_PWR)
         {
-            wantsToUseSelectedItem = false;
-            wantsToRemoveSelectedItem = true;
-            inventoryRequiresRedraw = true;
-            inventoryUIFrames.Reset();
+            if (inventory.SelectedIsUsable())
+            {
+                wantsToUseSelectedItem = false;
+                wantsToRemoveSelectedItem = true;
+                inventoryRequiresRedraw = true;
+                inventoryUIFrames.Reset();
+            }
         }
     }
 
