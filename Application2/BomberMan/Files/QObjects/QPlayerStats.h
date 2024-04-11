@@ -15,28 +15,51 @@
 #include "../Player/Player.h"
 
 // - DEFINES - //
+#define INVENTORY_SVG_SCALE 20
 
 // - CLASS - //
 
-class QPlayerStats : public QObject
+class QPlayerStat : public QWidget
+{
+	Q_OBJECT
+
+	public:
+		QPlayerStat(int playerID);
+
+		void LinkPlayer(Player* player);
+
+		void HealthChanged();
+		void InventoryChanged();
+
+	private:
+		QVBoxLayout* MainLayout;
+		QHBoxLayout* TopLayout;
+		QHBoxLayout* BottomLayout;
+		QLabel* PlayerNameLabel;
+		QProgressBar* HealthProgressBar;
+
+		QHBoxLayout* InventoryLayout;
+
+		Player* playerRef;
+
+		QVector<QLabel*> inventorySlots;
+};
+
+class QPlayerStatsList : public QWidget
 {
 	Q_OBJECT
 	
 public:
-	QPlayerStats();
-
-	QWidget* GetMenu();
-
-	void OnEnter();
-	void OnLeave();
+	QPlayerStatsList(int playerCount, BomberManGame* currentGame);
+	void LinkPlayer(int playerID, Player* player);
 
 public slots:
 	void HealthEvent();
 	void InventoryEvent();
 
 private:
-	AppHandler* appRef;
-	Player* playerRef;
+	int playerCountRef = 0;
 
-	QWidget* MainWidget;
+	QVBoxLayout* mainLayout;
+	QVector<QPlayerStat*> playerSlots;
 };

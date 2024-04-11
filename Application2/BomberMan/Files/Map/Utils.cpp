@@ -82,6 +82,37 @@ std::string GetSvg(std::string name)
     return applicationPath;
 }
 
+std::string GetSvg(TileTypes tile)
+{
+    std::string name = "";
+    switch (tile)
+    {
+    case(TileTypes::BOMB):                  name = SVG_BOMB; break; 
+    case(TileTypes::EMPTY):                 name = SVG_EMPTY; break; 
+    case(TileTypes::PERMAWALL):             name = SVG_PERMAWALL; break; 
+    case(TileTypes::PLAYER1):               name = SVG_PLAYER1; break; 
+    case(TileTypes::PLAYER2):               name = SVG_PLAYER2; break; 
+    case(TileTypes::PLAYER3):               name = SVG_PLAYER3; break; 
+    case(TileTypes::PLAYER4):               name = SVG_PLAYER4; break; 
+    case(TileTypes::PLAYERSPAWN):           name = SVG_PLAYERSPAWN; break; 
+    case(TileTypes::POWER_DMG):             name = SVG_POWER_DMG; break; 
+    case(TileTypes::POWER_HEART):           name = SVG_POWER_HEART; break;
+    case(TileTypes::POWER_MOREBOMB):        name = SVG_POWER_MOREBOMB; break;
+    case(TileTypes::POWER_REACH):           name = SVG_POWER_REACH; break;
+    case(TileTypes::POWER_SPEED):           name = SVG_POWER_SPEED; break;
+    case(TileTypes::POWER_BOMB_OF_WALLS):   name = SVG_POWER_BOMB_OF_WALLS; break;
+    case(TileTypes::POWER_DEPLOYABLE_WALL): name = SVG_POWER_DEPLOYABLE_WALL; break;
+    case(TileTypes::SMOKE):                 name = SVG_SMOKE; break;
+    case(TileTypes::SMOKE1):                name = SVG_SMOKE1; break;
+    case(TileTypes::SMOKE2):                name = SVG_SMOKE2; break;
+    case(TileTypes::SMOKE3):                name = SVG_SMOKE3; break;
+    case(TileTypes::SMOKE4):                name = SVG_SMOKE4; break;
+    case(TileTypes::SMOKE5):                name = SVG_SMOKE5; break;
+    case(TileTypes::WALL):                  name = SVG_WALL; break;
+    }
+    return GetSvg(name);
+}
+
 bool VerifyMap(std::string path)
 {
     // Check if the file exists.
@@ -139,6 +170,8 @@ void PrintTileName(TileTypes tile)
         case(TileTypes::POWER_MOREBOMB):    std::cout << "POWER_MOREBOMB"; return;
         case(TileTypes::POWER_REACH):       std::cout << "POWER_REACH   "; return;
         case(TileTypes::POWER_SPEED):       std::cout << "POWER_SPEED   "; return;
+        case(TileTypes::POWER_BOMB_OF_WALLS):           std::cout << "POWER_BOMB_OF_WALLS   "; return;
+        case(TileTypes::POWER_DEPLOYABLE_WALL):         std::cout << "POWER_DEPLOYABLE_WALL   "; return;
         case(TileTypes::SMOKE):             std::cout << "SMOKE         "; return;
         case(TileTypes::WALL):              std::cout << "WALL          "; return;
     }

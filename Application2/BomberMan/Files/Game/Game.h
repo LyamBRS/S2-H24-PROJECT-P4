@@ -163,7 +163,6 @@ class BomberManGame : public QObject
         /// @brief How long until the game starts and players can move
         SimpleTimer startTimer = SimpleTimer(4000);
         SimpleTimer handlerTimer = SimpleTimer(1);
-        SimpleChrono gameDuration = SimpleChrono();
         SimpleTimer bombUpdateTimer = SimpleTimer(GAME_BOMB_UPDATE_DELAY_MS);
 
         bool statusChanged = false;
@@ -353,7 +352,11 @@ class BomberManGame : public QObject
 
         bool HandlePlayerConnecting();
 
+        bool SetStatus(int newStatus);
+
     public:
+
+        SimpleChrono gameDuration = SimpleChrono();
 
         /**
          * @brief
@@ -594,13 +597,24 @@ class BomberManGame : public QObject
 
         int GetMaxPlayerCount();
 
+        int GetActualPlayerCount();
+
+        int GetConnectedPlayerCount();
+
+        Player* GetPlayer(int playerID);
+
     signals:
         void AmountOfConnectedPlayersChanged(int newPlayerCount);
         void PlayerConnected(int playerID, int realWorldControllerID);
         void PlayerDisconnected(int playerID);
 
-        void CountDownChanged();
-        void GameTimerChanged(int newHours, int newMinutes, int newSeconds);
-        void StatusChanged();
+        void CountDownChanged(int newValue);
+        void GameTimerChanged(uint64_t newValue);
+        void StatusChanged(int newStatus);
         void PlayerDeath(int playerID);
+
+        void HealthChanged();
+        void InventoryChanged();
+
+        void MapTileChanged(int x, int y, TileTypes newTile);
 };

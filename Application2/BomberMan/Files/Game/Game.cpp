@@ -411,6 +411,10 @@ bool BomberManGame::PutPlayersInMap()
                 currentPlayer->SetPlayerAsDeleted();
                 map->SetTileDataAtPosition(currentPos->X(), previousPos->Y(), TileTypes::EMPTY);
                 map->SetTileDataAtPosition(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+
+                emit MapTileChanged(currentPos->X(), currentPos->Y(), TileTypes::EMPTY);
+                emit MapTileChanged(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
+
                 playerDeathMessage.Reset();
             }
             else // Puts an empty space behind the player, and put the current player innit
@@ -430,6 +434,7 @@ bool BomberManGame::PutPlayersInMap()
                         std::cout << "FAILED PREVIOUS" << std::endl;
                         Sleep(1000);
                     }
+                    emit MapTileChanged(previousPos->X(), previousPos->Y(), TileTypes::EMPTY);
 
                     if (map->GetTileDataAtPosition(*currentPos) == TileTypes::WALL)
                     {
@@ -443,6 +448,8 @@ bool BomberManGame::PutPlayersInMap()
                         std::cout << "FAILED CURRENT" << std::endl;
                         Sleep(1000);
                     }
+                    emit MapTileChanged(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
+
                     needToRedrawMap = true;
                     previousPos->SetNewCoordinates(currentPos->X(), currentPos->Y());
                 }
@@ -452,6 +459,7 @@ bool BomberManGame::PutPlayersInMap()
                     {
                         if (map->GetTileDataAtPosition(*currentPos) == TileTypes::WALL) continue;     
                         map->SetTileDataAtPosition(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
+                        emit MapTileChanged(currentPos->X(), currentPos->Y(), map->GetPlayerTypeFromId(playerIndex));
                         needToRedrawMap = true;
                     }
                 }
@@ -472,14 +480,18 @@ bool BomberManGame::PutBombsInMap()
         }
         else
         {
+            int bombX = bombsOnMap[bombIndex].GetCurrentCoordinates()->X();
+            int bombY = bombsOnMap[bombIndex].GetCurrentCoordinates()->Y();
+
             if(map->GetTileDataAtPosition(*bombsOnMap[bombIndex].GetCurrentCoordinates()) != TileTypes::BOMB)
             {
                 needToRedrawMap = true;
             }
             map->SetTileDataAtPosition(
-                bombsOnMap[bombIndex].GetCurrentCoordinates()->X(), 
-                bombsOnMap[bombIndex].GetCurrentCoordinates()->Y(), 
+                bombX,
+                bombY,
                 TileTypes::BOMB);
+            emit MapTileChanged(bombX, bombY, TileTypes::BOMB);
         }
     }
     return true;
@@ -497,6 +509,8 @@ bool BomberManGame::PutPowerUpsInMap()
            powerUpPos.Y(),
            associatedTile
         );
+
+        emit MapTileChanged(powerUpPos.X(), powerUpPos.Y(), associatedTile);
     }
     return true;
 }
@@ -554,6 +568,8 @@ bool BomberManGame::HandleBombs()
                     bombPlacement.Y(),
                     TileTypes::EMPTY
                 );
+
+                emit MapTileChanged(bombPlacement.X(), bombPlacement.Y(), TileTypes::EMPTY);
             }
 
             // Check the ends of raycasts to remove boxes.
@@ -635,11 +651,16 @@ bool BomberManGame::HandlePlayers()
             TileTypes currentPlayerTile = map->GetTileDataAtPosition(*players[playerIndex].GetCurrentCoordinates());
             if(checkIfTileIsPlayer(currentPlayerTile))
             {
+                int playerCoordX = players[playerIndex].GetCurrentCoordinates()->X();
+                int playerCoordY = players[playerIndex].GetCurrentCoordinates()->Y();
+
                 map->SetTileDataAtPosition(
-                    players[playerIndex].GetCurrentCoordinates()->X(),
-                    players[playerIndex].GetCurrentCoordinates()->Y(),
+                    playerCoordX,
+                    playerCoordY,
                     TileTypes::EMPTY
                 );
+
+                emit MapTileChanged(playerCoordX, playerCoordY, TileTypes::EMPTY);
             }
         }
     }
@@ -652,7 +673,11 @@ bool BomberManGame::HandlePlayers()
 
         if(player->GetController()->controllerID == 0) continue;
         if(player->Health() == 0) continue;
-        if(player->NeedToRedrawInventory()) needToRedrawInventories = true;
+        if (player->NeedToRedrawInventory())
+        {
+            needToRedrawInventories = true;
+            //emit InventoryChanged();
+        }
 
         // - Check if the player wants to do something with their current powerups.
         if(player->WantsToUseSelected())
@@ -667,6 +692,7 @@ bool BomberManGame::HandlePlayers()
         if(player->WantsToDiscardSelected())
         {
             player->RemoveSelectedPowerUp();
+            emit InventoryChanged();
         }
     }
     return true;
@@ -702,6 +728,7 @@ bool BomberManGame::HandlePowerUp()
                 powerUpPos.Y(),
                 TileTypes::EMPTY
             );
+            emit MapTileChanged(powerUpPos.X(), powerUpPos.Y(), TileTypes::EMPTY);
             needToRedrawMap = true;
             continue;
         }
@@ -730,6 +757,7 @@ bool BomberManGame::HandlePowerUp()
 
                     needToRedrawInventories = true;
                     itemsOnMap.erase(itemsOnMap.begin() + i);
+                    emit InventoryChanged();
                 }
             }
             else
@@ -851,6 +879,7 @@ bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
         success = AffectPlayer_HealthBonus(player);
         needToRedrawPlayerHealth = true;
         current = player->Health();
+        emit HealthChanged();
         break;
 
     case(PowerUpID::nb_bomb_increase):
@@ -875,6 +904,7 @@ bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
             player->GetOldCoordinates()->Y(),
             TileTypes::WALL
         );
+        emit MapTileChanged(player->GetOldCoordinates()->X(), player->GetOldCoordinates()->Y(), TileTypes::WALL);
         break;
 
     case(PowerUpID::bombWall):
@@ -917,6 +947,7 @@ bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
         }
     }
 
+    emit InventoryChanged();
     SetGameMessage(result);
     return true;
 }
@@ -950,6 +981,7 @@ bool BomberManGame::CheckForPlayerDamage()
                     players[i].GiveDamage(damages);
                     players[i].invulnurability.Reset();
                     needToRedrawPlayerHealth = true;
+                    emit HealthChanged();
                     break;
                 }
             }
@@ -974,6 +1006,7 @@ bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
         boxPosition.Y(),
         TileTypes::EMPTY
     );
+    emit MapTileChanged(boxPosition.X(), boxPosition.Y(), TileTypes::WALL);
 
     int randomNumber = dist6(rng);
     TileTypes wantedTile = GetTileFromPowerUp(randomNumber);
@@ -999,7 +1032,7 @@ bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
 BomberManGame::BomberManGame()
 {
     canBeUsed = false;
-    gameStatus = GameStatuses::invalid;
+    SetStatus(GameStatuses::invalid);
 }
 
 /**
@@ -1030,7 +1063,7 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
         Sleep(1000);
 
         canBeUsed = false;
-        gameStatus = GameStatuses::invalid;
+        SetStatus(GameStatuses::invalid);
         return;
     }
 
@@ -1077,7 +1110,7 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
             Sleep(500);
             errorMessage = "FATAL PLAYER SPAWN ERROR";
             canBeUsed = false;
-            gameStatus = GameStatuses::invalid;
+            SetStatus(GameStatuses::invalid);
             //return;
         }
         Player player = Player(initialPosX, initialPosY, " @ ", GetPlayerColor(playerIndex));
@@ -1091,7 +1124,7 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
     // Sleep(1000);
 
     canBeUsed = true;
-    gameStatus = GameStatuses::awaitingPlayers;
+    SetStatus(GameStatuses::awaitingPlayers);
 }
 
 /**
@@ -1108,16 +1141,23 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
  */
 bool BomberManGame::Update()
 {
+    if (!canBeUsed) return false;
     static int oldGameStatus = GameStatuses::invalid;
-    static uint8_t oldSeconds = 0;
+    static uint8_t oldSeconds = 10;
     static int oldPlayerCount = 0;
+    static int oldCountdown = -1;
+
+    int countDownValue = 0;
+    if (gameStatus == GameStatuses::countdown)
+    {
+        countDownValue = GetCountdownValue();
+    }
 
     /////////////////////////////////////////
     // Handling game status changes
     /////////////////////////////////////////
     if(gameStatus != oldGameStatus)
     {
-        emit StatusChanged();
         statusChanged = true;
         // Game actually started! This is the first update frame.
         if(oldGameStatus==GameStatuses::countdown && gameStatus==GameStatuses::playing)
@@ -1130,9 +1170,10 @@ bool BomberManGame::Update()
     ////////////////////////////////////////////
     // Handling Game duration drawing intervals
     ////////////////////////////////////////////
-    if(oldSeconds != gameDuration.GetClockSeconds())
+    if((oldSeconds != gameDuration.GetClockSeconds()) && (gameStatus == GameStatuses::playing))
     {
         oldSeconds = gameDuration.GetClockSeconds();
+        emit GameTimerChanged(gameDuration.GetTotalTime());
         needToRedrawTimers = true;
     }
 
@@ -1158,7 +1199,7 @@ bool BomberManGame::Update()
         int ID = GetWinningPlayerID();
         if(ID != -1)
         {
-            gameStatus = GameStatuses::ended;
+            SetStatus(GameStatuses::ended);
         }
     }
 
@@ -1173,9 +1214,15 @@ bool BomberManGame::Update()
     if(gameStatus == GameStatuses::countdown)
     {
         std::string result = "-      0";
-        result.append(std::to_string(GetCountdownValue()));
+        result.append(std::to_string(countDownValue));
         result.append("      -");
         appRef->SetMessage(result);
+
+        if (countDownValue != oldCountdown)
+        {
+            //oldCountdown = countDownValue;
+            emit CountDownChanged(countDownValue);
+        }
     }
 
     int count = 0;
@@ -1198,6 +1245,23 @@ bool BomberManGame::Update()
         HandlePlayerConnecting();
     }
 
+    // - CHECK PLAYERS CURRENTLY SELECTED POWER UP - //
+    bool result = false;
+    for (int i = 0; i < GetMaxPlayerCount(); i++)
+    {
+        if (players[i].HasSelectedNewItemSinceLastTime())
+        {
+            result = true;
+        }
+    }
+
+    if (result)
+    {
+        emit InventoryChanged();
+    }
+
+    map->EmitChanges();
+
     return true;
 }
 
@@ -1218,7 +1282,37 @@ bool BomberManGame::Update()
 bool BomberManGame::Start()
 {
     startTimer.Reset();
-    gameStatus = GameStatuses::countdown;
+    SetStatus(GameStatuses::countdown);
+
+    // ALL PLAYER CARDS. AS MANY AS THERE IS PLAYERS FOR THIS GAME
+    for (int playerIndex = 0; playerIndex < map->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
+    {
+        int playerCoordX = players[playerIndex].GetCurrentCoordinates()->X();
+        int playerCoordY = players[playerIndex].GetCurrentCoordinates()->Y();
+
+        if (players[playerIndex].GetController()->controllerID != 0)
+        {
+            // Replace the player spawn by the actual player
+            map->SetTileDataAtPosition(
+                playerCoordX,
+                playerCoordY,
+                map->GetPlayerTypeFromId(playerIndex)
+            );
+
+            emit MapTileChanged(playerCoordX, playerCoordY, map->GetPlayerTypeFromId(playerIndex));
+        }
+        else
+        {
+            // Player did not join. Replace by empty space
+            map->SetTileDataAtPosition(
+                playerCoordX,
+                playerCoordY,
+                TileTypes::EMPTY
+            );
+
+            emit MapTileChanged(playerCoordX, playerCoordY, TileTypes::EMPTY);
+        }
+    }
     return true;
 }
 
@@ -1235,7 +1329,8 @@ bool BomberManGame::Start()
 bool BomberManGame::Pause()
 {
     if(gameStatus != GameStatuses::playing) return false;
-    gameStatus = GameStatuses::paused;
+    SetStatus(GameStatuses::paused);
+
     gameDuration.Stop();
     appRef->SetMessage("  Game  paused  ");
     return true;
@@ -1259,13 +1354,25 @@ bool BomberManGame::Resume()
     SetTerminalCursorPosition(0,0);
     // std::cout << "GAME RESUMED" << std::endl;
     // Sleep(1000);
-    gameStatus = GameStatuses::playing;
+    
+    SetStatus(GameStatuses::playing);
     gameDuration.Resume();
     appRef->SetMessage("  Game  resumed  ");
     return true;
 }
 
+bool BomberManGame::SetStatus(int newStatus)
+{
+    static int oldStatus = 0;
 
+    if (oldStatus != newStatus)
+    {
+        oldStatus = newStatus;
+        gameStatus = newStatus;
+        emit StatusChanged(gameStatus);
+    }
+    return true;
+}
 
 /**
  * @brief
@@ -1315,36 +1422,37 @@ int BomberManGame::GetStatus()
 int BomberManGame::GetCountdownValue()
 {
     if(!canBeUsed) return 0;
+    int result = 0;
 
     uint64_t timeLeft = startTimer.TimeLeftNoReset();
 
     if(gameStatus != GameStatuses::countdown)
     {
-        return 0;
+        result = 0;
+    }
+
+    if (timeLeft > 1000)
+    {
+        result = 2;
+    }
+
+    if (timeLeft > 2000)
+    {
+        result = 3;
     }
 
     if(timeLeft > 3000)
     {
-        return 4;
-    }
-
-    if(timeLeft > 2000)
-    {
-        return 3;
-    }
-
-    if(timeLeft > 1000)
-    {
-        return 2;
+        result = 4;
     }
 
     // The end of the timer was eventually reached as we attempted to read it. The game must then start.
     if(timeLeft == 0)
     {
-        gameStatus = GameStatuses::playing;
+        SetStatus(GameStatuses::playing);
     }
 
-    return 1;
+    return result;
 }
 
 /**
@@ -1401,7 +1509,10 @@ int BomberManGame::GetMaxPlayerCount()
     return maxPlayerCount;
 }
 
-
+int BomberManGame::GetActualPlayerCount()
+{
+    return GetConnectedPlayerCount();
+}
 
 Controller* BomberManGame::GetPlayerController(int playerIndex)
 {
@@ -1452,6 +1563,19 @@ bool BomberManGame::UnAssignPlayerController(int playerIndex)
     return true;
 }
 
+int BomberManGame::GetConnectedPlayerCount()
+{
+    int result = 0;
+    for (int i = 0; i < players.size(); i++)
+    {
+        if (players[i].GetController()->controllerID != 0)
+        {
+            result++;
+        }
+    }
+    return result;
+}
+
 int BomberManGame::GetWinningPlayerID()
 {
     int amountOfPlayersAlive = 0;
@@ -1476,6 +1600,11 @@ bool BomberManGame::SetGameMessage(std::string newMessage)
     needToRedrawMessage = true;
     gameMessageReset.Reset();
     return true;
+}
+
+Player* BomberManGame::GetPlayer(int playerID)
+{
+    return &players[playerID];
 }
 
 /**
@@ -1743,25 +1872,32 @@ bool BomberManGame::FreshDraw()
     // ALL PLAYER CARDS. AS MANY AS THERE IS PLAYERS FOR THIS GAME
     for(int playerIndex = 0; playerIndex < map->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
     {
+        int playerCoordX = players[playerIndex].GetCurrentCoordinates()->X();
+        int playerCoordY = players[playerIndex].GetCurrentCoordinates()->Y();
+
         if(players[playerIndex].GetController()->controllerID != 0) 
         {
             FreshDrawPlayer(playerIndex, gameWidth);
 
             // Replace the player spawn by the actual player
             map->SetTileDataAtPosition(
-                players[playerIndex].GetCurrentCoordinates()->X(), 
-                players[playerIndex].GetCurrentCoordinates()->Y(),
+                playerCoordX,
+                playerCoordY,
                 map->GetPlayerTypeFromId(playerIndex)
             );
+
+            emit MapTileChanged(playerCoordX, playerCoordY, map->GetPlayerTypeFromId(playerIndex));
         }
         else
         {
             // Player did not join. Replace by empty space
             map->SetTileDataAtPosition(
-                players[playerIndex].GetCurrentCoordinates()->X(), 
-                players[playerIndex].GetCurrentCoordinates()->Y(),
+                playerCoordX,
+                playerCoordY,
                 TileTypes::EMPTY
             );
+
+            emit MapTileChanged(playerCoordX, playerCoordY, TileTypes::EMPTY);
         }
     }
 

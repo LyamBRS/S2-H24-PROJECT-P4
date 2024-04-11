@@ -37,7 +37,7 @@
     <Import Project="$(QtMsBuild)\qt_defaults.props" />
   </ImportGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'" Label="QtSettings">
-    <QtInstall>6.6.1_msvc2019_64</QtInstall>
+    <QtInstall>6.7.0_msvc2019_64</QtInstall>
     <QtModules>core;gui;widgets</QtModules>
     <QtBuildConfig>debug</QtBuildConfig>
   </PropertyGroup>
@@ -132,12 +132,14 @@
     <ClCompile Include="Files\QMenus\QPlayerJoiningMenu.cpp" />
     <ClCompile Include="Files\QMenus\QSettingsMenu.cpp" />
     <ClCompile Include="Files\QObjects\QCountDown.cpp" />
+    <ClCompile Include="Files\QObjects\QGameHeader.cpp" />
     <ClCompile Include="Files\QObjects\QJoinedPlayersList.cpp">
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).moc</QtMocFileName>
       <DynamicSource Condition="'$(Configuration)|$(Platform)'=='Release|x64'">input</DynamicSource>
       <QtMocFileName Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).moc</QtMocFileName>
     </ClCompile>
+    <ClCompile Include="Files\QObjects\QMap.cpp" />
     <ClCompile Include="Files\QObjects\QPlayerStats.cpp" />
     <ClCompile Include="Files\ScreenAttributes\ScreenAttributes.cpp" />
     <ClCompile Include="Files\Serial\PortDetector.cpp" />
@@ -158,7 +160,7 @@
     <QtMoc Include="Files\Game\Game.h" />
     <ClInclude Include="Files\Inventory\Inventory.h" />
     <ClInclude Include="Files\JSON\json.hpp" />
-    <ClInclude Include="Files\Map\Map.h" />
+    <QtMoc Include="Files\Map\Map.h" />
     <ClInclude Include="Files\Map\Utils.hpp" />
     <ClInclude Include="Files\Menus\ArduinoMenu.h" />
     <ClInclude Include="Files\Menus\ExitMenu.h" />
@@ -188,7 +190,9 @@
     <ClInclude Include="Files\QMenus\QSettingsMenu.h" />
     <ClInclude Include="Files\QObjects\QCountDown.h" />
     <QtMoc Include="Files\QObjects\QJoinedPlayersList.h" />
-    <ClInclude Include="Files\QObjects\QPlayerStats.h" />
+    <QtMoc Include="Files\QObjects\QMap.h" />
+    <QtMoc Include="Files\QObjects\QGameHeader.h" />
+    <QtMoc Include="Files\QObjects\QPlayerStats.h" />
     <ClInclude Include="Files\ScreenAttributes\ScreenAttributes.h" />
     <ClInclude Include="Files\Serial\PortDetector.h" />
     <ClInclude Include="Files\Serial\SerialPort.hpp" />
