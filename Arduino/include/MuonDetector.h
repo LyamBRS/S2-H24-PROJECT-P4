@@ -34,6 +34,8 @@ class MuonDetector
 
         bool canBeUsed = false;
 
+        int defaultValue = 0;
+
     public:
 
         MuonDetector();
@@ -75,4 +77,6 @@ class MuonDetector
          * Failed to update the MuonDetector
          */
         bool Update();
+
+        int GetAnalog();
 };
