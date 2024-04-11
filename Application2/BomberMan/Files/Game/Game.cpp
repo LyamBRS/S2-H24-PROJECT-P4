@@ -996,9 +996,18 @@ bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
     //int detectedMuons = appRef->GetDetectedMuons();
 
     // CHANGE THIS ONCE WE'VE GOT MUONS GOING
-    std::random_device dev;
-    std::mt19937 rng(dev());
-    std::uniform_int_distribution<std::mt19937::result_type> dist6(1,10); // distribution in range [1, 5]
+    int randomNumber = 0;
+    if (appRef->useMuons && appRef->arduinoThread.GetArduino()->ConnectionStatus())
+    {
+        randomNumber = appRef->GetDetectedMuons() % 10;
+    }
+    else
+    {
+        std::random_device dev;
+        std::mt19937 rng(dev());
+        std::uniform_int_distribution<std::mt19937::result_type> dist6(1, 10); // distribution in range [1, 5]
+        randomNumber = dist6(rng);
+    }
 
     // - DESTROY BOX - //
     map->SetTileDataAtPosition(
@@ -1008,7 +1017,6 @@ bool BomberManGame::HandleBoxDestruction(Positions boxPosition)
     );
     emit MapTileChanged(boxPosition.X(), boxPosition.Y(), TileTypes::WALL);
 
-    int randomNumber = dist6(rng);
     TileTypes wantedTile = GetTileFromPowerUp(randomNumber);
 
     // - Test if the tile is no longer empty. If thats the case, a powerup needs to be created.
@@ -1113,7 +1121,8 @@ BomberManGame::BomberManGame(AppHandler* newAppRef, Map* MapData)
             SetStatus(GameStatuses::invalid);
             //return;
         }
-        Player player = Player(initialPosX, initialPosY, " @ ", GetPlayerColor(playerIndex));
+
+        Player player = Player(initialPosX, initialPosY, " @ ", GetPlayerColor(playerIndex), appRef);
         players.push_back(player);
     }
 

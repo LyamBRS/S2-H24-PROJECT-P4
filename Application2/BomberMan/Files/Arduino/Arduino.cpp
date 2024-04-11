@@ -169,6 +169,11 @@ bool Arduino::ParseReceivedMessage()
     return true;
 }
 
+bool Arduino::ConnectionStatus()
+{
+    return serialHandler.ConnectionStatus();
+}
+
 std::string Arduino::GetLastRawMessage()
 {
     return lastReceivedMessage;

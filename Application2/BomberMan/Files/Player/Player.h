@@ -30,20 +30,23 @@
 #define boutonBombe 1
 
 #define PLAYER_KEY_SELECT       bottomButton
-#define PLAYER_KEY_Y_AXIS       joystickY
-#define PLAYER_KEY_X_AXIS       joystickX
+#define PLAYER_KEY_Y_AXIS_JOY   joystickY
+#define PLAYER_KEY_X_AXIS_JOY   joystickX
 #define PLAYER_KEY_INV_LEFT     leftButton
 #define PLAYER_KEY_INV_RIGHT    rightButton
 #define PLAYER_KEY_USE_PWR      topButton
 #define PLAYER_KEY_DISCARD_PWR  joystickButton
 
 #define PLAYER_LOCAL_SELECT       controllerRef->bottomButton
-#define PLAYER_LOCAL_Y_AXIS       controllerRef->joystickY
-#define PLAYER_LOCAL_X_AXIS       controllerRef->joystickX
+#define PLAYER_LOCAL_Y_AXIS_JOY   controllerRef->joystickY
+#define PLAYER_LOCAL_X_AXIS_JOY   controllerRef->joystickX
 #define PLAYER_LOCAL_INV_LEFT     controllerRef->leftButton
 #define PLAYER_LOCAL_INV_RIGHT    controllerRef->rightButton
 #define PLAYER_LOCAL_USE_PWR      controllerRef->topButton
 #define PLAYER_LOCAL_DISCARD_PWR  controllerRef->joystickButton
+
+#define PLAYER_LOCAL_Y_AXIS_ACC   controllerRef->accelerometerY
+#define PLAYER_LOCAL_X_AXIS_ACC   controllerRef->accelerometerX
 
 #define PLAYER_CONTROLLER_THRESHOLD 30
 
@@ -69,6 +72,8 @@
 // - FUNCTION - //
 
 // - CLASS - //
+
+class AppHandler;
 
 /**
  * @brief
@@ -104,6 +109,8 @@ class Player : BaseObject
 
         /// @brief Linked to a real controller.
         Controller* controllerRef = new Controller();
+
+        AppHandler* appRef;
         
         /// @brief How big of a radius do the regular bombs have by default?
         int bombRadius = PLAYER_DEFAULT_BOMB_RADIUS;
@@ -147,7 +154,7 @@ class Player : BaseObject
          * @param wantdColour
          * What colour should the player be?
          */
-        Player(int initialX, int initialY, std::string wantedAscii, int wantedColour);
+        Player(int initialX, int initialY, std::string wantedAscii, int wantedColour, AppHandler* newAppRef);
 
         /**
          * @brief
@@ -368,3 +375,5 @@ bool AffectPlayer_SpeedBonus(Player* player);
 bool AffectPlayer_BombRadiusBonus(Player* player);
 bool AffectPlayer_BombDamageBonus(Player* player);
 bool AffectPlayer_BombPlacementSpeed(Player* player);
+
+#include "../Application/AppHandler.h"

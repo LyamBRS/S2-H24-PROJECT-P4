@@ -69,6 +69,15 @@ void QSettingsMenu::CreateWidgets()
 	baudratesBox	= new QComboBox();
 	comPortBox		= new CustomComboBox();
 
+	UseAccelerometerCheckBox = new QCheckBox();
+	UseMuonsForRandomCheckBox = new QCheckBox();
+
+	UseAccelerometerCheckBox->setChecked(appRef->useAccelerometer);
+	UseMuonsForRandomCheckBox->setChecked(appRef->useMuons);
+
+	UseAccelerometerLabel = new QLabel("Accelerometer movements");
+	UseMuonsForRandomLabel = new QLabel("Use muons for random");
+
 	connectionProgress = new QProgressBar();
 	connectionProgress->setRange(0, 100);
 	connectionProgress->setEnabled(false);
@@ -121,6 +130,9 @@ void QSettingsMenu::CreateLayouts()
 	baudrateLayout	= new QHBoxLayout();
 	comPortLayout	= new QHBoxLayout();
 
+	UseAccelerometerLayout = new QHBoxLayout();
+	UseMuonsForRandomLayout = new QHBoxLayout();
+
 	mainLayout = new QGridLayout();
 }
 
@@ -135,7 +147,13 @@ void QSettingsMenu::ConnectWidgets()
 	connect(amountOfComPortChecks,	&QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
 	connect(connectingProgress,		&QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
 
+	connect(UseAccelerometerCheckBox, &QCheckBox::checkStateChanged, this, &QSettingsMenu::AccelerometerCheckBoxChanged);
+	connect(UseMuonsForRandomCheckBox, &QCheckBox::checkStateChanged, this, &QSettingsMenu::MuonCheckBoxChanged);
+
+
 	connect(appRef->arduinoThread.GetArduino(), &Arduino::ComPortStateChanged, this, &QSettingsMenu::ComStateChanged);
+
+
 }
 
 void QSettingsMenu::CreateMenu()
@@ -152,8 +170,16 @@ void QSettingsMenu::CreateMenu()
 	comPortLayout->addWidget(comPortText);
 	comPortLayout->addWidget(comPortBox);
 
+	UseAccelerometerLayout->addWidget(UseAccelerometerLabel);
+	UseAccelerometerLayout->addWidget(UseAccelerometerCheckBox);
+
+	UseMuonsForRandomLayout->addWidget(UseMuonsForRandomLabel);
+	UseMuonsForRandomLayout->addWidget(UseMuonsForRandomCheckBox);
+
 	comboxBoxLayout->addLayout(baudrateLayout);
 	comboxBoxLayout->addLayout(comPortLayout);
+	comboxBoxLayout->addLayout(UseAccelerometerLayout);
+	comboxBoxLayout->addLayout(UseMuonsForRandomLayout);
 	comboxBoxLayout->addWidget(portStatus);
 	comboxBoxLayout->addWidget(helperText);
 
@@ -265,6 +291,17 @@ int QSettingsMenu::ComPortIndex()
 }
 
 
+
+
+void QSettingsMenu::AccelerometerCheckBoxChanged()
+{
+	appRef->useAccelerometer = UseAccelerometerCheckBox->checkState();
+}
+
+void QSettingsMenu::MuonCheckBoxChanged()
+{
+	appRef->useMuons = UseMuonsForRandomCheckBox->checkState();
+}
 
 void QSettingsMenu::GoToMainMenu()
 {
