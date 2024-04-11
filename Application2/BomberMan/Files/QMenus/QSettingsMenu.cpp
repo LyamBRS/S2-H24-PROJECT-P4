@@ -147,13 +147,11 @@ void QSettingsMenu::ConnectWidgets()
 	connect(amountOfComPortChecks,	&QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
 	connect(connectingProgress,		&QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
 
-	connect(UseAccelerometerCheckBox, &QCheckBox::checkStateChanged, this, &QSettingsMenu::AccelerometerCheckBoxChanged);
-	connect(UseMuonsForRandomCheckBox, &QCheckBox::checkStateChanged, this, &QSettingsMenu::MuonCheckBoxChanged);
+	connect(UseAccelerometerCheckBox, &QCheckBox::stateChanged, this, &QSettingsMenu::AccelerometerCheckBoxChanged);
+	connect(UseMuonsForRandomCheckBox, &QCheckBox::stateChanged, this, &QSettingsMenu::MuonCheckBoxChanged);
 
 
 	connect(appRef->arduinoThread.GetArduino(), &Arduino::ComPortStateChanged, this, &QSettingsMenu::ComStateChanged);
-
-
 }
 
 void QSettingsMenu::CreateMenu()
