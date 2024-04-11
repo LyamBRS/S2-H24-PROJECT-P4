@@ -18,9 +18,15 @@
 #include "../JSON/json.hpp"
 #include <vector>
 #include <fstream>
+#include <QtXml/QDomDocument>
+#include <QtSvg/QSvgRenderer>
+#include <QtCore/qfile.h>
+#include <QtGui/qpainter.h>
 #include <string>
 #include "../Colour/Colour.h"
 #include "../PowerUp/PowerUp.h"
+#include <QGraphicsItem>
+#include <QGraphicsColorizeEffect>
 
 // - DEFINES - //
 #define EM_MAP_WRONG_AMOUNT_OF_PLAYERS  "Invalid specified amount of players"
@@ -93,11 +99,12 @@ bool VerifyMap(std::string path);
 bool TileIsWalkable(TileTypes tile);
 
 void PrintTileName(TileTypes tile);
-
+//void SetAttrRecur(QDomElement elem, QString strtagname, QString strattr, QString strattrval);
 bool TileIsSmoke(TileTypes tile);
 bool checkIfTileIsPlayer(TileTypes tile);
 int GetPowerUpFromTile(TileTypes tile);
 TileTypes GetTileFromPowerUp(int powerUpID);
+QPixmap ChangeSVGColor(QString svgName, QColor qcolor);
 
 std::vector<nlohmann::json> GetAllMaps();
 std::string GetSvg(std::string name);

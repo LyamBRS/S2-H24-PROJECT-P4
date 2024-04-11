@@ -70,8 +70,10 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	ButtonLayout->addWidget(leaveButton);
 
 
+
 	
-	QPixmap pm(QString::fromStdString(GetSvg("Logo")));
+
+	QPixmap pm(ChangeSVGColor("Logo", QColor(0, 0, 200)));
 	auto newPixmap = pm.scaled(500, 500);
 	lblLogo->setPixmap(newPixmap);
 
@@ -79,9 +81,6 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	ButtonLogoLayout->addStretch();
 	ButtonLogoLayout->addWidget(lblLogo);
 	ButtonLogoLayout->addStretch();
-
-	
-	
 
 	MainLayout->addLayout(layTitle);
 	MainLayout->addLayout(ButtonLogoLayout);

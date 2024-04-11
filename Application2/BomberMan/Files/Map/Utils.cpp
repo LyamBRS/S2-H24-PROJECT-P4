@@ -14,6 +14,8 @@
 #include "Utils.hpp"
 
 
+
+
 // - PROGRAM - //
 
 
@@ -57,6 +59,24 @@ std::vector<nlohmann::json> GetAllMaps()
         }
     return allFoundMaps;
 }
+
+
+QPixmap ChangeSVGColor(QString svgName, QColor qcolor)
+{
+    QFile file(QString::fromStdString(GetSvg(svgName.toStdString())));
+    file.open(QIODevice::ReadOnly);
+    QByteArray baData = file.readAll();
+    QString str = baData;
+    str.replace("#000000", qcolor.name());
+    baData = str.toUtf8();
+    QSvgRenderer svgRenderer(baData);
+    QPixmap pix(svgRenderer.defaultSize());
+    pix.fill(Qt::transparent);
+    QPainter pixPainter(&pix);
+    svgRenderer.render(&pixPainter);
+    return pix;
+}
+
 
 std::string GetSvg(std::string name)
 {
