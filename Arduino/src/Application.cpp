@@ -143,10 +143,23 @@ bool Application::Reset()
  */
 bool Application::UpdateAll()
 {
+    static int oldMuonCount = 0;
     controllerA->Update();
     controllerB->Update();
     muonDetector->Update();
     communication.Update();
+
+    /*
+    if(oldMuonCount != muonDetector->GetTotal())
+    {
+        oldMuonCount = muonDetector->GetTotal();
+        lcd.setCursor(0,0);
+        lcd.print(oldMuonCount);
+        lcd.setCursor(0,1);
+        lcd.print(muonDetector->GetAnalog(PIN_MUON));
+    }
+    */
+
     UpdateLCD();
     return true;
 }

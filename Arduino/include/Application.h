@@ -33,7 +33,7 @@
 #define PIN_LCD_D6 27
 #define PIN_LCD_D7 25
 
-#define PIN_MUON 0
+#define PIN_MUON A0
 
 #define PIN_CONTROLLER_A_DETECTION 2
 #define PIN_CONTROLLER_B_DETECTION 3

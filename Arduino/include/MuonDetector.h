@@ -75,4 +75,6 @@ class MuonDetector
          * Failed to update the MuonDetector
          */
         bool Update();
+
+        int GetAnalog(int arduinoPin);
 };

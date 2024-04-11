@@ -76,9 +76,13 @@ bool MuonDetector::ResetCount()
  */
 bool MuonDetector::Update()
 {
-    if(analogRead(arduinoPin)>=330){
+    if(analogRead(arduinoPin)>=520){
         totalCounted+=1;
     }
     return true;
 }
 
+int MuonDetector::GetAnalog(int arduinoPin)
+{
+    return analogRead(arduinoPin);
+}
