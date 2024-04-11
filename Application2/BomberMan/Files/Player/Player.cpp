@@ -133,8 +133,8 @@ bool Player::UpdateFromController()
 
     if (appRef->useAccelerometer)
     {
-        if (PLAYER_LOCAL_X_AXIS_ACC < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
-        if (PLAYER_LOCAL_X_AXIS_ACC > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
+        if (PLAYER_LOCAL_X_AXIS_ACC < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
+        if (PLAYER_LOCAL_X_AXIS_ACC > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
 
         if (PLAYER_LOCAL_Y_AXIS_ACC < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
         if (PLAYER_LOCAL_Y_AXIS_ACC > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
