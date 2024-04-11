@@ -25,8 +25,7 @@
 #include <string>
 #include "../Colour/Colour.h"
 #include "../PowerUp/PowerUp.h"
-#include <QGraphicsItem>
-#include <QGraphicsColorizeEffect>
+
 
 // - DEFINES - //
 #define EM_MAP_WRONG_AMOUNT_OF_PLAYERS  "Invalid specified amount of players"
