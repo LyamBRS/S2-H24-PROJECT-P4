@@ -383,6 +383,8 @@ bool VerifyBaudRate(unsigned int baudRateToverify);
              */
             bool HandleMessageReception();
 
+            bool ConnectionStatus();
+
         signals:
             void ComPortStateChanged(bool newState);
     };

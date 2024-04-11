@@ -18,12 +18,12 @@ int AppHandler::UpdateKeyboardControllers()
     numpadKeyboard.isConnected = true;
     letterKeyboard.isConnected = true;
 
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_T) & 0x8000) letterKeyboard.joystickY = 100;
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_B) & 0x8000) letterKeyboard.joystickY = 0;  
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_L) & 0x8000) letterKeyboard.joystickX = 100;
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_R) & 0x8000) letterKeyboard.joystickX = 0;
-    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_R) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_L) & 0x8000)) letterKeyboard.joystickX = 50;
-    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_T) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_B) & 0x8000)) letterKeyboard.joystickY = 50;
+    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_T) & 0x8000) { letterKeyboard.joystickY = 100; letterKeyboard.accelerometerY = 100; }
+    if (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_B) & 0x8000) { letterKeyboard.joystickY = 0;   letterKeyboard.accelerometerY = 0; }
+    if (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_L) & 0x8000) { letterKeyboard.joystickX = 100; letterKeyboard.accelerometerX = 100; }
+    if (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_R) & 0x8000) { letterKeyboard.joystickX = 0;   letterKeyboard.accelerometerX = 0; }
+    if (!(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_R) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_X_L) & 0x8000)) { letterKeyboard.joystickX = 50; letterKeyboard.accelerometerX = 50;}
+    if (!(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_T) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_A_Y_B) & 0x8000)) { letterKeyboard.joystickY = 50; letterKeyboard.accelerometerY = 50;}
 
     letterKeyboard.leftButton       = (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_LEFT)   & 0x8000);
     letterKeyboard.rightButton      = (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_RIGHT)  & 0x8000);
@@ -31,12 +31,12 @@ int AppHandler::UpdateKeyboardControllers()
     letterKeyboard.bottomButton     = (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_DOWN)   & 0x8000);
     letterKeyboard.joystickButton   = (GetAsyncKeyState(CONTROLLER_KEYBOARD_A_SELECT) & 0x8000);
 
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_T) & 0x8000) numpadKeyboard.joystickY = 100;
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_B) & 0x8000) numpadKeyboard.joystickY = 0;  
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_L) & 0x8000) numpadKeyboard.joystickX = 100;
-    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_R) & 0x8000) numpadKeyboard.joystickX = 0;
-    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_R) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_L) & 0x8000)) numpadKeyboard.joystickX = 50;
-    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_T) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_B) & 0x8000)) numpadKeyboard.joystickY = 50;
+    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_T) & 0x8000) {numpadKeyboard.joystickY = 100; numpadKeyboard.accelerometerY = 100;}
+    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_B) & 0x8000) {numpadKeyboard.joystickY = 0;   numpadKeyboard.accelerometerY = 0;}
+    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_L) & 0x8000) {numpadKeyboard.joystickX = 100; numpadKeyboard.accelerometerX = 100;}
+    if(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_R) & 0x8000) {numpadKeyboard.joystickX = 0;   numpadKeyboard.accelerometerX = 0;}
+    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_R) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_X_L) & 0x8000)) { numpadKeyboard.joystickX = 50; numpadKeyboard.accelerometerX = 50; }
+    if(!(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_T) & 0x8000) && !(GetAsyncKeyState(CONTROLLER_KEYBOARD_B_Y_B) & 0x8000)) { numpadKeyboard.joystickY = 50; numpadKeyboard.accelerometerY = 50; }
 
     numpadKeyboard.leftButton       = (GetAsyncKeyState(CONTROLLER_KEYBOARD_B_LEFT)   & 0x8000);
     numpadKeyboard.rightButton      = (GetAsyncKeyState(CONTROLLER_KEYBOARD_B_RIGHT)  & 0x8000);

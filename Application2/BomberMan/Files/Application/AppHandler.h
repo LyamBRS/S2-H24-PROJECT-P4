@@ -159,6 +159,9 @@ class AppHandler : public QObject
         QColor* colorPlayerC;
         QColor* colorPlayerD;
         QColor* colorPlayerE;
+
+        bool useAccelerometer = false;
+        bool useMuons = false;
 };
 
 #include "../Game/Game.h"

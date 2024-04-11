@@ -26,8 +26,9 @@
 #include "Player.h"
 
 // - PRORGAM - //
-Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedColour) : BaseObject()
+Player::Player(int initialX, int initialY, std::string wantedAscii, int wantedColour, AppHandler* newAppRef) : BaseObject()
 {
+    appRef = newAppRef;
     position.SetNewCoordinates(initialX, initialY);
     OldPosition.SetNewCoordinates(initialX, initialY);
     movement.SetDeltas(0, 0);
@@ -130,11 +131,22 @@ bool Player::UpdateFromController()
 
     wantedDeltaX = wantedDeltaY;
 
-    if (PLAYER_LOCAL_X_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
-    if (PLAYER_LOCAL_X_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
+    if (appRef->useAccelerometer)
+    {
+        if (PLAYER_LOCAL_X_AXIS_ACC < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
+        if (PLAYER_LOCAL_X_AXIS_ACC > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
 
-    if (PLAYER_LOCAL_Y_AXIS < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
-    if (PLAYER_LOCAL_Y_AXIS > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
+        if (PLAYER_LOCAL_Y_AXIS_ACC < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
+        if (PLAYER_LOCAL_Y_AXIS_ACC > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
+    }
+    else
+    {
+        if (PLAYER_LOCAL_X_AXIS_JOY < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(1);
+        if (PLAYER_LOCAL_X_AXIS_JOY > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaX(-1);
+
+        if (PLAYER_LOCAL_Y_AXIS_JOY < 50 - PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(1);
+        if (PLAYER_LOCAL_Y_AXIS_JOY > 50 + PLAYER_CONTROLLER_THRESHOLD) movement.DeltaY(-1);
+    }
 
     // Bomb placement handling
     if(bombPlacement.TimeLeftNoReset() == 0)

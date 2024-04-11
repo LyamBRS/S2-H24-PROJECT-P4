@@ -75,6 +75,14 @@ private:
 	QPushButton* backButton;
 	QPushButton* connectButton;
 
+	QHBoxLayout* UseAccelerometerLayout;
+	QCheckBox* UseAccelerometerCheckBox;
+	QLabel* UseAccelerometerLabel;
+
+	QHBoxLayout* UseMuonsForRandomLayout;
+	QCheckBox* UseMuonsForRandomCheckBox;
+	QLabel* UseMuonsForRandomLabel;
+
 	QComboBox* baudratesBox;
 	CustomComboBox* comPortBox;
 
@@ -133,4 +141,7 @@ public slots:
 	void ComPortChanged();
 	void CheckOnConnectionStatus();
 	void ComStateChanged(bool newState);
+
+	void AccelerometerCheckBoxChanged();
+	void MuonCheckBoxChanged();
 };
