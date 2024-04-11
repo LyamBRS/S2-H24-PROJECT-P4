@@ -63,6 +63,7 @@ std::vector<nlohmann::json> GetAllMaps()
 
 QPixmap ChangeSVGColor(QString svgName, QColor qcolor)
 {
+    using namespace std::chrono;
     QFile file(QString::fromStdString(GetSvg(svgName.toStdString())));
     file.open(QIODevice::ReadOnly);
     QByteArray baData = file.readAll();
