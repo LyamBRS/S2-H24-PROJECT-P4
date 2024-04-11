@@ -37,7 +37,7 @@ class Communication
         /// @brief serial port's object.
         SerialPort* serialPort;
 
-        int baudRate = 9600;
+        int baudRate = 115200;
         std::string comPort = "0";
 
         bool connectCalled = false;
