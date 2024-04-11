@@ -50,10 +50,6 @@ void QGameMenu::CreateWidgets()
 
 	GameMap = new QBomberManMap();
 	GameMap->SetMapReference(appRef->currentGame->GetMap());
-	GameMap->SetTileColor(TileTypes::PLAYER1, *appRef->colorPlayerA);
-	GameMap->SetTileColor(TileTypes::PLAYER2, *appRef->colorPlayerB);
-	GameMap->SetTileColor(TileTypes::PLAYER3, *appRef->colorPlayerC);
-	GameMap->SetTileColor(TileTypes::PLAYER4, *appRef->colorPlayerD);
 	//GameMap->SetTileColor(TileTypes::PLAYER5, *appRef->colorPlayerE);
 
 	PlayersStats = new QPlayerStatsList(appRef->currentGame->GetMaxPlayerCount(), appRef->currentGame);

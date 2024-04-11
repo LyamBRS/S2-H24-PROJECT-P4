@@ -28,6 +28,7 @@ QMapSelectionMenu::QMapSelectionMenu(QMainWindow* windowReference, AppHandler* a
 	btnSelectionLeft = new QPushButton("<");
 	btnPlay		= new QPushButton("Play");
 	btnSelectionRight = new QPushButton(">");
+	qmap = new QBomberManMap();
 
 	connect(btnLeave, &QPushButton::clicked, this, &QMapSelectionMenu::GoBack);
 	connect(btnSelectionLeft, &QPushButton::clicked, this, &QMapSelectionMenu::SelectionPrevious);
@@ -55,9 +56,7 @@ QMapSelectionMenu::QMapSelectionMenu(QMainWindow* windowReference, AppHandler* a
 	layLabels->addSpacing(20);
 	layLabels->addWidget(lblNbPlayer);
 
-	layMapGrid->setVerticalSpacing(2);
-	layMapGrid->setHorizontalSpacing(2);
-	layMapGrid->setAlignment(Qt::AlignCenter);
+	layMapGrid->addWidget(qmap);
 	
 	layMain->addLayout(layLabels);
 	layMain->addLayout(layMapGrid);
@@ -75,7 +74,6 @@ QWidget* QMapSelectionMenu::GetMenu()
 
 void QMapSelectionMenu::OnEnter()
 {
-	ClearMapGrid();
 	SelectMap(0);
 }
 
@@ -96,6 +94,9 @@ bool QMapSelectionMenu::OnMapSelect()
 	}
 
 	map = new Map(allMaps[appRef->selection]);
+	//qmap = new QBomberManMap();
+	qmap->SetMapReference(map);
+	qmap->BuildFromMapRef();
 	DrawSelectedMap();
 	return true;
 }
@@ -108,7 +109,7 @@ void QMapSelectionMenu::DrawSelectedMap()
 	lblNbPlayer->setText(QString("Number of player: %1").arg(map->GetAmountOfPlayer()));
 	lblMapSize->setText(QString("Size of the map: %1 by %2").arg(sizeX).arg(sizeY));
 
-	for (int i = 0; i < sizeX; ++i) {
+	/*for (int i = 0; i < sizeX; ++i) {
 		for (int j = 0; j < sizeY; ++j) {
 			QLabel* lblMapCell = new QLabel;
 			QPixmap pm(QString::fromStdString(map->tileSvg[map->GetTileDataAtPosition(i, j)]));
@@ -116,17 +117,18 @@ void QMapSelectionMenu::DrawSelectedMap()
 			lblMapCell->setPixmap(newPixmap);
 			layMapGrid->addWidget(lblMapCell, j, i);
 		}
-	}
+	}*/
 }
 
 void QMapSelectionMenu::ClearMapGrid() 
 {
-	while (QLayoutItem* item = layMapGrid->takeAt(0))
+	qmap->Clear();
+	/*while (QLayoutItem* item = layMapGrid->takeAt(0))
 	{
 		if (QWidget* widget = item->widget())
 			widget->deleteLater();
 		delete item;
-	}	
+	}*/	
 }
 
 void QMapSelectionMenu::Play() 

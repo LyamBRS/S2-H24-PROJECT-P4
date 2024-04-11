@@ -25,6 +25,7 @@
 #include "../Map/Utils.hpp"
 #include "../Map/Map.h"
 #include "../JSON/json.hpp"
+#include "../QObjects/QMap.h"
 
 // - DEFINES - //
 
@@ -79,6 +80,7 @@ private:
 
 	QWidget* MainMenu;
 	QVector<QVector<QLabel*>> gridContent;
+	QBomberManMap* qmap;
 
 
 	int amountOfMaps = 0;
