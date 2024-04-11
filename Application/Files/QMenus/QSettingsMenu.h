@@ -64,9 +64,9 @@ protected:
 	}
 };
 
+
 class QSettingsMenu : public QObject
 {
-
 private:
 
 	QMainWindow* winRef;
@@ -117,6 +117,12 @@ public:
 
 	int GetCurrentBaudRateIndex();
 	int ComPortIndex();
+
+	void CreateTimers();
+	void CreateWidgets();
+	void CreateLayouts();
+	void ConnectWidgets();
+	void CreateMenu();
 
 public slots:
 	void GoToMainMenu();

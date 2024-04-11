@@ -1,0 +1,60 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.34407.143
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "BomberMan", "BomberMan.vcxproj", "{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{2A12CA84-2970-465A-AB10-A6EE7A095DDF}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maps", "Maps", "{B3B5DE42-88C8-481A-9127-17391112D8E2}"
+	ProjectSection(SolutionItems) = preProject
+		Maps\bruh.json = Maps\bruh.json
+		Maps\GoodMap.json = Maps\GoodMap.json
+		Maps\lol.json = Maps\lol.json
+		Maps\Lv1.json = Maps\Lv1.json
+		Maps\Lv2.json = Maps\Lv2.json
+		Maps\MapExample.json = Maps\MapExample.json
+		Maps\nuhhuh.json = Maps\nuhhuh.json
+		Maps\rohoh.json = Maps\rohoh.json
+	EndProjectSection
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Media", "Media", "{FB874DB8-9231-434B-8510-B8B4A8386E6B}"
+	ProjectSection(SolutionItems) = preProject
+		Media\Bomb.svg = Media\Bomb.svg
+		Media\Empty.svg = Media\Empty.svg
+		Media\PermaWall.svg = Media\PermaWall.svg
+		Media\PlayerFemale.svg = Media\PlayerFemale.svg
+		Media\PlayerMale.svg = Media\PlayerMale.svg
+		Media\PowerBomb.svg = Media\PowerBomb.svg
+		Media\PowerDmg.svg = Media\PowerDmg.svg
+		Media\PowerLife.svg = Media\PowerLife.svg
+		Media\PowerReach.svg = Media\PowerReach.svg
+		Media\PowerSpeed.svg = Media\PowerSpeed.svg
+		Media\PowerWall.svg = Media\PowerWall.svg
+		Media\Smoke.svg = Media\Smoke.svg
+		Media\Wall.svg = Media\Wall.svg
+	EndProjectSection
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|x64 = Debug|x64
+		Release|x64 = Release|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}.Debug|x64.ActiveCfg = Debug|x64
+		{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}.Debug|x64.Build.0 = Debug|x64
+		{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}.Release|x64.ActiveCfg = Release|x64
+		{94AC509C-2F01-4B1C-95A8-559BE93DF3DE}.Release|x64.Build.0 = Release|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{B3B5DE42-88C8-481A-9127-17391112D8E2} = {2A12CA84-2970-465A-AB10-A6EE7A095DDF}
+		{FB874DB8-9231-434B-8510-B8B4A8386E6B} = {2A12CA84-2970-465A-AB10-A6EE7A095DDF}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {B8FC9BEB-2924-45C5-8130-CE730E4503E1}
+	EndGlobalSection
+EndGlobal

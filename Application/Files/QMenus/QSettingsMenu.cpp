@@ -13,8 +13,6 @@
 
 
 
-
-
 // - CLASS - //
 QSettingsMenu::QSettingsMenu()
 {
@@ -26,49 +24,65 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	winRef = windowReference;
 	appRef = appHandler;
 
-	amountOfComPortChecks = new QTimer();
-	amountOfComPortChecks->setInterval(500);
+	CreateTimers();
+	CreateWidgets();
+	CreateLayouts();
+	ConnectWidgets();
+	CreateMenu();
 
+	// - LABEL SETUPS - //
+
+
+	// - LAYOUT SETUPS - //
+
+
+	// - SIGNALS & SLOTS - CONNECTION - //
+
+	// - LAYOUT MAKING AND WIDGET ARRANGEMENTS - //
+
+}
+
+
+void QSettingsMenu::CreateTimers()
+{
+	// - CREATE
+	amountOfComPortChecks = new QTimer();
 	connectingProgress = new QTimer();
+
+	// - SET
+	amountOfComPortChecks->setInterval(500);
 	connectingProgress->setInterval(100);
 
-	MainMenu = new QWidget();
-	leftArea = new QWidget();
-	rightArea = new QWidget();
+	// - START
+	amountOfComPortChecks->start();
+}
+
+void QSettingsMenu::CreateWidgets()
+{
+	MainMenu	= new QWidget();
+	leftArea	= new QWidget();
+	rightArea	= new QWidget();
 
 	backButton		= new QPushButton("Back");
-	connectButton = new QPushButton("Connect");
+	connectButton	= new QPushButton("Connect");
 
-	baudratesBox = new QComboBox();
-	comPortBox = new CustomComboBox();
+	baudratesBox	= new QComboBox();
+	comPortBox		= new CustomComboBox();
 
 	connectionProgress = new QProgressBar();
 	connectionProgress->setRange(0, 100);
 	connectionProgress->setEnabled(false);
 
-	baudRateText = new QLabel("Baudrate:");
-	comPortText  = new QLabel("Port:");
-	helperText = new QLabel("helperText");
-	portStatus = new QLabel("Port status");
-	rawReceivedMessageText = new QLabel("ARDUINO MESSAGE IS SEEN HERE");
+	baudRateText			= new QLabel("Baudrate:");
+	comPortText				= new QLabel("Port:");
+	helperText				= new QLabel("helperText");
+	portStatus				= new QLabel("Port status");
+	rawReceivedMessageText	= new QLabel("ARDUINO MESSAGE IS SEEN HERE");
 
-	buttonLayout = new QVBoxLayout();
-	comboxBoxLayout = new QVBoxLayout();
-
-	baudrateLayout = new QHBoxLayout();
-	comPortLayout = new QHBoxLayout();
-
-	rawReceivedMessageLayout = new QVBoxLayout();
-	mainLayout = new QGridLayout();
-	leftLayout = new QVBoxLayout();
-
-	// - LABEL SETUPS - //
-	helperText->setAlignment(Qt::AlignJustify);
-	portStatus->setAlignment(Qt::AlignJustify);
 	rawReceivedMessageText->setStyleSheet("border: 1px solid black;");
 	rawReceivedMessageText->setWordWrap(true);
-
-	// - LAYOUT SETUPS - //
+	helperText->setAlignment(Qt::AlignCenter);
+	portStatus->setAlignment(Qt::AlignCenter);
 
 	// - COMBO BOX SETUPS - //
 	baudratesBox->addItems(GetBaudRates());
@@ -88,17 +102,42 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 		comPortBox->setCurrentIndex(selectedPort);
 	}
 
+	// - SET WANTED LOOKS FOR STUFF - //
+	if (appRef->arduinoThread.GetArduino()->GetPortState())
+	{
+		connectButton->setText("Disconnect");
+		baudratesBox->setEnabled(false);
+		comPortBox->setEnabled(false);
+	}
+}
 
-	// - SIGNALS & SLOTS - CONNECTION - //
-	connect(backButton, &QPushButton::clicked, this, &QSettingsMenu::GoToMainMenu);
-	connect(connectButton, &QPushButton::clicked, this, &QSettingsMenu::ConnectClicked);
-	connect(baudratesBox, QOverload<int>::of(&QComboBox::currentIndexChanged),this, &QSettingsMenu::BaudRateChanged);
-	connect(comPortBox, QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QSettingsMenu::SelectedComPortChanged);
+void QSettingsMenu::CreateLayouts()
+{
+	buttonLayout				= new QVBoxLayout();
+	comboxBoxLayout				= new QVBoxLayout();
+	rawReceivedMessageLayout	= new QVBoxLayout();
+	leftLayout					= new QVBoxLayout();
 
-	connect(amountOfComPortChecks, &QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
-	connect(connectingProgress, &QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
+	baudrateLayout	= new QHBoxLayout();
+	comPortLayout	= new QHBoxLayout();
 
-	// - LAYOUT MAKING AND WIDGET ARRANGEMENTS - //
+	mainLayout = new QGridLayout();
+}
+
+void QSettingsMenu::ConnectWidgets()
+{
+	connect(backButton,		&QPushButton::clicked, this, &QSettingsMenu::GoToMainMenu);
+	connect(connectButton,	&QPushButton::clicked, this, &QSettingsMenu::ConnectClicked);
+
+	connect(baudratesBox,	QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QSettingsMenu::BaudRateChanged);
+	connect(comPortBox,		QOverload<int>::of(&QComboBox::currentIndexChanged), this, &QSettingsMenu::SelectedComPortChanged);
+
+	connect(amountOfComPortChecks,	&QTimer::timeout, this, &QSettingsMenu::ComPortChanged);
+	connect(connectingProgress,		&QTimer::timeout, this, &QSettingsMenu::CheckOnConnectionStatus);
+}
+
+void QSettingsMenu::CreateMenu()
+{
 	buttonLayout->addWidget(connectButton);
 	buttonLayout->addWidget(backButton);
 	buttonLayout->addWidget(connectionProgress);
@@ -122,20 +161,14 @@ QSettingsMenu::QSettingsMenu(QMainWindow* windowReference, AppHandler* appHandle
 	leftArea->setLayout(leftLayout);
 	rightArea->setLayout(rawReceivedMessageLayout);
 
-	mainLayout->addWidget(leftArea, 0, 0, 50,50);
-	mainLayout->addWidget(rightArea, 0, 51, 50,50);
+	mainLayout->addWidget(leftArea, 0, 0, 50, 50);
+	mainLayout->addWidget(rightArea, 0, 51, 50, 50);
 	MainMenu->setLayout(mainLayout);
-
-	amountOfComPortChecks->start();
-
-	// - SET WANTED LOOKS FOR STUFF - //
-	if (appRef->arduinoThread.GetArduino()->GetPortState())
-	{
-		connectButton->setText("Disconnect");
-		baudratesBox->setEnabled(false);
-		comPortBox->setEnabled(false);
-	}
 }
+
+
+
+
 
 QWidget* QSettingsMenu::GetMenu()
 {

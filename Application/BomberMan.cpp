@@ -9,19 +9,13 @@
  * @copyright Copyright (c) 2024
  */
 #include <QApplication>
-#include <QMainWindow>
-#include <QTimer>
 #include <Windows.h>
-#include "Files/Application/Application.h"
-#include "Files/QMenus/QMainMenu.h"
-#include "Files/QMenus/Handler.h"
+#include "Files/QMenus/QAppWindow.h"
 
 
 #include <iostream>
 #include <thread>
 #include <mutex>
-
-Application* application;
 
 class SharedClass {
 public:
@@ -71,30 +65,14 @@ public:
     }
 };
 
-class ApplicationThread : public QThread {
-public:
-    void run() override
-    {
-        //met ton code a excuter ici
-        application->TemporaryLoop();
-    }
-};
+
 
 int main( int argc, char ** argv )
 {
 	QApplication app(argc, argv);
 
-    QMainWindow window;
-    window.setWindowTitle("Bomberman");
-    window.resize(800, 600);
+    QAppWindow window;
     window.show();
 
-    //QMainWindow::connect(&window, &QMainWindow::, &window, &exit);
-
-	application = new Application(&window);
-    QMenuHandler menuHandler = QMenuHandler(&window, application->GetHandler());
-
-    ApplicationThread thread;
-    thread.start();
 	return app.exec();
 }
