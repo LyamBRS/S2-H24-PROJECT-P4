@@ -129,11 +129,16 @@ void QPlayerJoiningMenu::CancelPressed()
 void QPlayerJoiningMenu::StartGamePressed()
 {
 	appRef->currentGame->Start();
-	appRef->SetNewQMenu(QMenus::Countdown);
+	appRef->SetNewQMenu(QMenus::Game);
 }
 
 void QPlayerJoiningMenu::PlayerCountChanged(int newPlayerCount)
 {
+	if (newPlayerCount != appRef->currentGame->GetConnectedPlayerCount())
+	{
+		qFatal() << " newPlayerCount does not match GetConnectedPlayerCount";
+	}
+
 	JoinedPlayersProgress->setValue(newPlayerCount);
 }
 

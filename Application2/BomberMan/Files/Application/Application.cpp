@@ -134,7 +134,7 @@ bool Application::Update()
        appHandler->requiresNewDrawing = true;
     }
 
-    HandleMenuDrawings();
+    //HandleMenuDrawings();
     HandleKeyboardActions();
     HandleMenuUpdates();
 

@@ -150,6 +150,12 @@ bool Map::SetTileDataAtPosition(int x, int y, TileTypes wantedTile)
 		for (int i = 0; i < sizeX; ++i) {
 			if (i == x && j == y)
 			{
+
+				if (wantedTile != GetTileDataAtPosition(x, y))
+				{
+					emit TileDataChanged(x, y, wantedTile);
+				}
+
 				map[i][j] = wantedTile;
 				return true;
 			}

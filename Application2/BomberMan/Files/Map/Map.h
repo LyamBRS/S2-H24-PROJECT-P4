@@ -18,8 +18,30 @@
 #include "../JSON/json.hpp"
 #include "../Colour/Colour.h"
 #include "../Positions/Positions.h"
+#include <qobject.h>
 // - DEFINES - //
-
+#define SVG_EMPTY                   "Empty"
+#define SVG_PERMAWALL               "PermaWall"
+#define SVG_WALL                    "Wall"
+#define SVG_PLAYERSPAWN             "PlayerMale"
+#define SVG_SMOKE                   "Smoke"
+#define SVG_SMOKE1                  "Smoke"
+#define SVG_SMOKE2                  "Smoke"
+#define SVG_SMOKE3                  "Smoke"
+#define SVG_SMOKE4                  "Smoke"
+#define SVG_SMOKE5                  "Smoke"
+#define SVG_POWER_HEART             "PowerLife"
+#define SVG_POWER_DMG               "PowerDmg"
+#define SVG_POWER_MOREBOMB          "PowerBomb"
+#define SVG_POWER_REACH             "PowerReach"
+#define SVG_POWER_SPEED             "PowerSpeed"
+#define SVG_PLAYER1                 "PlayerMale"
+#define SVG_PLAYER2                 "PlayerFemale"
+#define SVG_PLAYER3                 "PlayerMale"
+#define SVG_PLAYER4                 "PlayerMale"
+#define SVG_POWER_BOMB_OF_WALLS     "PowerWall"
+#define SVG_POWER_DEPLOYABLE_WALL   "PowerWall"
+#define SVG_BOMB                    "Bomb"
 
 //////////////////////////////////////////////////////// - TILES
 
@@ -245,8 +267,9 @@ enum class TileTypes
 
 std::string GetSvg(std::string name);
 
-class Map
+class Map : public QObject
 {
+    Q_OBJECT
     private:
         /// @brief How big the map is horizontally.
         int sizeX = 0;
@@ -298,28 +321,28 @@ class Map
 
         std::map<TileTypes, std::string> tileSvg =
         {
-            { TileTypes::EMPTY, GetSvg("Empty")},
-            { TileTypes::PERMAWALL, GetSvg("PermaWall")},
-            { TileTypes::WALL, GetSvg("Wall")},
-            { TileTypes::PLAYERSPAWN, GetSvg("PlayerMale")},
-            { TileTypes::SMOKE, GetSvg("Smoke")},
-            { TileTypes::SMOKE1, GetSvg("Smoke")},
-            { TileTypes::SMOKE2, GetSvg("Smoke")},
-            { TileTypes::SMOKE3, GetSvg("Smoke")},
-            { TileTypes::SMOKE4, GetSvg("Smoke")},
-            { TileTypes::SMOKE5, GetSvg("Smoke")},
-            { TileTypes::POWER_HEART, GetSvg("PowerLife")},
-            { TileTypes::POWER_DMG, GetSvg("PowerDmg")}, 
-            { TileTypes::POWER_MOREBOMB, GetSvg("PowerBomb")},
-            { TileTypes::POWER_REACH, GetSvg("PowerReach")}, 
-            { TileTypes::POWER_SPEED, GetSvg("PowerSpeed")},
-            { TileTypes::PLAYER1, GetSvg("PlayerMale")},
-            { TileTypes::PLAYER2, GetSvg("PlayerFemale")},
-            { TileTypes::PLAYER3, GetSvg("PlayerMale")},
-            { TileTypes::PLAYER4, GetSvg("PlayerMale")},
-            { TileTypes::POWER_BOMB_OF_WALLS, GetSvg("PowerWall")},
+            { TileTypes::EMPTY,                 GetSvg("Empty")},
+            { TileTypes::PERMAWALL,             GetSvg("PermaWall")},
+            { TileTypes::WALL,                  GetSvg("Wall")},
+            { TileTypes::PLAYERSPAWN,           GetSvg("PlayerMale")},
+            { TileTypes::SMOKE,                 GetSvg("Smoke")},
+            { TileTypes::SMOKE1,                GetSvg("Smoke")},
+            { TileTypes::SMOKE2,                GetSvg("Smoke")},
+            { TileTypes::SMOKE3,                GetSvg("Smoke")},
+            { TileTypes::SMOKE4,                GetSvg("Smoke")},
+            { TileTypes::SMOKE5,                GetSvg("Smoke")},
+            { TileTypes::POWER_HEART,           GetSvg("PowerLife")},
+            { TileTypes::POWER_DMG,             GetSvg("PowerDmg")}, 
+            { TileTypes::POWER_MOREBOMB,        GetSvg("PowerBomb")},
+            { TileTypes::POWER_REACH,           GetSvg("PowerReach")}, 
+            { TileTypes::POWER_SPEED,           GetSvg("PowerSpeed")},
+            { TileTypes::PLAYER1,               GetSvg("PlayerMale")},
+            { TileTypes::PLAYER2,               GetSvg("PlayerFemale")},
+            { TileTypes::PLAYER3,               GetSvg("PlayerMale")},
+            { TileTypes::PLAYER4,               GetSvg("PlayerMale")},
+            { TileTypes::POWER_BOMB_OF_WALLS,   GetSvg("PowerWall")},
             { TileTypes::POWER_DEPLOYABLE_WALL, GetSvg("PowerWall")},
-            { TileTypes::BOMB, GetSvg("Bomb")},
+            { TileTypes::BOMB,                  GetSvg("Bomb")},
         };
 
         /**
@@ -476,6 +499,9 @@ class Map
         bool GetASpawnPosition(unsigned int spawnNumber, unsigned int* resultedX, unsigned int* resultedY);
 
         TileTypes GetPlayerTypeFromId(int playerId);
+
+    signals:
+        void TileDataChanged(int x, int y, TileTypes);
 };
 
 #include "Utils.hpp"

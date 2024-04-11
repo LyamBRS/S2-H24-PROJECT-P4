@@ -155,6 +155,7 @@ bool Player::UpdateFromController()
             {
                 inventoryUIFrames.Reset();
                 inventoryRequiresRedraw = true;
+                inventorySelectionChanged = true;
             }
         }
 
@@ -164,6 +165,7 @@ bool Player::UpdateFromController()
             {
                 inventoryUIFrames.Reset();
                 inventoryRequiresRedraw = true;
+                inventorySelectionChanged = true;
             }
         }
 
@@ -421,9 +423,20 @@ int Player::GetBombDamage()
     return bombDamage;
 }
 
+Inventory* Player::GetInventory()
+{
+    return &inventory;
+}
 
-
-
+bool Player::HasSelectedNewItemSinceLastTime()
+{
+    if (inventorySelectionChanged)
+    {
+        inventorySelectionChanged = false;
+        return true;
+    }
+    return false;
+}
 
 
 

@@ -109,6 +109,8 @@ class Player : BaseObject
         int bombRadius = PLAYER_DEFAULT_BOMB_RADIUS;
         int bombDamage = PLAYER_DEFAULT_BOMB_DAMAGE;
 
+        bool inventorySelectionChanged = false;
+
     public:
         /// @brief How long until the player can take damages again
         SimpleTimer invulnurability = SimpleTimer(PLAYER_INVULNURABILITY_TIMER);
@@ -354,6 +356,10 @@ class Player : BaseObject
         bool SetPlayerAsDeleted();
 
         PlacedBomb GetABomb(Map* mapReference);
+
+        Inventory* GetInventory();
+
+        bool HasSelectedNewItemSinceLastTime();
 };
 
 // - FUNCTIONS - //

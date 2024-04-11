@@ -178,6 +178,12 @@
     <ClCompile Include="Files\QObjects\QJoinedPlayersList.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="Files\QObjects\QMap.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="Files\QObjects\QGameHeader.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files\Application\AppHandler.h">
@@ -205,9 +211,6 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Files\JSON\json.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="Files\Map\Map.h">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="Files\Map\Utils.hpp">
@@ -294,9 +297,6 @@
     <ClInclude Include="Files\QObjects\QCountDown.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Files\QObjects\QPlayerStats.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Files\ScreenAttributes\ScreenAttributes.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -321,6 +321,18 @@
       <Filter>Header Files</Filter>
     </QtMoc>
     <QtMoc Include="Files\Arduino\Arduino.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Files\QObjects\QMap.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Files\QObjects\QGameHeader.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Files\Map\Map.h">
+      <Filter>Header Files</Filter>
+    </QtMoc>
+    <QtMoc Include="Files\QObjects\QPlayerStats.h">
       <Filter>Header Files</Filter>
     </QtMoc>
   </ItemGroup>

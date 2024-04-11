@@ -26,13 +26,13 @@ bool cGameMenu::Update()
     if(!gameIsValid) return false;
 
     static int oldCountdownValue = 0;
-    if(oldCountdownValue != currentGame->GetCountdownValue())
+    if(oldCountdownValue != appRef->currentGame->GetCountdownValue())
     {
-        oldCountdownValue = currentGame->GetCountdownValue();
+        oldCountdownValue = appRef->currentGame->GetCountdownValue();
         Draw();
     }
 
-    switch(currentGame->GetStatus())
+    switch(appRef->currentGame->GetStatus())
     {
         case(GameStatuses::awaitingPlayers):
             HandleWaitingForPlayers(); // No I dont need a break/return here. Yes its cursed. yes, I dont care :P (just keep this case as the first one)
@@ -46,16 +46,17 @@ bool cGameMenu::Update()
             }
     }
 
-    return currentGame->Update();
+    //return currentGame->Update();
 }
 
 bool cGameMenu::HandleWaitingForPlayers()
 {
+    return false;
     // system("cls");
-    for(int playerIndex = 0; playerIndex < currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
+    for(int playerIndex = 0; playerIndex < appRef->currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndex++)
     {
         // std::cout << "p: " << playerIndex;
-        Controller* currentController = currentGame->GetPlayerController(playerIndex);
+        Controller* currentController = appRef->currentGame->GetPlayerController(playerIndex);
 
         // std::cout << " b: " << currentController->topButton;
 
@@ -68,7 +69,7 @@ bool cGameMenu::HandleWaitingForPlayers()
         if(currentController->bottomButton) // Remove that controller from the list.
         {
             // std::cout << " LE ";
-            currentGame->UnAssignPlayerController(playerIndex);
+            appRef->currentGame->UnAssignPlayerController(playerIndex);
             currentController->controllerID = 0;
         }
 
@@ -87,15 +88,15 @@ bool cGameMenu::HandleWaitingForPlayers()
                 {
                     // std::cout << std::endl;
                     // Sleep(1000);
-                    currentGame->AssignControllerToPlayer(playerIndex, realWorldController);
+                    appRef->currentGame->AssignControllerToPlayer(playerIndex, realWorldController);
                     realWorldController->controllerID = selectedID;
 
-                    // std::cout << "placed ID: " << currentGame->GetPlayerController(playerIndex)->controllerID << " in player " << playerIndex << std::endl;
+                    // std::cout << "placed ID: " << appRef->currentGame->GetPlayerController(playerIndex)->controllerID << " in player " << playerIndex << std::endl;
 
                     // Verify that no other players have that controllerID
-                    for(int playerIndexV = 0; playerIndexV < currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndexV++)
+                    for(int playerIndexV = 0; playerIndexV < appRef->currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; playerIndexV++)
                     {
-                        Controller* playerController = currentGame->GetPlayerController(playerIndexV);
+                        Controller* playerController = appRef->currentGame->GetPlayerController(playerIndexV);
                         // std::cout << playerIndexV << " " << playerIndex << std::endl;
                         if(playerIndexV != playerIndex)
                         {
@@ -125,7 +126,7 @@ bool cGameMenu::HandleWaitingForPlayers()
 
 bool cGameMenu::HandleKeyboard(int keyBoardKey)
 {
-    switch(currentGame->GetStatus())
+    switch(appRef->currentGame->GetStatus())
     {
         case(GameStatuses::awaitingConnection):
             return KeyboardWaitingForConnection(keyBoardKey);
@@ -183,22 +184,22 @@ bool cGameMenu::OnEnter()
         return false;
     }
 
-    currentMap = new Map(allMaps[appRef->wantedMapIndex]);
-    currentGame = new BomberManGame(appRef, currentMap);
+    //currentMap = new Map(allMaps[appRef->wantedMapIndex]);
+    //currentGame = new BomberManGame(appRef, currentMap);
 
-    if(!currentGame->isValidated())
-    {
-        std::cout << "GAME isValidated ERROR" << std::endl;
-        Sleep(1000);
-        gameIsValid = false;
-        return false;
-    }
+    //if(!appRef->currentGame->isValidated())
+    //{
+    //    std::cout << "GAME isValidated ERROR" << std::endl;
+    //    Sleep(1000);
+    //    gameIsValid = false;
+    //    return false;
+    //}
     
     // Reset all hardware controllers's IDs so that they are valid again to be assigned to players.
-    for(int i=1; i<=CONTROLLER_TYPE_AMOUNT; i++)
-    {
-        appRef->GetHardwareController(i)->controllerID = 0;
-    }
+    //for(int i=1; i<=CONTROLLER_TYPE_AMOUNT; i++)
+    //{
+    //    appRef->GetHardwareController(i)->controllerID = 0;
+    //}
 
     gameIsValid = true;
 
@@ -218,11 +219,12 @@ bool cGameMenu::OnExit()
 
 bool cGameMenu::Draw()
 {
+    return false;
     static int oldStatus = 0;
 
-    if(needsToBeRedrawn || (currentGame->GetStatus() != oldStatus))
+    if(needsToBeRedrawn || (appRef->currentGame->GetStatus() != oldStatus))
     {
-        oldStatus = currentGame->GetStatus();
+        oldStatus = appRef->currentGame->GetStatus();
         needsToBeRedrawn = false;
         system("cls");
     }
@@ -230,7 +232,7 @@ bool cGameMenu::Draw()
 
     if(!gameIsValid) return DrawInvalid();
 
-    switch(currentGame->GetStatus())
+    switch(appRef->currentGame->GetStatus())
     {
         case(GameStatuses::awaitingConnection):
             return DrawWaitingForConnection();
@@ -280,6 +282,7 @@ bool cGameMenu::DrawInvalid()
 
 bool cGameMenu::DrawWaitingForStart()
 {
+    return false;
     //ResizeTerminal(36, 7 + currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]);
     ResizeTerminal(36, 100);
 
@@ -442,7 +445,7 @@ bool cGameMenu::DrawWaitingForStart()
     
     // Draw the name of the map dead center. Because why not.
     // To pull this off, we've got 42 characters of space to deal with.
-    nlohmann::json mapJSON = currentGame->GetMap()->GetCurrentMap();
+    nlohmann::json mapJSON = appRef->currentGame->GetMap()->GetCurrentMap();
     std::string mapName = mapJSON["name"];
     int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
@@ -468,9 +471,9 @@ bool cGameMenu::DrawWaitingForStart()
     rectangles(1, colors::black, false); rectangles(9, BG, false); PrintInColour(std::cout, "Waiting for all players.", colors::black, BG); rectangles(9, BG, false);    rectangles(1, colors::grey, true);
     rectangles(1, colors::black, false); ConsecutiveChar(std::cout, '#', colors::lightgrey, BG, 42, false); rectangles(1, colors::grey, true);
 
-    for(int i=0; i<currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; i++)
+    for(int i=0; i< appRef->currentGame->GetMap()->GetCurrentMap()["amountOfPlayers"]; i++)
     {
-        int hardwareControllerType = currentGame->GetPlayerController(i)->controllerID;
+        int hardwareControllerType = appRef->currentGame->GetPlayerController(i)->controllerID;
         bool playerSlotTaken = hardwareControllerType != 0;
 
         drawPlayerSlot(playerSlotTaken, i, hardwareControllerType, animationSpriteIndex);
@@ -488,6 +491,7 @@ bool cGameMenu::DrawWaitingForConnection()
 
 bool cGameMenu::DrawPaused()
 {
+    return false;
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
         ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);
@@ -498,7 +502,7 @@ bool cGameMenu::DrawPaused()
 
     // Draw the name of the map dead center. Because why not.
     // To pull this off, we've got 42 characters of space to deal with.
-    std::string mapName = currentGame->GetMap()->GetName();
+    std::string mapName = appRef->currentGame->GetMap()->GetName();
     int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
     rectangles(1, colors::black, false);
@@ -541,12 +545,14 @@ bool cGameMenu::DrawPaused()
 
 bool cGameMenu::DrawGame()
 {
-    currentGame->Draw();
+    return false;
+    appRef->currentGame->Draw();
     return true;
 }
 
 bool cGameMenu::DrawStart()
 {
+    return false;
     ResizeTerminal(36, 14);
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
@@ -557,7 +563,7 @@ bool cGameMenu::DrawStart()
     rectangles(1, BC, false); rectangles(42, BG, false); rectangles(1, BC, true);
     rectangles(1, BC, false); rectangles(42, BG, false); rectangles(1, BC, true);
 
-    switch(currentGame->GetCountdownValue())
+    switch(appRef->currentGame->GetCountdownValue())
     {
         case(4):
                 rectangles(1, BC, false); rectangles(13, BG, false);     rectangles(12, C3, false); rectangles(17, BG, false);      rectangles(1, BC, true);
@@ -621,6 +627,7 @@ bool cGameMenu::DrawStart()
 
 bool cGameMenu::DrawEnd()
 {
+    return false;
     auto rectangles = [](int amount, int color, bool lineEnd)
     {
         ConsecutiveChar(std::cout, ' ', colors::white, color, amount, lineEnd);
@@ -631,7 +638,7 @@ bool cGameMenu::DrawEnd()
 
     // Draw the name of the map dead center. Because why not.
     // To pull this off, we've got 42 characters of space to deal with.
-    std::string mapName = currentGame->GetMap()->GetName();
+    std::string mapName = appRef->currentGame->GetMap()->GetName();
     int seperationBetweenTextAndBorder = (42-((int)mapName.length()))/2;
 
     rectangles(1, colors::black, false);
@@ -647,7 +654,7 @@ bool cGameMenu::DrawEnd()
 
     // Draw winner
     rectangles(1, colors::black, false); 
-    int ID = currentGame->GetWinningPlayerID();
+    int ID = appRef->currentGame->GetWinningPlayerID();
     if(ID == 0)
     {
         rectangles(16, BG, false);
@@ -724,7 +731,7 @@ bool cGameMenu::KeyboardWaitingForStart(int keyBoardKey)
                 return true;                  
 
         case KB_ENTER: // Bypass playing joining wait.
-                currentGame->Start();
+                appRef->currentGame->Start();
                 return true;
         
         case KB_ESCAPE:
@@ -770,7 +777,7 @@ bool cGameMenu::KeyboardPaused(int keyBoardKey)
                 }
                 else
                 {
-                    currentGame->Resume();
+                    appRef->currentGame->Resume();
                 }
                 return true;
     }        
@@ -791,7 +798,7 @@ bool cGameMenu::KeyboardGame(int keyBoardKey)
                 return true;
 
         case KB_ESCAPE:
-                currentGame->Pause();
+                appRef->currentGame->Pause();
                 return true;
     }        
     return false;
