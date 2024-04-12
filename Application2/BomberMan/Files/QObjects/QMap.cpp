@@ -67,8 +67,8 @@ void QBomberManMap::SetScale(int newScaleX, int newScaleY)
 	
 			QLabel* label = gridContent[y][x];
 
-			QPixmap originalPixmap;
-			originalPixmap.load(QString::fromStdString(mapRef->tileSvg[mapRef->GetTileDataAtPosition(x, y)]));
+			QPixmap originalPixmap(ChangeSVGColor(QString::fromStdString(mapRef->tileSvg[mapRef->GetTileDataAtPosition(x, y)]), mapRef->tileColor[mapRef->GetTileDataAtPosition(x, y)]));
+
 
 			int desiredWidth = newScaleX / sizeX;
 			int desiredHeight = newScaleY / sizeY;
@@ -105,7 +105,8 @@ void QBomberManMap::Clear()
 
 void QBomberManMap::TileChanged(int x, int y, TileTypes newTile)
 {
-	QPixmap pm(QString::fromStdString(mapRef->tileSvg[newTile]));
+	QPixmap pm(ChangeSVGColor(QString::fromStdString(mapRef->tileSvg[newTile]), mapRef->tileColor[newTile]));
+
 	auto newPixmap = pm.scaled(scaleX, scaleY);
 
 	if (y >= gridContent.size())
@@ -129,8 +130,8 @@ void QBomberManMap::TileChanged(int x, int y, TileTypes newTile)
 
 	QLabel* label = gridContent[y][x];
 
-	QPixmap originalPixmap;
-	originalPixmap.load(QString::fromStdString(mapRef->tileSvg[newTile]));
+	QPixmap originalPixmap(ChangeSVGColor(QString::fromStdString(mapRef->tileSvg[newTile]), mapRef->tileColor[newTile]));
+
 
 	int desiredWidth = w / sizeX;
 	int desiredHeight = h / sizeY;
@@ -196,8 +197,7 @@ void QBomberManMap::BuildFromMapRef()
 			QLabel* label = gridContent[y][x];
 
 			// Convert the SVG content to a QPixmap (PNG format)
-			QPixmap originalPixmap;
-			originalPixmap.load(QString::fromStdString(mapRef->tileSvg[mapRef->GetTileDataAtPosition(x, y)]));
+			QPixmap originalPixmap(ChangeSVGColor(QString::fromStdString(mapRef->tileSvg[mapRef->GetTileDataAtPosition(x, y)]), mapRef->tileColor[mapRef->GetTileDataAtPosition(x, y)]));
 
 			// Resize the original pixmap to the desired size
 			int desiredWidth = w/sizeX;
