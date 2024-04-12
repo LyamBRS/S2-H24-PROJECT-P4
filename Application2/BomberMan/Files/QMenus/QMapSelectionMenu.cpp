@@ -118,7 +118,16 @@ void QMapSelectionMenu::DrawSelectedMap()
 			QPixmap pm(ChangeSVGColor(QString::fromStdString(map->tileSvg[map->GetTileDataAtPosition(i, j)]), map->tileColor[map->GetTileDataAtPosition(i, j)]));
 
 			//QPixmap pm(QString::fromStdString(map->tileSvg[map->GetTileDataAtPosition(i, j)]));
-			auto newPixmap = pm.scaled(50, 50);
+			auto newPixmap = QPixmap();
+			if (sizeX == 30)
+			{
+				newPixmap = pm.scaled(25, 25);
+
+			}
+			else
+			{
+				newPixmap = pm.scaled(50, 50);
+			}
 			lblMapCell->setPixmap(newPixmap);
 			layMapGrid->addWidget(lblMapCell, j, i);
 		}
