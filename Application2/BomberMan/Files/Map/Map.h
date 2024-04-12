@@ -356,7 +356,7 @@ class Map : public QObject
             { TileTypes::SMOKE,                QColor(0,0,0)},
             { TileTypes::SMOKE1,               QColor(128,0,0)},
             { TileTypes::SMOKE2,               QColor(255, 0, 0)},
-            { TileTypes::SMOKE3,               QColor(128, 255, 0)},
+            { TileTypes::SMOKE3,               QColor(255, 128, 0)},
             { TileTypes::SMOKE4,               QColor(255, 255, 0)},
             { TileTypes::SMOKE5,               QColor(128,0,255)},
             { TileTypes::POWER_HEART,          QColor(75, 240, 10)},
