@@ -12,6 +12,7 @@
 
 // - INCLUDES - //
 #include "Utils.hpp"
+#include <QtWidgets>
 
 // - PROGRAM - //
 
@@ -52,6 +53,10 @@ std::vector<nlohmann::json> GetAllMaps()
         if(VerifyMap(entry.path().generic_string()))
         {
             allFoundMaps.push_back(GetMapJson(entry.path().generic_string()));
+        }
+        else
+        {
+            qFatal() << entry.path().generic_string();
         }
     return allFoundMaps;
 }
@@ -135,6 +140,7 @@ bool VerifyMap(std::string path)
     // Check if the file exists.
     if(!std::filesystem::exists(path))
     {
+        qFatal() << QString::fromStdString(path) << ": path does not exist";
         return false;
     }
 
@@ -142,6 +148,7 @@ bool VerifyMap(std::string path)
 
     if(directoryEntry.path().extension() != ".json")
     {
+        qFatal() << QString::fromStdString(path) << ": missing .json";
         std::cout << directoryEntry.path().extension() << std::endl;
         return false;
     }
@@ -151,6 +158,8 @@ bool VerifyMap(std::string path)
 
     if(fileContent.is_discarded())
     {
+        qFatal() << QString::fromStdString(path) << ": invalid JSON file";
+
         // Invalid JSON file. There's errors n shit innit bruh
         return false;
     }

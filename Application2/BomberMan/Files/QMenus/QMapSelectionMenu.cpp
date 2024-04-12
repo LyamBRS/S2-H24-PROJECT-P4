@@ -90,9 +90,12 @@ bool QMapSelectionMenu::OnMapSelect()
 	std::vector<nlohmann::json> allMaps = GetAllMaps();
 	amountOfMaps = (int)allMaps.size();
 
+	//qFatal() << QString::number(amountOfMaps);
+
 	// Corruption detection
 	if (GetMapJsonError(allMaps[appRef->selection]) != EM_MAP_NO_ERROR)
 	{
+		qFatal() << GetMapJsonError(allMaps[appRef->selection]);
 		return false;
 	}
 

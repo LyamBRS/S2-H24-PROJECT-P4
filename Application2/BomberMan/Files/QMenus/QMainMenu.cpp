@@ -50,7 +50,7 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	connect(appButton,		&QPushButton::clicked, this, &QMainMenu::GoToFormulaire);
 	connect(leaveButton,	&QPushButton::clicked, this, &QMainMenu::GoToExit);
 
-	MainLayout		= new QGridLayout();
+	MainLayout		= new QVBoxLayout();
 	ButtonLogoLayout	= new QHBoxLayout();
 	ButtonLayout = new QVBoxLayout();
 	layTitle		= new QHBoxLayout();
@@ -74,7 +74,7 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	
 
 	QPixmap pm(ChangeSVGColor("Logo", QColor(0, 0, 200)));
-	auto newPixmap = pm.scaled(250, 250);
+	auto newPixmap = pm.scaled(500, 500);
 	lblLogo->setPixmap(newPixmap);
 
 	//QPixmap lk(QString::fromStdString(GetSvg("Smoke")));
@@ -88,8 +88,8 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	ButtonLogoLayout->addStretch();
 
 	//MainLayout->addWidget(backgroundLabel, 0, 0, 10, 10);
-	MainLayout->addLayout(layTitle, 0, 0, 3, 10);
-	MainLayout->addLayout(ButtonLogoLayout, 1,0, 7, 5);
+	MainLayout->addLayout(layTitle);
+	MainLayout->addLayout(ButtonLogoLayout);
 	MainMenu->setLayout(MainLayout);
 
 

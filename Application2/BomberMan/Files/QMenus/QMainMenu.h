@@ -66,7 +66,7 @@ private:
 	QPushButton* appButton;
 	QPushButton* leaveButton;
 
-	QGridLayout* MainLayout;
+	QVBoxLayout* MainLayout;
 	QVBoxLayout* ButtonLayout;
 	QHBoxLayout* layTitle;
 	QHBoxLayout* ButtonLogoLayout;

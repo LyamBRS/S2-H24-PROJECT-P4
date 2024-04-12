@@ -40,7 +40,7 @@
 #define SVG_PLAYER2                 "PlayerFemale"
 #define SVG_PLAYER3                 "PlayerMale"
 #define SVG_PLAYER4                 "PlayerMale"
-#define SVG_POWER_BOMB_OF_WALLS     "PowerWall"
+#define SVG_POWER_BOMB_OF_WALLS     "Cone"
 #define SVG_POWER_DEPLOYABLE_WALL   "PowerWall"
 #define SVG_BOMB                    "Bomb"
 
