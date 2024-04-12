@@ -3,7 +3,10 @@
 BomberMan::BomberMan(QWidget *parent)
     : QMainWindow(parent)
 {
-    ui.setupUi(this);
+
+    // Load the image
+    QPixmap backgroundImage(QString::fromStdString(GetSvg("Background")));
+
     setWindowTitle("Bomberman");
     resize(800, 600);
 

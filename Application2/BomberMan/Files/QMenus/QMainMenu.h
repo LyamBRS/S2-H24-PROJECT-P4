@@ -59,13 +59,14 @@ private:
 	QLabel* lblTeam;
 	QLabel* lblProjName;
 	QLabel* lblLogo;
+	QLabel* backgroundLabel;
 
 	QPushButton* playButton;
 	QPushButton* settingsButton;
 	QPushButton* appButton;
 	QPushButton* leaveButton;
 
-	QVBoxLayout* MainLayout;
+	QGridLayout* MainLayout;
 	QVBoxLayout* ButtonLayout;
 	QHBoxLayout* layTitle;
 	QHBoxLayout* ButtonLogoLayout;

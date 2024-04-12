@@ -21,6 +21,7 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Maps", "Maps", "{B3B5DE42-8
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Media", "Media", "{FB874DB8-9231-434B-8510-B8B4A8386E6B}"
 	ProjectSection(SolutionItems) = preProject
+		Media\Background.svg = Media\Background.svg
 		Media\Bomb.svg = Media\Bomb.svg
 		Media\Empty.svg = Media\Empty.svg
 		Media\PermaWall.svg = Media\PermaWall.svg
