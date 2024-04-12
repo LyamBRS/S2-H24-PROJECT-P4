@@ -47,10 +47,10 @@ public slots:
 	void ChronoChanged(uint64_t newValue);
 	void UpdateFromGameStatus(int gameStatus);
 	void CountDownChanged(int newCount);
+	void GameMessageChanged(std::string newMessage);
 
 private slots:
 	void PausePressed();
-	void GameMessageChanged(std::string newMessage);
 
 signals:
 	void PauseButtonPressed();

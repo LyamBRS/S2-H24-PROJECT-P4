@@ -50,7 +50,7 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	connect(appButton,		&QPushButton::clicked, this, &QMainMenu::GoToFormulaire);
 	connect(leaveButton,	&QPushButton::clicked, this, &QMainMenu::GoToExit);
 
-	MainLayout		= new QVBoxLayout();
+	MainLayout		= new QGridLayout();
 	ButtonLogoLayout	= new QHBoxLayout();
 	ButtonLayout = new QVBoxLayout();
 	layTitle		= new QHBoxLayout();
@@ -70,23 +70,28 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 	ButtonLayout->addWidget(leaveButton);
 
 
-
+	backgroundLabel = new QLabel();
 	
-	quint32 r = QRandomGenerator::global()->bounded(0, 200);
-	quint32 g = QRandomGenerator::global()->bounded(0, 200);
-	quint32 b = QRandomGenerator::global()->bounded(0, 200);
-	QPixmap pm(ChangeSVGColor("Logo", QColor(r, g, b)));
-	auto newPixmap = pm.scaled(500, 500);
+
+	QPixmap pm(ChangeSVGColor("Logo", QColor(0, 0, 200)));
+	auto newPixmap = pm.scaled(250, 250);
 	lblLogo->setPixmap(newPixmap);
+
+	//QPixmap lk(QString::fromStdString(GetSvg("Smoke")));
+	//auto newPixMap = lk.scaled(500, 500);
+	//backgroundLabel->setPixmap(newPixMap);
+
 
 	ButtonLogoLayout->addLayout(ButtonLayout);
 	ButtonLogoLayout->addStretch();
 	ButtonLogoLayout->addWidget(lblLogo);
 	ButtonLogoLayout->addStretch();
 
-	MainLayout->addLayout(layTitle);
-	MainLayout->addLayout(ButtonLogoLayout);
+	//MainLayout->addWidget(backgroundLabel, 0, 0, 10, 10);
+	MainLayout->addLayout(layTitle, 0, 0, 3, 10);
+	MainLayout->addLayout(ButtonLogoLayout, 1,0, 7, 5);
 	MainMenu->setLayout(MainLayout);
+
 
 	if (GetAllMaps().size() == 0)
 	{
