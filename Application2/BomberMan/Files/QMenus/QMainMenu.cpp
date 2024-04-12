@@ -72,8 +72,10 @@ QMainMenu::QMainMenu(QMainWindow* windowReference, AppHandler* appHandler)
 
 	backgroundLabel = new QLabel();
 	
-
-	QPixmap pm(ChangeSVGColor("Logo", QColor(0, 0, 200)));
+	quint32 r = QRandomGenerator::global()->bounded(0, 200);
+	quint32 g = QRandomGenerator::global()->bounded(0, 200);
+	quint32 b = QRandomGenerator::global()->bounded(0, 200);
+	QPixmap pm(ChangeSVGColor("Logo", QColor(r, g, b)));
 	auto newPixmap = pm.scaled(500, 500);
 	lblLogo->setPixmap(newPixmap);
 
