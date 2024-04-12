@@ -915,7 +915,7 @@ bool BomberManGame::UsePowerUp(int playerID, int powerUpID)
             PlacedBomb(
                 player->GetCurrentCoordinates()->X(),
                 player->GetCurrentCoordinates()->Y(),
-                PLAYER_MAX_BOMB_RADIUS,
+                2,
                 PLAYER_BASE_BOMB_PLACEMENT_TIMER,
                 0,
                 map,
@@ -1156,6 +1156,8 @@ bool BomberManGame::Update()
     static int oldPlayerCount = 0;
     static int oldCountdown = -1;
 
+    std::string oldString = "";
+
     int countDownValue = 0;
     if (gameStatus == GameStatuses::countdown)
     {
@@ -1226,6 +1228,7 @@ bool BomberManGame::Update()
         result.append(std::to_string(countDownValue));
         result.append("      -");
         appRef->SetMessage(result);
+        SetGameMessage(result);
 
         if (countDownValue != oldCountdown)
         {
@@ -1270,6 +1273,12 @@ bool BomberManGame::Update()
     }
 
     map->EmitChanges();
+
+    if (oldString != gameMessage)
+    {
+        oldString = gameMessage;
+        emit GameMessageChanged(oldString);
+    }
 
     return true;
 }
@@ -1342,6 +1351,7 @@ bool BomberManGame::Pause()
 
     gameDuration.Stop();
     appRef->SetMessage("  Game  paused  ");
+    SetGameMessage("  Game  paused  ");
     return true;
 }
 
@@ -1367,6 +1377,7 @@ bool BomberManGame::Resume()
     SetStatus(GameStatuses::playing);
     gameDuration.Resume();
     appRef->SetMessage("  Game  resumed  ");
+    SetGameMessage("  Game  resumed  ");
     return true;
 }
 
@@ -1551,6 +1562,7 @@ bool BomberManGame::AssignControllerToPlayer(int playerIndex, Controller* contro
     result.append(std::to_string((playerIndex+1)));
     result.append(" joined");
     appRef->SetMessage(result);
+    SetGameMessage(result);
 
     emit PlayerConnected(playerIndex, controllerRef->controllerID);
 
@@ -1566,6 +1578,7 @@ bool BomberManGame::UnAssignPlayerController(int playerIndex)
     result.append(std::to_string((playerIndex+1)));
     result.append(" left  ");
     appRef->SetMessage(result);
+    SetGameMessage(result);
 
     emit PlayerDisconnected(playerIndex);
 
@@ -1605,7 +1618,9 @@ int BomberManGame::GetWinningPlayerID()
 
 bool BomberManGame::SetGameMessage(std::string newMessage)
 {
+    //appRef->SetMessage();
     gameMessage = newMessage;
+    emit GameMessageChanged(newMessage);
     needToRedrawMessage = true;
     gameMessageReset.Reset();
     return true;

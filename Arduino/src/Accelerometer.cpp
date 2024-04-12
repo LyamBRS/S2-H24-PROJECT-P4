@@ -7,9 +7,9 @@ Accelerometer::Accelerometer()
 
 Accelerometer::Accelerometer(uint8_t xPin, uint8_t yPin, uint8_t zPin)
 {
-    xAxis = new AnalogInput(xPin, 260, 450);
-    yAxis = new AnalogInput(yPin, 260, 450);
-    zAxis = new AnalogInput(zPin, 260, 450);
+    xAxis = new AnalogInput(xPin, 360, 750);
+    yAxis = new AnalogInput(yPin, 360, 750);
+    zAxis = new AnalogInput(zPin, 360, 750);
 
     canBeUsed = true;
 }

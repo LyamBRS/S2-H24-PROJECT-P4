@@ -613,6 +613,8 @@ class BomberManGame : public QObject
         void StatusChanged(int newStatus);
         void PlayerDeath(int playerID);
 
+        void GameMessageChanged(std::string newMessage);
+
         void HealthChanged();
         void InventoryChanged();
 
