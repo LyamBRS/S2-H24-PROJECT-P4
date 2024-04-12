@@ -56,7 +56,7 @@ void QGameMenu::CreateWidgets()
 	GameMap->SetTileColor(TileTypes::PLAYER4, *appRef->colorPlayerD);
 	//GameMap->SetTileColor(TileTypes::PLAYER5, *appRef->colorPlayerE);
 
-	PlayersStats = new QPlayerStatsList(appRef->currentGame->GetMaxPlayerCount(), appRef->currentGame);
+	PlayersStats = new QPlayerStatsList(appRef->currentGame->GetMaxPlayerCount(), appRef->currentGame, appRef);
 
 	MainMenu = new QWidget();
 	GameMap->SetAsPaused();

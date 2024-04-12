@@ -31,10 +31,10 @@ Application::Application(QMainWindow* windowReference)
 
     appHandler->currentGame = new BomberManGame();
 
-    appHandler->colorPlayerA = new QColor("#4a4aed");
-    appHandler->colorPlayerB = new QColor("#eb3d3d");
-    appHandler->colorPlayerC = new QColor("c2be4a");
-    appHandler->colorPlayerD = new QColor("41d146");
+    appHandler->colorPlayerA = new QColor(255,0,0);
+    appHandler->colorPlayerB = new QColor(21,99,214);
+    appHandler->colorPlayerC = new QColor(240,233,29);
+    appHandler->colorPlayerD = new QColor(11,125,40);
     appHandler->colorPlayerE = new QColor("8000FF");
 
     // Creates all the menus.

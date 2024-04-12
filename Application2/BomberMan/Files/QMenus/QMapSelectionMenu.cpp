@@ -104,7 +104,7 @@ bool QMapSelectionMenu::OnMapSelect()
 	return true;
 }
 
-void QMapSelectionMenu::DrawSelectedMap() 
+void QMapSelectionMenu::DrawSelectedMap()
 {
 	int sizeX = map->GetSizeX();
 	int sizeY = map->GetSizeY();

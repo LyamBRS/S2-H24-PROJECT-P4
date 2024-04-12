@@ -137,11 +137,15 @@ bool Map::Draw()
 
 TileTypes Map::GetTileDataAtPosition(int x, int y)
 {
+	if (x >= sizeX) return;
+	if (y >= sizeY) return;
 	return map[x][y];
 }
 
 TileTypes Map::GetTileDataAtPosition(Positions pos)
 {
+	if (pos.X() >= sizeX) return;
+	if (pos.Y() >= sizeY) return;
 	return map[pos.X()][pos.Y()];
 }
 

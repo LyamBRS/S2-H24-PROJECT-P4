@@ -24,7 +24,7 @@ class QPlayerStat : public QWidget
 	Q_OBJECT
 
 	public:
-		QPlayerStat(int playerID);
+		QPlayerStat(int playerID, QColor associatedColor);
 
 		void LinkPlayer(Player* player);
 
@@ -50,7 +50,7 @@ class QPlayerStatsList : public QWidget
 	Q_OBJECT
 	
 public:
-	QPlayerStatsList(int playerCount, BomberManGame* currentGame);
+	QPlayerStatsList(int playerCount, BomberManGame* currentGame, AppHandler* handler);
 	void LinkPlayer(int playerID, Player* player);
 
 public slots:

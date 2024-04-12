@@ -190,6 +190,11 @@ QWidget* QPlayerJoiningMenu::GetMenu()
 
 void QPlayerJoiningMenu::OnEnter()
 {
+	for (int i = 1; i <= CONTROLLER_TYPE_AMOUNT; i++)
+	{
+		appRef->GetHardwareController(i)->controllerID = 0;
+	}
+
 	switch (appRef->currentGame->GetStatus())
 	{
 	case(GameStatuses::awaitingConnection):

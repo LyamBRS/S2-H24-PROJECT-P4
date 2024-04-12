@@ -11,7 +11,7 @@
 #include "QPlayerStats.h"
 
 
-QPlayerStat::QPlayerStat(int playerID)
+QPlayerStat::QPlayerStat(int playerID, QColor associatedColor)
 {
 	MainLayout = new QVBoxLayout();
 	TopLayout = new QHBoxLayout();
@@ -43,6 +43,9 @@ QPlayerStat::QPlayerStat(int playerID)
 	QFont font = PlayerNameLabel->font();
 	font.setPointSize(font.pointSize() * 2);
 	PlayerNameLabel->setFont(font);
+
+	QString styleSheet = QString("color: %1;").arg(associatedColor.name());
+	PlayerNameLabel->setStyleSheet(styleSheet);
 
 	// - CREATE WIDGET - //
 	TopLayout->addWidget(PlayerNameLabel);
@@ -110,7 +113,7 @@ void QPlayerStat::InventoryChanged()
 
 
 
-QPlayerStatsList::QPlayerStatsList(int playerCount, BomberManGame* currentGame)
+QPlayerStatsList::QPlayerStatsList(int playerCount, BomberManGame* currentGame, AppHandler* handler)
 {
 	playerCountRef = playerCount;
 
@@ -119,7 +122,18 @@ QPlayerStatsList::QPlayerStatsList(int playerCount, BomberManGame* currentGame)
 
 	for (int i = 0; i < playerCountRef; i++)
 	{
-		QPlayerStat* stats = new QPlayerStat(i);
+
+		QColor associatedColour;
+		switch (i)
+		{
+		case(0): associatedColour = *handler->colorPlayerA; break;
+		case(1): associatedColour = *handler->colorPlayerB; break;
+		case(2): associatedColour = *handler->colorPlayerC; break;
+		case(3): associatedColour = *handler->colorPlayerD; break;
+		case(4): associatedColour = *handler->colorPlayerE; break;
+		}
+
+		QPlayerStat* stats = new QPlayerStat(i, associatedColour);
 		stats->LinkPlayer(currentGame->GetPlayer(i));
 		playerSlots.append(stats);
 
