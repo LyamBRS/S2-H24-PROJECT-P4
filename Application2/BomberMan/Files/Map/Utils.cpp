@@ -13,11 +13,7 @@
 // - INCLUDES - //
 #include "Utils.hpp"
 
-
-
-
 // - PROGRAM - //
-
 
 bool checkIfTileIsPlayer(TileTypes tile)
 {
@@ -39,7 +35,7 @@ std::vector<nlohmann::json> GetAllMaps()
 #ifndef NDEBUG
     applicationPath.erase(applicationPath.length() - 10, 10);
 #else
-    applicationPath.erase(applicationPath.length() - 11, 11);
+    applicationPath.erase(applicationPath.length() - 12, 12);
 #endif
     applicationPath.append("\\Maps\\");
     // std::cout << applicationPath << std::endl;

@@ -61,6 +61,7 @@ QMapSelectionMenu::QMapSelectionMenu(QMainWindow* windowReference, AppHandler* a
 	
 	layMain->addLayout(layLabels);
 	layMain->addLayout(layMapGrid);
+	layMain->addStretch();
 	layMain->addLayout(layButton);
 	layMain->addWidget(btnLeave);
 

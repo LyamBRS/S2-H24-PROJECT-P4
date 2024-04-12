@@ -81,6 +81,32 @@ private:
         { TileTypes::BOMB,                  QColor(0, 0, 0)}
     };
 
+  /*  std::map<TileTypes, QColor> tileColors =
+    {
+        { TileTypes::EMPTY,                QColor(0,0,0)},
+        { TileTypes::PERMAWALL,            QColor(0,0,0)},
+        { TileTypes::WALL,                 QColor(199, 122, 34)},
+        { TileTypes::PLAYERSPAWN,          QColor(255,0,0)},
+        { TileTypes::SMOKE,                QColor(0,0,0)},
+        { TileTypes::SMOKE1,               QColor(255,0,0)},
+        { TileTypes::SMOKE2,               QColor(21, 99, 214)},
+        { TileTypes::SMOKE3,               QColor(240, 233, 29)},
+        { TileTypes::SMOKE4,               QColor(11, 125, 40)},
+        { TileTypes::SMOKE5,               QColor(0,0,0)},
+        { TileTypes::POWER_HEART,          QColor(75, 240, 10)},
+        { TileTypes::POWER_DMG,            QColor(75, 240, 10)},
+        { TileTypes::POWER_MOREBOMB,       QColor(75, 240, 10)},
+        { TileTypes::POWER_REACH,          QColor(75, 240, 10)},
+        { TileTypes::POWER_SPEED,          QColor(75, 240, 10)},
+        { TileTypes::PLAYER1,              QColor(255,0,0)},
+        { TileTypes::PLAYER2,              QColor(21, 99, 214)},
+        { TileTypes::PLAYER3,              QColor(240, 233, 29)},
+        { TileTypes::PLAYER4,              QColor(11, 125, 40)},
+        { TileTypes::POWER_BOMB_OF_WALLS,  QColor(75, 240, 10)},
+        { TileTypes::POWER_DEPLOYABLE_WALL,QColor(75, 240, 10)},
+        { TileTypes::BOMB,                 QColor(64, 64, 64)},
+    };*/
+
 	Map* mapRef;
 	int scaleX = 50;
 	int scaleY = 50;
